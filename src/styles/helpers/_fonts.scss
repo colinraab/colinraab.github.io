@@ -1,0 +1,27 @@
+/**
+ * Font helpers
+ */
+
+@mixin font-primary {
+  font-family: var(--font-family-primary);
+}
+
+@mixin font-secondary {
+  font-family: var(--font-family-secondary);
+}
+
+@mixin font-mono {
+  font-family: var(--font-family-mono);
+}
+
+@mixin font-size($size) {
+  font-size: var(--font-size-#{$size});
+}
+
+@mixin font-weight($weight) {
+  font-weight: var(--font-weight-#{$weight});
+}
+
+@mixin line-height($height) {
+  line-height: var(--line-height-#{$height});
+}

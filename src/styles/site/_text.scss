@@ -1,0 +1,129 @@
+/**
+ * Text styles - ASCII Theme
+ */
+
+@use '../helpers/fonts' as *;
+@use '../helpers/colors' as *;
+@use '../helpers/responsive' as *;
+
+h1, h2, h3, h4, h5, h6 {
+  @include font-weight('bold');
+  @include line-height('tight');
+  @include text-color('text-primary');
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-family: var(--font-family-heading);
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  @include font-size('4xl');
+  text-shadow: 0 0 10px var(--color-text-secondary);
+  
+  @include media-down('sm') {
+    @include font-size('3xl');
+  }
+}
+
+h2 {
+  @include font-size('3xl');
+  
+  @include media-down('sm') {
+    @include font-size('2xl');
+  }
+}
+
+h3 {
+  @include font-size('2xl');
+  
+  @include media-down('sm') {
+    @include font-size('xl');
+  }
+}
+
+h4 {
+  @include font-size('xl');
+  
+  @include media-down('sm') {
+    @include font-size('lg');
+  }
+}
+
+h5 {
+  @include font-size('lg');
+}
+
+h6 {
+  @include font-size('base');
+}
+
+p {
+  @include line-height('relaxed');
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-family: var(--font-family-mono);
+  
+  @include media-down('sm') {
+    @include font-size('sm');
+    margin-bottom: 0.75rem;
+  }
+}
+
+// Compact text styles
+.text-compact {
+  @include line-height('normal');
+  margin-bottom: 0.5rem;
+}
+
+.text-large {
+  @include font-size('xl');
+  
+  @include media-down('sm') {
+    @include font-size('lg');
+  }
+}
+
+.text-small {
+  @include font-size('sm');
+  
+  @include media-down('sm') {
+    @include font-size('xs');
+  }
+}
+
+.text-muted {
+  @include text-color('text-muted');
+}
+
+.text-secondary {
+  @include text-color('text-secondary');
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// ASCII styled text
+.ascii-text {
+  font-family: var(--font-family-ascii);
+  letter-spacing: var(--ascii-letter-spacing);
+  line-height: var(--ascii-line-height);
+}
+
+// Glowing text effect
+.text-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor;
+  
+  @include media-down('sm') {
+    text-shadow: 
+      0 0 3px currentColor,
+      0 0 6px currentColor;
+  }
+}

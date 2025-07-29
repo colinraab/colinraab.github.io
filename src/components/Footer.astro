@@ -1,0 +1,371 @@
+---
+// Get the base URL for proper navigation paths
+const baseUrl = import.meta.env.BASE_URL;
+
+// Helper function to create proper paths
+const createPath = (path: string) => {
+  if (path === '') return baseUrl; // Home page
+  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+---
+
+<div id="persistent-nav-container">
+    <div class="footer-content">
+        <div class="footer-info">
+            <p>&copy;{new Date().getFullYear()}.</p>
+        </div>
+        <div id="persistent-name" class="persistent-name">
+            COLIN RAAB
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/colinraab" target="_blank" rel="noopener noreferrer">
+                GitHub
+            </a>
+            <a href="https://linkedin.com/in/colinraab" target="_blank" rel="noopener noreferrer">
+                LinkedIn
+            </a>
+            <a href="mailto:csr@raabfamily.net">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="popup-modal" class="popup-modal">
+    <div class="links-container">
+        <a href={createPath('about')} class="nav-link">About</a>
+        <a href={createPath('resume.html')} class="nav-link" target="_blank">Resume</a>
+        <a href={createPath('programming')} class="nav-link">Programming</a>
+        <a href={createPath('research')} class="nav-link">Research</a>
+        <a href={createPath('music')} class="nav-link">Music</a>
+        <a href={createPath('audioengineering')} class="nav-link">Audio Engineering</a>
+        <a href={createPath('lessons')} class="nav-link">Lessons</a>
+        <a href={createPath('photography')} class="nav-link">Photography</a>
+    </div>
+</div>
+
+<script define:vars={{ baseUrl }}>
+(function() {
+    function initializeFooterNavigation() {
+        const persistentNavContainer = document.getElementById('persistent-nav-container');
+        const popupModal = document.getElementById('popup-modal');
+        const isHomePage = window.location.pathname === baseUrl || window.location.pathname === baseUrl.replace(/\/$/, '') + '/';
+
+        if (!persistentNavContainer || !popupModal) return;
+
+        let isModalOpen = false;
+        let isNavigating = false; // Flag to prevent animations during navigation
+
+        const showModal = () => {
+            if (isModalOpen) return;
+            isModalOpen = true;
+            
+            // Add modal-open class to body for mobile footer behavior
+            document.body.classList.add('modal-open');
+            
+            window.anime({
+                targets: popupModal,
+                opacity: 1,
+                duration: 200,
+                easing: 'easeOutQuad',
+                begin: () => {
+                    popupModal.style.pointerEvents = 'auto';
+                    popupModal.style.display = 'flex';
+                }
+            });
+        };
+
+        const hideModal = () => {
+            if (!isModalOpen) return;
+            
+            window.anime({
+                targets: popupModal,
+                opacity: 0,
+                duration: 300,
+                easing: 'easeOutQuad',
+                complete: () => {
+                    popupModal.style.pointerEvents = 'none';
+                    popupModal.style.display = 'none';
+                    isModalOpen = false;
+                    // Remove modal-open class from body
+                    document.body.classList.remove('modal-open');
+                }
+            });
+        };
+
+        const morphToModal = (glassPanel) => {
+            if (isModalOpen || isNavigating) return;
+            isModalOpen = true;
+            
+            // Add modal-open class to body for mobile footer behavior
+            document.body.classList.add('modal-open');
+            
+            // Get current position and size of glass panel
+            const glassPanelRect = glassPanel.getBoundingClientRect();
+            const heroContent = glassPanel.querySelector('.hero-content');
+            
+            if (!heroContent) return;
+            
+            // Get the actual modal dimensions by temporarily showing it
+            popupModal.style.display = 'flex';
+            popupModal.style.opacity = '0';
+            popupModal.style.pointerEvents = 'none';
+            popupModal.style.visibility = 'hidden';
+            
+            const modalRect = popupModal.getBoundingClientRect();
+            const targetModalWidth = modalRect.width;
+            const targetModalHeight = modalRect.height;
+            const targetLeft = modalRect.left;
+            const targetTop = modalRect.top;
+            
+            // Hide the modal again for the animation
+            popupModal.style.display = 'none';
+            popupModal.style.visibility = 'visible';
+            
+            // Set up the glass panel for absolute positioning
+            glassPanel.style.position = 'fixed';
+            glassPanel.style.left = glassPanelRect.left + 'px';
+            glassPanel.style.top = glassPanelRect.top + 'px';
+            glassPanel.style.width = glassPanelRect.width + 'px';
+            glassPanel.style.height = glassPanelRect.height + 'px';
+            glassPanel.style.zIndex = '9998';
+            glassPanel.style.transformOrigin = 'center center';
+            
+            // Create animation timeline using the global anime object
+            const timeline = window.anime.timeline({
+                easing: 'easeInOutCubic'
+            });
+            
+            // Phase 1: Fade out hero content
+            timeline.add({
+                targets: heroContent,
+                opacity: [1, 0],
+                scale: [1, 0.8],
+                duration: 300,
+                easing: 'easeInCubic'
+            });
+            
+            // Phase 2: Morph glass panel to modal position and size
+            timeline.add({
+                targets: glassPanel,
+                left: targetLeft,
+                top: targetTop,
+                width: targetModalWidth,
+                height: targetModalHeight,
+                duration: 500,
+                easing: 'easeInOutCubic'
+            }, '-=150');
+            
+            // Phase 3: Fade out glass panel and fade in modal simultaneously
+            timeline.add({
+                targets: glassPanel,
+                opacity: [1, 0],
+                duration: 200,
+                easing: 'easeInCubic'
+            }, '-=100');
+            
+            // Phase 4: Show modal content (fade in only, no scaling)
+            timeline.add({
+                targets: popupModal,
+                opacity: [0, 1],
+                duration: 200,
+                easing: 'easeOutCubic',
+                begin: () => {
+                    popupModal.style.pointerEvents = 'auto';
+                    popupModal.style.display = 'flex';
+                    popupModal.style.zIndex = '9999'; // Ensure modal is above glass panel
+                    
+                    // Ensure central content is hidden when modal is open
+                    const centralContent = document.getElementById('central-content');
+                    if (centralContent) {
+                        centralContent.style.visibility = 'hidden';
+                    }
+                }
+            }, '-=200'); // Start at the same time as glass panel fade out
+        };
+
+        const resetToGlassPanel = () => {
+            if (!isModalOpen || isNavigating) return;
+            
+            const glassPanel = document.querySelector('.glass-panel');
+            if (!glassPanel) return;
+            
+            const heroContent = glassPanel.querySelector('.hero-content');
+            if (!heroContent) return;
+            
+            // Simple approach - just fade out modal and restore glass panel
+            popupModal.style.transition = 'opacity 0.3s ease';
+            popupModal.style.opacity = '0';
+            
+            setTimeout(() => {
+                popupModal.style.display = 'none';
+                popupModal.style.pointerEvents = 'none';
+                
+                // Reset glass panel state completely
+                isModalOpen = false;
+                document.body.classList.remove('modal-open');
+                
+                // Make sure glass panel is visible
+                glassPanel.style.position = '';
+                glassPanel.style.left = '';
+                glassPanel.style.top = '';
+                glassPanel.style.width = '';
+                glassPanel.style.height = '';
+                glassPanel.style.zIndex = '';
+                glassPanel.style.opacity = '1';
+                glassPanel.style.transform = '';
+                glassPanel.style.transformOrigin = '';
+                
+                // Reset hero content
+                heroContent.style.opacity = '1';
+                heroContent.style.transform = '';
+                heroContent.style.scale = '';
+                
+                // Make central content visible
+                const centralContent = document.getElementById('central-content');
+                if (centralContent) {
+                    centralContent.style.visibility = 'visible';
+                    centralContent.style.opacity = '1';
+                }
+            }, 300);
+        };
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (isModalOpen && !isNavigating && !popupModal.contains(target) && !target.closest('.glass-panel') && !target.closest('.persistent-name')) {
+                if (isHomePage) {
+                    resetToGlassPanel();
+                } else {
+                    hideModal();
+                }
+            }
+        });
+
+        // Close modal with escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && isModalOpen && !isNavigating) {
+                if (isHomePage) {
+                    resetToGlassPanel();
+                } else {
+                    hideModal();
+                }
+            }
+        });
+
+        // Prevent modal from closing when clicking inside it, but allow navigation links to work
+        popupModal.addEventListener('click', (event) => {
+            const target = event.target;
+            // If it's a navigation link, handle based on whether it opens in new tab
+            if (target.classList.contains('nav-link') || target.closest('.nav-link')) {
+                const linkElement = target.classList.contains('nav-link') ? target : target.closest('.nav-link');
+                
+                // If link opens in new tab (like resume), use the animated close
+                if (linkElement && linkElement.getAttribute('target') === '_blank') {
+                    if (isHomePage) {
+                        resetToGlassPanel();
+                    } else {
+                        hideModal();
+                    }
+                    return;
+                }
+                
+                // For regular navigation, set navigation flag and clean up immediately
+                isNavigating = true; // Prevent any animations
+                isModalOpen = false;
+                document.body.classList.remove('modal-open');
+                
+                // Hide modal and glass panel immediately without animation
+                popupModal.style.display = 'none';
+                popupModal.style.opacity = '0';
+                popupModal.style.pointerEvents = 'none';
+                
+                // Reset glass panel immediately if on home page
+                if (isHomePage) {
+                    const glassPanel = document.querySelector('.glass-panel');
+                    if (glassPanel) {
+                        glassPanel.style.position = '';
+                        glassPanel.style.left = '';
+                        glassPanel.style.top = '';
+                        glassPanel.style.width = '';
+                        glassPanel.style.height = '';
+                        glassPanel.style.zIndex = '';
+                        glassPanel.style.transform = '';
+                        glassPanel.style.opacity = '';
+                        
+                        const heroContent = glassPanel.querySelector('.hero-content');
+                        if (heroContent) {
+                            heroContent.style.opacity = '';
+                            heroContent.style.scale = '';
+                        }
+                    }
+                }
+                
+                // Don't prevent default - let navigation proceed normally
+                return;
+            }
+            // For non-navigation clicks, prevent modal closing
+            event.stopPropagation();
+        });
+
+        if (isHomePage) {
+            persistentNavContainer.style.display = 'none';
+            const glassPanel = document.querySelector('.glass-panel');
+            
+            if (glassPanel) {
+                // Add click event listener to glass panel
+                glassPanel.addEventListener('click', (event) => {
+                    // Only handle glass panel clicks when modal is closed
+                    if (!isModalOpen) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        morphToModal(glassPanel);
+                    }
+                    // When modal is open, don't interfere with modal click handling
+                });
+                
+                // Add visual feedback for clickability
+                glassPanel.style.cursor = 'pointer';
+                glassPanel.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                
+                glassPanel.addEventListener('mouseenter', () => {
+                    if (!isModalOpen) {
+                        glassPanel.style.transform = 'scale(1.02)';
+                        glassPanel.style.boxShadow = '0 10px 30px rgba(0, 255, 0, 0.2)';
+                    }
+                });
+                
+                glassPanel.addEventListener('mouseleave', () => {
+                    if (!isModalOpen) {
+                        glassPanel.style.transform = 'scale(1)';
+                        glassPanel.style.boxShadow = 'none';
+                    }
+                });
+            }
+            
+            // Initially hide the popup modal
+            popupModal.style.display = 'none';
+            
+        } else {
+            const persistentName = document.getElementById('persistent-name');
+
+            if (persistentName) {
+                persistentName.addEventListener('click', () => {
+                    if (isModalOpen) {
+                        hideModal();
+                    } else {
+                        showModal();
+                    }
+                });
+            }
+        }
+    }
+
+    // Initialize on first load
+    document.addEventListener('DOMContentLoaded', initializeFooterNavigation);
+    
+    // Re-initialize after Astro view transitions
+    document.addEventListener('astro:after-swap', initializeFooterNavigation);
+})();
+</script>
+

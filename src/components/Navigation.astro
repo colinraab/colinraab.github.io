@@ -1,0 +1,288 @@
+---
+// Get the base URL for proper navigation paths
+const baseUrl = import.meta.env.BASE_URL;
+
+// Helper function to create proper paths
+const createPath = (path: string) => {
+  if (path === '') return baseUrl; // Home page
+  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+
+const navItems = [
+  { href: createPath(''), label: 'Home' },
+  { href: createPath('about'), label: 'About' },
+  { href: createPath('resume.html'), label: 'Resume' },
+  { href: createPath('programming'), label: 'Programming' },
+  { href: createPath('research'), label: 'Research' },
+  { href: createPath('music'), label: 'Music' },
+  { href: createPath('audioengineering'), label: 'Audio Engineering' },
+  { href: createPath('lessons'), label: 'Lessons' },
+  { href: createPath('photography'), label: 'Photography' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!-- Hero content for home page -->
+<div id="central-content" class="central-content">
+    <div id="glass-panel" class="glass-panel">
+        <div class="hero-content">
+            <h1 id="hero-name" class="text-glow">COLIN RAAB</h1>
+            <p id="hero-subtitle" class="text-secondary text-compact">Creative Developer & Multi-Disciplinary Artist</p>
+            <p id="hero-tagline" class="text-muted text-small text-compact">Exploring intersections of technology, music & visual arts</p>
+        </div>
+    </div>
+</div>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .central-content h1 {
+    transform-origin: center center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .glass-panel {
+    transform-origin: center center;
+    opacity: 0; /* Start invisible for fade-in animation */
+  }
+
+  #hero-name {
+    letter-spacing: 0.5em; /* Start with wide letter spacing */
+    transition: letter-spacing 1.2s ease-out;
+  }
+
+  #hero-subtitle, #hero-tagline {
+    opacity: 0; /* Start invisible for text animation */
+  }
+
+  .nav {
+    @include flex-between;
+    padding: 1rem 0;
+    
+    &__logo {
+      @include font-weight('bold');
+      @include font-size('xl');
+      
+      &:hover {
+        @include text-color('primary');
+      }
+    }
+    
+    &__list {
+      @include flex-center;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      
+      @include media-down('md') {
+        display: none;
+      }
+    }
+    
+    &__link {
+      @include font-weight('medium');
+      transition: color 0.2s ease;
+      
+      &:hover,
+      &--active {
+        @include text-color('primary');
+      }
+    }
+    
+    &__toggle {
+      display: none;
+      flex-direction: column;
+      gap: 3px;
+      
+      @include media-down('md') {
+        display: flex;
+      }
+      
+      span {
+        width: 20px;
+        height: 2px;
+        @include bg-color('text-primary');
+        transition: all 0.2s ease;
+      }
+    }
+  }
+</style>
+
+<script>
+// Declare anime.js for TypeScript
+declare const anime: any;
+
+(function() {
+    function initializeNavLinks() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const popupModal = document.getElementById('popup-modal');
+        const centralContent = document.getElementById('central-content');
+
+        // Handle navigation with Astro Client Router
+        navLinks.forEach(link => {
+            // Remove existing listeners to prevent duplicates
+            const newLink = link.cloneNode(true) as HTMLElement;
+            link.parentNode?.replaceChild(newLink, link);
+            
+            newLink.addEventListener('click', (e) => {
+                // Immediately hide central content and modal before any animations
+                if (centralContent) {
+                    centralContent.style.opacity = '0';
+                    centralContent.style.pointerEvents = 'none';
+                    centralContent.style.visibility = 'hidden';
+                }
+                
+                if (popupModal) {
+                    popupModal.style.opacity = '0';
+                    popupModal.style.display = 'none';
+                    popupModal.style.pointerEvents = 'none';
+                }
+
+                // Don't prevent default - let Astro Client Router handle the navigation
+            });
+        });
+    }
+
+    function animateHeroContent() {
+        const glassPanel = document.getElementById('glass-panel');
+        const heroName = document.getElementById('hero-name');
+        const heroSubtitle = document.getElementById('hero-subtitle');
+        const heroTagline = document.getElementById('hero-tagline');
+        
+        if (!glassPanel || !heroName || !heroSubtitle || !heroTagline) return;
+
+        // Check if we're on the home page (landing page)
+        const isHomePage = window.location.pathname === '/' || 
+                          window.location.pathname === '/portfolio/' || 
+                          window.location.pathname.endsWith('/portfolio');
+
+        if (!isHomePage) return;
+
+        // Reset initial state
+        glassPanel.style.opacity = '0';
+        heroName.style.letterSpacing = '0.5em';
+        heroSubtitle.style.opacity = '0';
+        heroTagline.style.opacity = '0';
+
+        // Store original text content
+        const originalSubtitle = heroSubtitle.textContent || '';
+        const originalTagline = heroTagline.textContent || '';
+        
+        // ASCII symbols for randomization
+        const asciiSymbols = ['•', '★', '◆', '●', '■', '◇', '♦', '✤', '▫', '▪'];
+
+        // Function to create random ASCII text
+        function createRandomText(originalText: string): string {
+            return originalText.split('').map(char => {
+                if (char === ' ') return ' '; // Preserve spaces
+                return asciiSymbols[Math.floor(Math.random() * asciiSymbols.length)];
+            }).join('');
+        }
+
+        // Function to animate text character by character
+        function animateTextReveal(element: HTMLElement, originalText: string, delay: number) {
+            const randomText = createRandomText(originalText);
+            element.textContent = randomText;
+            element.style.opacity = '0'; // Start invisible
+
+            // Create character spans for animation
+            const chars = originalText.split('');
+            const randomChars = randomText.split('');
+            
+            element.innerHTML = randomChars.map((char, index) => 
+                `<span class="char" data-original="${chars[index]}" data-index="${index}" style="opacity: 0;">${char}</span>`
+            ).join('');
+
+            const charElements = element.querySelectorAll('.char');
+            
+            // First, fade in all characters with random symbols
+            setTimeout(() => {
+                element.style.opacity = '1';
+                charElements.forEach((charEl, index) => {
+                    const htmlCharEl = charEl as HTMLElement;
+                    setTimeout(() => {
+                        htmlCharEl.style.opacity = '1';
+                    }, index * 20); // 20ms stagger for fade-in
+                });
+                
+                // Then start the decryption after all characters are visible
+                const totalFadeTime = charElements.length * 20 + 200; // Extra 200ms pause
+                setTimeout(() => {
+                    charElements.forEach((charEl, index) => {
+                        const htmlCharEl = charEl as HTMLElement;
+                        const originalChar = htmlCharEl.getAttribute('data-original') || '';
+                        
+                        // Delay each character reveal
+                        setTimeout(() => {
+                            htmlCharEl.textContent = originalChar;
+                        }, index * 20); // 30ms between each character decrypt
+                    });
+                }, totalFadeTime);
+            }, delay);
+        }
+
+        // Start animations after logo animation begins
+        setTimeout(() => {
+            // Animate glass panel fade-in
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: glassPanel,
+                    opacity: [0, 1],
+                    duration: 1200,
+                    easing: 'easeOutQuart',
+                    delay: 500 // Start after logo animation begins
+                });
+
+                // Animate letter spacing
+                anime({
+                    targets: heroName,
+                    letterSpacing: ['0.5em', '0.1em'],
+                    duration: 1200,
+                    easing: 'easeOutQuart',
+                    delay: 500
+                });
+
+                // Animate subtitle text (starts after glass panel begins)
+                setTimeout(() => {
+                    animateTextReveal(heroSubtitle, originalSubtitle, 0);
+                }, 600);
+
+                // Animate tagline text (starts after subtitle)
+                setTimeout(() => {
+                    animateTextReveal(heroTagline, originalTagline, 0);
+                }, 1000);
+
+            } else {
+                // Fallback if anime.js not available
+                glassPanel.style.transition = 'opacity 1.2s ease-out';
+                heroName.style.transition = 'letter-spacing 1.2s ease-out';
+                
+                setTimeout(() => {
+                    glassPanel.style.opacity = '1';
+                    heroName.style.letterSpacing = '0.1em';
+                    heroSubtitle.style.opacity = '1';
+                    heroTagline.style.opacity = '1';
+                }, 500);
+            }
+        }, 100);
+    }
+
+    // Initialize on first load
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeNavLinks();
+        animateHeroContent();
+    });
+    
+    // Re-initialize after Astro view transitions
+    document.addEventListener('astro:after-swap', () => {
+        initializeNavLinks();
+        animateHeroContent();
+    });
+})();
+</script>

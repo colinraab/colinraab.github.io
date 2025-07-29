@@ -1,0 +1,21 @@
+/**
+ * Global style entry file - ASCII Theme
+ */
+
+/* CSS variables */
+@use 'variables-css/colors';
+@use 'variables-css/fonts';
+
+/* Global classes */
+@use 'site/base';
+@use 'site/text';
+@use 'site/layout';
+
+/* ASCII Components */
+@use 'components/ascii';
+
+/* Utility classes */
+@use 'utilities/visibility';
+
+/* Import */
+@import '../../node_modules/modern-normalize/modern-normalize.css';

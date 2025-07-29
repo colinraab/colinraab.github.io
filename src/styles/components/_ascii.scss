@@ -1,0 +1,166 @@
+/**
+ * ASCII Art Styles
+ */
+
+@use '../helpers/responsive' as *;
+
+// ASCII Art Background
+.ascii-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Use CSS custom properties for better mobile support */
+  width: 100dvw; /* Dynamic viewport width - fallback to 100vw */
+  height: 100dvh; /* Dynamic viewport height - fallback to 100vh */
+  z-index: -10;
+  pointer-events: none;
+  overflow: hidden;
+  
+  @supports not (height: 100dvh) {
+    /* Fallback for browsers that don't support dvh */
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  @include media-down('sm') {
+    /* Ensure full coverage on mobile */
+    width: 100vw;
+    height: 100vh;
+    /* Add slight padding to account for potential browser chrome issues */
+    width: calc(100vw + 10px);
+    height: calc(100vh + 10px);
+    top: -5px;
+    left: -5px;
+  }
+}
+
+.ascii-art {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-family-ascii);
+  font-size: clamp(6px, 1vmin, 14px);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-ascii);
+  white-space: pre;
+  user-select: none;
+  opacity: 0.6;
+  overflow: hidden;
+  
+  // Glow effect
+  text-shadow: 
+    0 0 5px var(--color-ascii-glow),
+    0 0 10px var(--color-ascii-glow),
+    0 0 15px var(--color-ascii-glow);
+  
+  // Animation
+  animation: asciiPulse 4s ease-in-out infinite alternate;
+  
+  @include media-down('sm') {
+    font-size: clamp(4px, 1.5vmin, 10px);
+    opacity: 0.4;
+    text-shadow: 
+      0 0 3px var(--color-ascii-glow),
+      0 0 6px var(--color-ascii-glow);
+  }
+}
+
+@keyframes asciiPulse {
+  0% {
+    opacity: 0.4;
+    text-shadow: 
+      0 0 5px var(--color-ascii-glow),
+      0 0 10px var(--color-ascii-glow),
+      0 0 15px var(--color-ascii-glow);
+  }
+  100% {
+    opacity: 0.7;
+    text-shadow: 
+      0 0 8px var(--color-ascii-glow),
+      0 0 16px var(--color-ascii-glow),
+      0 0 24px var(--color-ascii-glow);
+  }
+}
+
+// Theme toggle button
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: var(--color-bg-secondary);
+    transform: scale(1.05);
+  }
+  
+  @include media-down('sm') {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.375rem;
+    font-size: var(--font-size-xs);
+  }
+}
+
+// Glass and grain effects
+.glass-effect {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 8px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.1) 0%, transparent 50%);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 4px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, var(--grain-opacity)) 2px,
+        rgba(0, 0, 0, var(--grain-opacity)) 4px
+      );
+    border-radius: 8px;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}

@@ -1,0 +1,15 @@
+/**
+ * Color helpers
+ */
+
+@mixin text-color($color) {
+  color: var(--color-#{$color});
+}
+
+@mixin bg-color($color) {
+  background-color: var(--color-#{$color});
+}
+
+@mixin border-color($color) {
+  border-color: var(--color-#{$color});
+}

@@ -1,0 +1,294 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="Music - Colin Raab" description="Explore Colin's music.">
+  <section class="section">
+    <div class="container">
+      <div class="page-hero">
+        <h1>Music</h1>
+        <p class="lead">
+          Original compositions, sound design, and musical explorations
+        </p>
+      </div>
+      
+      <div class="music-grid">
+        <!-- TODO: Replace with actual music projects and Cloudinary audio/artwork URLs -->
+        
+        <!-- Example Music Project -->
+        <article class="music-card">
+          <div class="music-artwork">
+            <img src="https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/music/electronic-composition-cover.jpg" alt="Electronic Composition Artwork" /> <!-- TODO: Replace with actual Cloudinary artwork URL -->
+          </div>
+          <div class="music-content">
+            <h3>Electronic Composition</h3>
+            <p class="music-genre">Electronic / Ambient</p>
+            <p>An atmospheric electronic piece exploring texture and space through layered synthesizers and processed field recordings.</p>
+            <div class="music-player">
+              <audio controls>
+                <source src="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1234567890/portfolio/music/electronic-composition.mp3" type="audio/mpeg"> <!-- TODO: Replace with actual Cloudinary audio URL -->
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div class="music-links">
+              <a href="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1234567890/portfolio/music/electronic-composition.mp3" class="btn btn--primary" download>Download</a> <!-- TODO: Replace with actual Cloudinary audio URL -->
+            </div>
+          </div>
+        </article>
+        
+      </div>
+      
+      <div class="musical-journey">
+        <h2>Musical Journey</h2>
+        <div class="journey-content">
+          <p>
+            My musical journey spans multiple genres and instruments, from singing opera 
+            to performing electronic music. I am a classiically trained lyric baritone/tenor with ten years of formal training and a soft spot for Romantic British art song.
+          </p>
+          
+          <div class="instruments-skills">
+            <div class="skill-group">
+              <h3>Instruments</h3>
+              <ul>
+                <li>Classical Voice</li>
+                <li>Violin</li>
+                <li>Guitar (Acoustic & Electric)</li>
+                <li>Piano</li>
+              </ul>
+            </div>
+            
+            <div class="skill-group">
+              <h3>Production</h3>
+              <ul>
+                <li>Ableton Live</li>
+                <li>Sound Synthesis</li>
+                <li>MIDI Programming</li>
+                <li>Audio Processing</li>
+              </ul>
+            </div>
+            
+            <div class="skill-group">
+              <h3>Genres</h3>
+              <ul>
+                <li>Electronic Dance Music</li>
+                <li>Ambient</li>
+                <li>Cinematic</li>
+                <li>Experimental</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .page-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    
+    h1 {
+      @include font-size('5xl');
+      margin-bottom: 1rem;
+      
+      @include media-down('sm') {
+        @include font-size('4xl');
+      }
+    }
+    
+    .lead {
+      @include font-size('xl');
+      @include text-color('text-secondary');
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .music-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .music-card {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .music-artwork {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .placeholder-artwork {
+      width: 100%;
+      height: 100%;
+      @include bg-color('border-light');
+      @include flex-center;
+      @include font-size('4xl');
+    }
+  }
+
+  .music-content {
+    padding: 1.5rem;
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 0.25rem;
+    }
+    
+    .music-genre {
+      @include font-size('sm');
+      @include text-color('primary');
+      @include font-weight('medium');
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      @include text-color('text-secondary');
+      margin-bottom: 1.5rem;
+      @include line-height('relaxed');
+    }
+  }
+
+  .music-player {
+    margin-bottom: 1.5rem;
+    
+    audio {
+      width: 100%;
+      height: 40px;
+      border-radius: 4px;
+      
+      &::-webkit-media-controls-panel {
+        background-color: var(--color-bg-secondary);
+      }
+    }
+    
+    .placeholder-player {
+      height: 60px;
+      @include bg-color('border-light');
+      @include flex-center;
+      @include font-weight('medium');
+      @include text-color('text-muted');
+      border-radius: 4px;
+      border: 1px solid var(--color-border);
+    }
+  }
+
+  .music-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    @include font-size('sm');
+    @include font-weight('medium');
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    
+    &--primary {
+      @include bg-color('primary');
+      color: white;
+      
+      &:hover {
+        background-color: var(--color-secondary);
+        color: white;
+      }
+    }
+    
+    &--secondary {
+      border-color: var(--color-primary);
+      @include text-color('primary');
+      
+      &:hover {
+        @include bg-color('primary');
+        color: white;
+      }
+    }
+  }
+
+  .musical-journey {
+    margin-top: 4rem;
+    
+    h2 {
+      @include font-size('3xl');
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .journey-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    p {
+      @include font-size('lg');
+      @include line-height('relaxed');
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+  }
+
+  .instruments-skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .skill-group {
+    @include bg-color('bg-secondary');
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 1rem;
+      @include text-color('primary');
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--color-border-light);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+</style>

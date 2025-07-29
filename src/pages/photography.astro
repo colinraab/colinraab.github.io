@@ -1,0 +1,719 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Photo album data structure
+// TODO: Replace placeholder URLs with Cloudinary links
+const photoAlbums = [
+  {
+    id: 'montreal-25',
+    title: 'Montreal `25',
+    description: 'Recent work from Montreal exploring its architectural beauty, 2025',
+    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-25/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    images: [
+      {
+        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-25/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        alt: 'Montreal Contemporary',
+        title: 'Modern Montreal',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      }
+    ]
+  },
+  {
+    id: 'florida-southern-25',
+    title: 'Florida Southern `25',
+    description: 'Frank Lloyd Wright architecture, Lakeland, Florida, 2025',
+    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/florida-southern-25/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    images: [
+      {
+        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/florida-southern-25/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+    ]
+  },
+  {
+    id: 'montreal-23',
+    title: 'Montreal `23',
+    description: 'Street photography and urban exploration in Montreal, 2023',
+    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-23/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    images: [
+      {
+        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-23/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        description: 'Candid moments in Montreal streets',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+    ]
+  },
+  {
+    id: 'sitka-alaska-22',
+    title: 'Sitka `22',
+    description: 'Natural landscapes and wildlife photography in Sitka, Alaska, 2022',
+    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/sitka-alaska-22/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    images: [
+      {
+        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/sitka-alaska-22/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+    ]
+  }
+];
+---
+
+<PageLayout title="Photography - Colin Raab" description="Explore Colin's photography.">
+  <section class="section">
+    <div class="container">
+      <div class="page-hero">
+        <h1>Photography</h1>
+        <p class="lead">
+          Architecture, landscape, and street photography.
+        </p>
+      </div>
+      
+      <div class="albums-grid">
+        {photoAlbums.map((album) => (
+          <div class="album-card" data-album-id={album.id}>
+            <div class="album-cover">
+              <img src={album.coverImage} alt={album.title} loading="lazy" />
+              <div class="album-overlay">
+                <h3>{album.title}</h3>
+                <p>{album.description}</p>
+                <div class="image-count">{album.images.length} images</div>
+              </div>
+            </div>
+            <div class="album-info">
+              <h3>{album.title}</h3>
+              <p>{album.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <!-- Full-screen gallery modal -->
+      <div class="gallery-modal" id="galleryModal">
+        <div class="gallery-container">
+          <div class="gallery-header">
+            <h2 class="gallery-title"></h2>
+            <button class="close-btn" id="closeGallery">&times;</button>
+          </div>
+          
+          <div class="gallery-main">
+            <button class="nav-btn prev-btn" id="prevImage">&#8249;</button>
+            <div class="main-image-container">
+              <img class="main-image" id="mainImage" alt="" />
+              <div class="image-info">
+                <h3 class="image-title"></h3>
+                <p class="image-description"></p>
+                <div class="image-meta">
+                  <span class="meta-camera"></span>
+                  <span class="meta-lens"></span>
+                  <span class="meta-year"></span>
+                </div>
+              </div>
+            </div>
+            <button class="nav-btn next-btn" id="nextImage">&#8250;</button>
+          </div>
+          
+          <div class="gallery-thumbnails">
+            <div class="thumbnails-container" id="thumbnailsContainer">
+              <!-- Thumbnails will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .page-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    
+    h1 {
+      @include font-size('5xl');
+      margin-bottom: 1rem;
+      
+      @include media-down('sm') {
+        @include font-size('4xl');
+      }
+    }
+    
+    .lead {
+      @include font-size('xl');
+      @include text-color('text-secondary');
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  // Album Grid Styles
+  .albums-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 6rem;
+    
+    @include media-down('md') {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+  }
+
+  .album-card {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      
+      .album-overlay {
+        opacity: 1;
+      }
+      
+      img {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .album-cover {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .album-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+    color: white;
+    @include flex-center;
+    flex-direction: column;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 2rem;
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('bold');
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      @include font-size('sm');
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+    
+    .image-count {
+      @include font-size('xs');
+      @include font-weight('medium');
+      padding: 0.25rem 0.75rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  .album-info {
+    padding: 1.5rem;
+    
+    h3 {
+      @include font-size('lg');
+      @include font-weight('semibold');
+      margin-bottom: 0.5rem;
+      @include text-color('text-primary');
+    }
+    
+    p {
+      @include font-size('sm');
+      @include text-color('text-secondary');
+      line-height: 1.5;
+    }
+  }
+
+  // Gallery Modal Styles
+  .gallery-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    
+    &.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .gallery-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+    
+    @include media-down('sm') {
+      padding: 0.5rem;
+    }
+  }
+
+  .gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .gallery-title {
+      color: white;
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin: 0;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      @include font-size('3xl');
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .gallery-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 0;
+    padding: 1rem 0;
+  }
+
+  .nav-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    @include font-size('2xl');
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      
+      &:hover {
+        transform: none;
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    @include media-down('sm') {
+      width: 50px;
+      height: 50px;
+      @include font-size('xl');
+    }
+  }
+
+  .main-image-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    max-height: 100%;
+    min-height: 0;
+  }
+
+  .main-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    
+    @include media-down('sm') {
+      max-height: 60vh;
+    }
+  }
+
+  .image-info {
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    
+    .image-title {
+      @include font-size('lg');
+      @include font-weight('semibold');
+      margin-bottom: 0.5rem;
+    }
+    
+    .image-description {
+      @include font-size('sm');
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    
+    .image-meta {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      
+      span {
+        @include font-size('xs');
+        padding: 0.25rem 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+      }
+      
+      @include media-down('sm') {
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  .gallery-thumbnails {
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .thumbnails-container {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+
+  .thumbnail {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    &.active {
+      border-color: var(--color-primary, #fff);
+    }
+    
+    &:hover {
+      transform: scale(1.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    @include media-down('sm') {
+      width: 60px;
+      height: 60px;
+    }
+  }
+</style>
+
+<script define:vars={{ photoAlbums }}>
+  // Pass photo albums data to global scope
+  window.photoAlbums = photoAlbums;
+</script>
+
+<script>
+  // @ts-nocheck
+  // Photo Gallery JavaScript
+  class PhotoGallery {
+    constructor() {
+      this.albums = window.photoAlbums || [];
+      this.currentAlbum = null;
+      this.currentImageIndex = 0;
+      this.modal = null;
+      
+      this.init();
+    }
+    
+    init() {
+      this.setupAlbumClicks();
+      this.setupModal();
+      this.setupKeyboardNavigation();
+    }
+    
+    setupAlbumClicks() {
+      const albumCards = document.querySelectorAll('.album-card');
+      
+      albumCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const albumId = card.dataset.albumId;
+          if (albumId) {
+            this.openAlbum(albumId);
+          }
+        });
+      });
+    }
+    
+    setupModal() {
+      this.modal = document.getElementById('galleryModal');
+      const closeBtn = document.getElementById('closeGallery');
+      const prevBtn = document.getElementById('prevImage');
+      const nextBtn = document.getElementById('nextImage');
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => this.closeGallery());
+      }
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => this.previousImage());
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => this.nextImage());
+      }
+      
+      // Close on background click
+      if (this.modal) {
+        this.modal.addEventListener('click', (e) => {
+          if (e.target === this.modal) {
+            this.closeGallery();
+          }
+        });
+      }
+    }
+    
+    setupKeyboardNavigation() {
+      document.addEventListener('keydown', (e) => {
+        if (!this.modal || !this.modal.classList.contains('active')) return;
+        
+        switch(e.key) {
+          case 'Escape':
+            this.closeGallery();
+            break;
+          case 'ArrowLeft':
+            this.previousImage();
+            break;
+          case 'ArrowRight':
+            this.nextImage();
+            break;
+        }
+      });
+    }
+    
+    openAlbum(albumId) {
+      this.currentAlbum = this.albums.find(album => album.id === albumId);
+      if (!this.currentAlbum || !this.modal) return;
+      
+      this.currentImageIndex = 0;
+      this.modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      this.updateGalleryContent();
+      this.createThumbnails();
+    }
+    
+    closeGallery() {
+      if (this.modal) {
+        this.modal.classList.remove('active');
+      }
+      document.body.style.overflow = '';
+      this.currentAlbum = null;
+    }
+    
+    updateGalleryContent() {
+      if (!this.currentAlbum) return;
+      
+      const currentImage = this.currentAlbum.images[this.currentImageIndex];
+      
+      // Update title
+      const galleryTitle = document.querySelector('.gallery-title');
+      if (galleryTitle) {
+        galleryTitle.textContent = this.currentAlbum.title;
+      }
+      
+      // Update main image
+      const mainImage = document.getElementById('mainImage');
+      if (mainImage && 'src' in mainImage && 'alt' in mainImage) {
+        mainImage.src = currentImage.src;
+        mainImage.alt = currentImage.alt;
+      }
+      
+      // Update image info
+      const imageTitle = document.querySelector('.image-title');
+      const imageDescription = document.querySelector('.image-description');
+      const metaCamera = document.querySelector('.meta-camera');
+      const metaLens = document.querySelector('.meta-lens');
+      const metaYear = document.querySelector('.meta-year');
+      
+      if (imageTitle) imageTitle.textContent = currentImage.title;
+      if (imageDescription) imageDescription.textContent = currentImage.description;
+      if (metaCamera) metaCamera.textContent = currentImage.camera;
+      if (metaLens) metaLens.textContent = currentImage.lens;
+      if (metaYear) metaYear.textContent = currentImage.year;
+      
+      // Update navigation buttons
+      const prevBtn = document.getElementById('prevImage');
+      const nextBtn = document.getElementById('nextImage');
+      
+      if (prevBtn && 'disabled' in prevBtn) {
+        prevBtn.disabled = this.currentImageIndex === 0;
+      }
+      if (nextBtn && 'disabled' in nextBtn) {
+        nextBtn.disabled = this.currentImageIndex === this.currentAlbum.images.length - 1;
+      }
+      
+      // Update thumbnails
+      this.updateThumbnailActive();
+    }
+    
+    createThumbnails() {
+      const container = document.getElementById('thumbnailsContainer');
+      if (!container || !this.currentAlbum) return;
+      
+      container.innerHTML = '';
+      
+      this.currentAlbum.images.forEach((image, index) => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'thumbnail';
+        if (index === this.currentImageIndex) {
+          thumbnail.classList.add('active');
+        }
+        
+        const img = document.createElement('img');
+        img.src = image.src;
+        img.alt = image.alt;
+        img.loading = 'lazy';
+        
+        thumbnail.appendChild(img);
+        thumbnail.addEventListener('click', () => {
+          this.currentImageIndex = index;
+          this.updateGalleryContent();
+        });
+        
+        container.appendChild(thumbnail);
+      });
+    }
+    
+    updateThumbnailActive() {
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      thumbnails.forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === this.currentImageIndex);
+      });
+      
+      // Scroll active thumbnail into view
+      const activeThumbnail = thumbnails[this.currentImageIndex];
+      if (activeThumbnail) {
+        activeThumbnail.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      }
+    }
+    
+    previousImage() {
+      if (this.currentImageIndex > 0) {
+        this.currentImageIndex--;
+        this.updateGalleryContent();
+      }
+    }
+    
+    nextImage() {
+      if (this.currentAlbum && this.currentImageIndex < this.currentAlbum.images.length - 1) {
+        this.currentImageIndex++;
+        this.updateGalleryContent();
+      }
+    }
+  }
+  
+  // Initialize gallery when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new PhotoGallery();
+  });
+</script>

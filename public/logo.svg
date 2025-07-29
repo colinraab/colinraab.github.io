@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-b3469467-8eea-4df1-ac42-dcc45644b3f4" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1001.525">
+  <defs>
+    <style>
+      .uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41 {
+        fill: #fff;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 15px;
+      }
+    </style>
+  </defs>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="344.447" cy="188.217" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="344.447" cy="586.661" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="187.503" cy="389.681" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="646.913" cy="188.217" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="802.43" cy="389.319" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="646.913" cy="586.661" r="107.602"/>
+  <circle class="uuid-8f466f34-a2b4-4a30-bea3-91c1ff494e41" cx="825.523" cy="844.398" r="107.602"/>
+</svg>

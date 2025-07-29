@@ -1,0 +1,296 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="Audio Engineering - Colin Raab" description="Explore Colin's audio engineering projects, from recording to mixing and mastering.">
+  <section class="section">
+    <div class="container">
+      <div class="page-hero">
+        <h1>Audio Engineering</h1>
+        <p class="lead">
+          Recording, mixing, and mastering projects
+        </p>
+      </div>
+      
+      <div class="projects-grid">
+        <!-- Audio engineering project placeholder
+        <article class="project-card">
+          <div class="project-image">
+            <div class="placeholder-image">
+              <span>🎚️</span>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Album Mixing & Mastering</h3>
+            <p class="project-type">Mixing / Mastering</p>
+            <p>Complete mixing and mastering suite for an independent artist's debut album, featuring 10 tracks spanning multiple genres.</p>
+            <div class="project-details">
+              <div class="detail">
+                <strong>Tracks:</strong> 10
+              </div>
+              <div class="detail">
+                <strong>Genre:</strong> Indie Rock
+              </div>
+              <div class="detail">
+                <strong>Duration:</strong> 45 minutes
+              </div>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn btn--primary">Listen</a>
+              <a href="#" class="btn btn--secondary">Process</a>
+            </div>
+          </div>
+        </article> -->
+        
+      </div>
+      
+      <div class="services-section">
+        <h2>Services & Expertise</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <h3>Recording</h3>
+            <ul>
+              <li>Studio recording</li>
+              <li>Location recording</li>
+              <li>Live performance capture</li>
+              <li>Vocal recording</li>
+            </ul>
+          </div>
+          
+          <div class="service-card">
+            <h3>Mixing and Mastering</h3>
+            <ul>
+              <li>Multi-track mixing</li>
+              <li>Stereo & surround mixing</li>
+              <li>Clip-to-zero loudness</li>
+              <li>Genre diversity</li>
+              <li>Modern plugin use</li>
+            </ul>
+          </div>
+          
+          <div class="service-card">
+            <h3>Sound Design</h3>
+            <ul>
+              <li>Original sound creation</li>
+              <li>Foley recording</li>
+              <li>Ambient soundscapes</li>
+              <li>Audio restoration</li>
+              <li>Podcast production</li>
+            </ul>
+          </div>
+          
+          <div class="service-card">
+            <h3>Digital Audio Workstations</h3>
+            <ul>
+              <li>Ableton Live</li>
+              <li>Pro Tools</li>
+              <li>Logic Pro X</li>
+              <li>Reaper</li>
+              <li>FL Studio</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .page-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    
+    h1 {
+      @include font-size('5xl');
+      margin-bottom: 1rem;
+      
+      @include media-down('sm') {
+        @include font-size('4xl');
+      }
+    }
+    
+    .lead {
+      @include font-size('xl');
+      @include text-color('text-secondary');
+      max-width: 600px;
+      margin: 0 auto;
+      
+      @include media-down('sm') {
+        @include font-size('lg');
+        max-width: 100%;
+        padding: 0 1rem;
+      }
+    }
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+    
+    @include media-down('sm') {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .project-card {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .project-image {
+    height: 200px;
+    
+    .placeholder-image {
+      width: 100%;
+      height: 100%;
+      @include bg-color('border-light');
+      @include flex-center;
+      @include font-size('4xl');
+    }
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 0.25rem;
+    }
+    
+    .project-type {
+      @include font-size('sm');
+      @include text-color('primary');
+      @include font-weight('medium');
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      @include text-color('text-secondary');
+      margin-bottom: 1.5rem;
+      @include line-height('relaxed');
+    }
+  }
+
+  .project-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    
+    .detail {
+      @include font-size('sm');
+      @include text-color('text-muted');
+      
+      strong {
+        @include text-color('text-primary');
+      }
+    }
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    @include font-size('sm');
+    @include font-weight('medium');
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    
+    &--primary {
+      @include bg-color('primary');
+      color: white;
+      
+      &:hover {
+        background-color: var(--color-secondary);
+        color: white;
+      }
+    }
+    
+    &--secondary {
+      border-color: var(--color-primary);
+      @include text-color('primary');
+      
+      &:hover {
+        @include bg-color('primary');
+        color: white;
+      }
+    }
+  }
+
+  .services-section {
+    margin-top: 4rem;
+    
+    h2 {
+      @include font-size('3xl');
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    
+    @include media-down('sm') {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      max-width: 100%;
+    }
+  }
+
+  .service-card {
+    @include bg-color('bg-secondary');
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 1rem;
+      @include text-color('primary');
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--color-border-light);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+</style>

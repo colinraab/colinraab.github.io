@@ -1,0 +1,231 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Colin Raab - Creative portfolio showcasing programming, music, audio engineering, and photography." } = Astro.props;
+
+// Get the base URL for proper asset paths
+const baseUrl = import.meta.env.BASE_URL;
+
+// Helper function to create proper asset paths
+const createAssetPath = (path: string) => {
+  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <link rel="canonical" href={Astro.url} />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href={createAssetPath('favicon.svg')} />
+    <link rel="icon" type="image/x-icon" href={createAssetPath('favicon.ico')} />
+    
+    <!-- Google Fonts - DM Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts - Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:site_name" content="Colin Raab's Portfolio" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <!-- Theme -->
+    <meta name="theme-color" content="#2563eb" />
+    
+    <!-- Astro Client Router -->
+    <ClientRouter />
+    
+    <!-- Theme persistence script - runs before view transition -->
+    <script is:inline>
+      // Restore theme immediately to prevent flash
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.documentElement.classList.remove('theme-light', 'theme-dark');
+        document.documentElement.classList.add(`theme-${savedTheme}`);
+      })();
+    </script>
+    
+    <style>
+      /* Custom View Transition Styles */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.4s;
+      }
+      
+      /* Fade transition for the entire page */
+      ::view-transition-old(root) {
+        animation-name: fade-out;
+      }
+      
+      ::view-transition-new(root) {
+        animation-name: fade-in;
+      }
+      
+      @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      /* Ensure smooth transitions */
+      html {
+        view-transition-name: root;
+      }
+      
+      /* DM Mono Font Utility Classes */
+      .dm-mono-light {
+        font-family: "DM Mono", monospace;
+        font-weight: 300;
+        font-style: normal;
+      }
+
+      .dm-mono-regular {
+        font-family: "DM Mono", monospace;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .dm-mono-medium {
+        font-family: "DM Mono", monospace;
+        font-weight: 500;
+        font-style: normal;
+      }
+
+      .dm-mono-light-italic {
+        font-family: "DM Mono", monospace;
+        font-weight: 300;
+        font-style: italic;
+      }
+
+      .dm-mono-regular-italic {
+        font-family: "DM Mono", monospace;
+        font-weight: 400;
+        font-style: italic;
+      }
+
+      .dm-mono-medium-italic {
+        font-family: "DM Mono", monospace;
+        font-weight: 500;
+        font-style: italic;
+      }
+      
+      /* Lora Font Utility Classes */
+      .lora-regular {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .lora-medium {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 500;
+        font-style: normal;
+      }
+
+      .lora-semibold {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+      }
+
+      .lora-bold {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: normal;
+      }
+
+      .lora-regular-italic {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: italic;
+      }
+
+      .lora-medium-italic {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 500;
+        font-style: italic;
+      }
+
+      .lora-semibold-italic {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: italic;
+      }
+
+      .lora-bold-italic {
+        font-family: "Lora", serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: italic;
+      }
+    </style>
+    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" is:inline></script>
+  </head>
+  
+  <body>
+    <div class="site-wrapper centered-container">
+      <slot />
+    </div>
+    
+    <Footer />
+    
+    <script define:vars={{ baseUrl }}>
+    // Theme persistence for view transitions
+    (function() {
+        // Preserve theme state before and after transitions
+        document.addEventListener('astro:before-swap', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        document.addEventListener('astro:after-swap', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.classList.remove('theme-light', 'theme-dark');
+            document.documentElement.classList.add(`theme-${savedTheme}`);
+        });
+    })();
+    </script>
+
+  </body>
+</html>

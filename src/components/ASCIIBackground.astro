@@ -1,0 +1,109 @@
+---
+// ASCII Background Component
+---
+
+<div class="ascii-background">
+  <div class="ascii-art" id="ascii-canvas"></div>
+</div>
+
+<button class="theme-toggle" id="theme-toggle">
+  <span class="theme-icon" data-theme="dark">🌙</span>
+  <span class="theme-icon" data-theme="light" style="display: none;">☀️</span>
+</button>
+
+<script>
+  import { ASCIIGenerator, ASCIIAnimator } from '../utils/ASCIIGenerator.js';
+  import { ThemeController } from '../utils/ThemeController.js';
+
+  // Store global references for cleanup
+  let currentAnimator: any = null;
+  let currentThemeController: any = null;
+  let resizeTimeout: ReturnType<typeof setTimeout>;
+
+  function initializeComponents() {
+    // Clean up existing instances
+    if (currentAnimator) {
+      currentAnimator.stop?.();
+    }
+
+    // Initialize ASCII art
+    const asciiCanvas = document.getElementById('ascii-canvas');
+    const generator = new ASCIIGenerator();
+    
+    if (asciiCanvas) {
+      currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12); // 12 fps for smooth but controlled updates
+      currentAnimator.start();
+      
+      // Handle resize and viewport changes
+      const handleResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          currentAnimator?.resize();
+        }, 250);
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      // Handle mobile viewport changes (address bar show/hide)
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleResize);
+      }
+      
+      // Handle orientation changes on mobile
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          currentAnimator?.resize();
+        }, 500); // Delay to allow orientation change to complete
+      });
+    }
+
+    // Initialize theme controller
+    if (!currentThemeController) {
+      currentThemeController = new ThemeController();
+    } else {
+      // Ensure theme is correctly applied on reinit
+      const currentTheme = currentThemeController.getCurrentTheme();
+      currentThemeController.applyTheme();
+    }
+    
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcons = themeToggle?.querySelectorAll('.theme-icon');
+
+    function updateThemeButton(theme: string) {
+      if (themeIcons) {
+        themeIcons.forEach(icon => {
+          const iconTheme = icon.getAttribute('data-theme');
+          (icon as HTMLElement).style.display = iconTheme === theme ? 'inline' : 'none';
+        });
+      }
+    }
+
+    if (themeToggle) {
+      // Remove existing listeners to prevent duplicates
+      themeToggle.replaceWith(themeToggle.cloneNode(true));
+      const newThemeToggle = document.getElementById('theme-toggle');
+      
+      if (newThemeToggle) {
+        newThemeToggle.addEventListener('click', () => {
+          const newTheme = currentThemeController.toggle();
+          updateThemeButton(newTheme);
+        });
+      }
+    }
+
+    // Initialize theme button with current theme
+    const currentTheme = currentThemeController.getCurrentTheme();
+    updateThemeButton(currentTheme);
+    currentThemeController.onThemeChange(updateThemeButton);
+  }
+
+  // Initialize on first load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeComponents);
+  } else {
+    initializeComponents();
+  }
+
+  // Re-initialize after Astro view transitions
+  document.addEventListener('astro:after-swap', initializeComponents);
+</script>

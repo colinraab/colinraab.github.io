@@ -1,0 +1,54 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+
+import ASCIIBackground from '../components/ASCIIBackground.astro';
+import AnimatedLogoBackground from '../components/AnimatedLogoBackground.astro';
+import '../styles/global.scss';
+
+export interface Props {
+  title: string;
+  description?: string;
+  isASCIILayout?: boolean;
+  hideLogoBackground?: boolean;
+}
+
+const { title, description, isASCIILayout = false, hideLogoBackground = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <ASCIIBackground />
+  
+  {!hideLogoBackground && (
+    <AnimatedLogoBackground />
+  )}
+  
+  <main class={`main-content ${isASCIILayout ? 'ascii-layout' : ''}`}>
+    <slot />
+  </main>
+</BaseLayout>
+
+{isASCIILayout && (
+  <script>
+    // Add class to body for ASCII layout styling
+    document.body.classList.add('ascii-layout-body');
+  </script>
+)}
+
+<style lang="scss">
+  .main-content {
+    &.ascii-layout {
+      padding: 0;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden; 
+      display: flex;
+      flex-direction: row;
+    }
+    
+    &:not(.ascii-layout) {
+      padding-top: 2rem;
+      min-height: calc(100vh - 160px);
+    }
+  }
+</style>

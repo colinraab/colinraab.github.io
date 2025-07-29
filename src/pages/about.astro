@@ -1,0 +1,212 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Get the base URL for proper navigation paths
+const baseUrl = import.meta.env.BASE_URL;
+
+// Helper function to create proper paths
+const createPath = (path: string) => {
+  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+---
+
+<PageLayout title="About - Colin Raab" description="Learn more about Colin Raab, a creative developer and multi-disciplinary artist." isASCIILayout={true}>
+
+    <!-- Central content -->
+    <div class="glass-panel">
+      <div class="about-content">
+        <h1 class="text-glow">ABOUT</h1>
+        <div class="about-grid">
+          <div class="about-text">
+            <p class="text-compact">Jack of all trades</p>
+            <p class="text-small text-muted text-compact">Each discipline informs and enhances the others.</p>
+          </div>
+          <div class="skills-compact">
+            <div class="skill-row">
+              <span class="skill-label">EDU:</span>
+              <span class="skill-items">MA Music Tech (McGill 2025) ⊕ BS Music Engineering (U Miami 2023)</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">DEV:</span>
+              <span class="skill-items">Full-stack ⊕ Creative coding ⊕ Firmware</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">MUSIC:</span>
+              <span class="skill-items">Composition ⊕ Production ⊕ Sound design ⊕ Live performance</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">AUDIO:</span>
+              <span class="skill-items">Recording ⊕ Mixing ⊕ Mastering ⊕ Live Sound</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">VISUAL:</span>
+              <span class="skill-items">Video editing ⊕ UI/UX design</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">PHOTO:</span>
+              <span class="skill-items">Architecture ⊕ Landscape ⊕ Digital & Film</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+
+  // Override main content layout for centering, but be more specific
+  :global(.main-content.ascii-layout) {
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  // Remove the site-wrapper override to prevent footer shift
+  // The site-wrapper should maintain its normal layout
+
+  // Override glass-panel for about page to fit content
+  .glass-panel {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+    width: auto !important;
+    max-width: 600px !important;
+    flex: none !important;
+    align-self: center !important;
+    
+    // Mobile responsive width constraints
+    @include media-down('sm') {
+      max-width: 90vw !important;
+      width: calc(100vw - 2rem) !important;
+    }
+    
+    @include media-down('xs') {
+      max-width: 95vw !important;
+      width: calc(100vw - 1rem) !important;
+    }
+  }
+
+  .about-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    
+    @include media-down('sm') {
+      max-width: 100%;
+      padding: 0;
+    }
+    
+    h1 {
+      margin: 0 0 1rem 0;
+      padding: 0;
+      letter-spacing: 0.15em;
+      
+      @include media-down('sm') {
+        margin: 0 0 0.75rem 0;
+        letter-spacing: 0.1em;
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+      }
+    }
+  }
+
+  .about-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    
+    @include media-down('sm') {
+      gap: 0.75rem;
+    }
+  }
+
+  .about-text {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    
+    p {
+      text-align: left;
+      margin: 0 0 0.5rem 0;
+      padding: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      @include media-down('sm') {
+        text-align: center;
+        margin: 0 0 0.375rem 0;
+        font-size: var(--font-size-sm);
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .skills-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    
+    @include media-down('sm') {
+      gap: 0.375rem;
+      text-align: center;
+    }
+  }
+
+  .skill-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    width: 100%;
+    box-sizing: border-box;
+    
+    @include media-down('sm') {
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  .skill-label {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    text-shadow: 0 0 5px currentColor;
+    min-width: 60px;
+    flex-shrink: 0;
+    
+    @include media-down('sm') {
+      min-width: auto;
+    }
+  }
+
+  .skill-items {
+    color: var(--color-text-secondary);
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    
+    @include media-down('sm') {
+      font-size: var(--font-size-xs);
+      line-height: 1.4;
+    }
+  }
+</style>

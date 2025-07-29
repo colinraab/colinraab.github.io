@@ -1,0 +1,312 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="Programming - Colin Raab" description="Explore Colin's programming projects, from full-stack web development to creative coding.">
+  <section class="section">
+    <div class="container">
+      <div class="page-hero">
+        <h1>Programming</h1>
+        <p class="lead">
+          Full-stack development, creative coding, and interactive experiences
+        </p>
+      </div>
+      
+      <div class="projects-grid">
+        <!-- Project placeholder 
+        <article class="project-card">
+          <div class="project-image">
+            <div class="placeholder-image">
+              <span>Project Image</span>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Web Application Project</h3>
+            <p>Full-stack web application built with modern technologies. Features include user authentication, real-time updates, and responsive design.</p>
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">TypeScript</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="btn btn--primary">View Project</a>
+              <a href="#" class="btn btn--secondary">GitHub</a>
+            </div>
+          </div>
+        </article> -->
+        
+        <article class="project-card">
+          <div class="project-image">
+            <iframe 
+              src="https://www.youtube-nocookie.com/embed/M_zJuxTO8xc?rel=0&modestbranding=1" 
+              title="Modern Distortion Synthesizer Demo"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="project-content">
+            <h3>Modern Distortion Synthesizer</h3>
+            <p>Developed in C++ using Juce. the Modern Distortion Synthesizer is a polyphonic wavetable synthesizer featuring four sources (two wavetable oscillators, a noise generator, and a sampler) with per-voice, per-source processing (filters, envelopes, and most importantly, distortion).</p>
+            <div class="project-tags">
+              <span class="tag">C++</span>
+              <span class="tag">Juce</span>
+              <span class="tag">Audio DSP</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/colinraab/modern-distortion-synth" class="btn btn--primary">Github</a>
+            </div>
+          </div>
+        </article>
+        
+        <article class="project-card">
+          <div class="project-image">
+            <iframe 
+              src="https://www.youtube-nocookie.com/embed/3NJsCWIrALM?rel=0&modestbranding=1" 
+              title="AMB1 - Arduino Midi Sequencer Demo"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="project-content">
+            <h3>AMB1 - Arduino Midi Sequencer</h3>
+            <p>5 channel MIDI sequencer using an Arduino Due, potentiometers, Cherry-MX style switches, and an LED display. generates chords, melodies, basslines, and arpegiated patterns automatically.</p>
+            <div class="project-tags">
+              <span class="tag">Arduino</span>
+              <span class="tag">MIDI</span>
+              <span class="tag">Hardware</span>
+            </div>
+          </div>
+        </article>
+      </div>
+      
+      <div class="technologies-section">
+        <h2>Technologies & Tools</h2>
+        <div class="tech-grid">
+          <div class="tech-category">
+            <h3>Frontend</h3>
+            <ul>
+              <li>React / Next.js</li>
+              <li>Electron</li>
+              <li>SCSS / Tailwind CSS</li>
+              <li>Three.js / WebGL</li>
+            </ul>
+          </div>
+          
+          <div class="tech-category">
+            <h3>Backend</h3>
+            <ul>
+              <li>C++</li>
+              <li>Python</li>
+              <li>Node.js / Express</li>
+              <li>PostgreSQL / Supabase</li>
+              <li>RESTful APIs</li>
+            </ul>
+          </div>
+          
+          <div class="tech-category">
+            <h3>Tools & Platforms</h3>
+            <ul>
+              <li>Git / GitHub</li>
+              <li>Docker</li>
+              <li>JUCE</li>
+              <li>MATLAB</li>
+              <li>Google Cloud</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .page-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    
+    h1 {
+      @include font-size('5xl');
+      margin-bottom: 1rem;
+      
+      @include media-down('sm') {
+        @include font-size('4xl');
+      }
+    }
+    
+    .lead {
+      @include font-size('xl');
+      @include text-color('text-secondary');
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .project-card {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .project-image {
+    position: relative;
+    overflow: hidden;
+    
+    // Default height for placeholder images
+    height: 200px;
+    
+    // 16:9 aspect ratio for iframes
+    &:has(iframe) {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .placeholder-image {
+      width: 100%;
+      height: 100%;
+      @include bg-color('border-light');
+      @include flex-center;
+      @include text-color('text-muted');
+      @include font-weight('medium');
+    }
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      @include text-color('text-secondary');
+      margin-bottom: 1rem;
+      @include line-height('relaxed');
+    }
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag {
+    @include font-size('sm');
+    @include font-weight('medium');
+    padding: 0.25rem 0.75rem;
+    @include bg-color('primary');
+    color: white;
+    border-radius: 20px;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    @include font-size('sm');
+    @include font-weight('medium');
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    
+    &--primary {
+      @include bg-color('primary');
+      color: white;
+      
+      &:hover {
+        background-color: var(--color-secondary);
+        color: white;
+      }
+    }
+    
+    &--secondary {
+      border-color: var(--color-primary);
+      @include text-color('primary');
+      
+      &:hover {
+        @include bg-color('primary');
+        color: white;
+      }
+    }
+  }
+
+  .technologies-section {
+    margin-top: 4rem;
+    
+    h2 {
+      @include font-size('3xl');
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .tech-category {
+    @include bg-color('bg-secondary');
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    
+    h3 {
+      @include font-size('xl');
+      @include font-weight('semibold');
+      margin-bottom: 1rem;
+      @include text-color('primary');
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--color-border-light);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+</style>

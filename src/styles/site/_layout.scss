@@ -1,0 +1,450 @@
+/**
+ * Layout styles - ASCII Theme
+ */
+
+@use '../helpers/grid' as *;
+@use '../helpers/responsive' as *;
+
+.container {
+  max-width: 1000px;
+  @include container;
+}
+
+.section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  
+  @include media-up('md') {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.grid {
+  @include grid;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+.content-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  
+  @include media-down('sm') {
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ensure it takes at least full viewport height */
+  width: 100%; /* Take full width */
+}
+
+.central-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Align items vertically within central-content */
+  text-align: center; /* Center text within central-content */
+  /* Remove height/width properties here, let content define size */
+}
+
+.glass-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Align items vertically within glass-panel */
+  text-align: center; /* Center text within glass-panel */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+  max-width: 85vw;
+  max-height: 80vh;
+  overflow: hidden;
+  
+  @include media-down('sm') {
+    padding: 1rem;
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 4px
+      );
+    border-radius: 8px;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}
+
+// Regular layout content styling (for non-ASCII pages)
+.main-content:not(.ascii-layout) {
+  overflow: visible;
+  padding: 2rem 0; /* Default padding */
+  padding-bottom: 0; /* Remove padding here, apply to content containers instead */
+  padding-top: 20px; /* Adjust based on any potential fixed header */
+  min-height: calc(100vh - 160px); /* Ensure content pushes footer down if short */
+  
+  @include media-down('sm') {
+    padding: 1rem 0;
+    padding-bottom: 0; /* Remove padding here, apply to content containers instead */
+  }
+  
+  // Ensure all content containers have proper bottom spacing
+  .container {
+    &:last-child {
+      padding-bottom: 50px !important;
+    }
+  }
+  
+  .section:last-child .container {
+    padding-bottom: 50px !important;
+  }
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+  max-width: 85vw;
+  max-height: 80vh;
+  overflow: hidden;
+  
+  @include media-down('sm') {
+    padding: 1rem;
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 2px,
+        rgba(255, 255, 255, var(--grain-opacity)) 4px
+      );
+    border-radius: 8px;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}
+
+.popup-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  .links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .nav-link {
+      white-space: nowrap;
+    }
+  }
+}
+
+#persistent-nav-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  z-index: 90;
+  background: var(--glass-bg);
+  border-top: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(180%);
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between; /* Distribute space */
+    align-items: center; /* Center vertically */
+    width: 100%;
+    max-width: 1200px; /* Adjust as needed */
+    padding: 0 1rem;
+    gap: 0.5rem; /* Add a small gap between items */
+
+    // On mobile, when modal is not open, center the persistent-name
+    @include media-down('sm') {
+      body:not(.modal-open) & {
+        justify-content: center;
+      }
+    }
+
+    .footer-info {
+      flex: 1; /* Take up equal space as footer-links */
+      min-width: 0; /* Allow content to shrink below its intrinsic size */
+      p {
+        margin: 0; /* Remove default paragraph margin */
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        white-space: nowrap; /* Keep text on one line */
+
+        @include media-down('sm') {
+          font-size: var(--font-size-xs); /* Smaller on mobile */
+        }
+      }
+
+      // Hide on mobile by default, show when modal is open
+      @include media-down('sm') {
+        display: none;
+        
+        .modal-open & {
+          display: block;
+        }
+      }
+    }
+
+    .footer-links {
+      flex: 1; /* Take up equal space as footer-info */
+      display: flex;
+      justify-content: flex-end; /* Align links to the right within their flex space */
+      gap: 1rem;
+      min-width: 0; /* Allow content to shrink below its intrinsic size */
+
+      @include media-down('sm') {
+        gap: 0.5rem; /* Smaller gap on mobile */
+        // Hide on mobile by default, show when modal is open
+        display: none;
+        
+        .modal-open & {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+
+      a {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        white-space: nowrap; /* Keep text on one line */
+
+        @include media-down('sm') {
+          font-size: var(--font-size-xs); /* Smaller on mobile */
+        }
+      }
+    }
+
+    .persistent-name {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px) saturate(180%);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-md);
+      color: var(--color-text-primary);
+      transition: all 0.3s ease;
+      white-space: nowrap; /* Ensure text stays on one line */
+      flex-shrink: 0; /* Prevent it from shrinking */
+
+      &:hover {
+        background: var(--color-bg-secondary);
+        transform: scale(1.05);
+        color: var(--color-primary);
+        text-shadow: 0 0 8px currentColor;
+      }
+
+      // Hide on mobile when modal is open to make room for footer-info and footer-links
+      @include media-down('sm') {
+        .modal-open & {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Edge-aligned navigation links
+.edge-links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  
+  .edge-link {
+    position: absolute;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    pointer-events: all;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: var(--color-bg-secondary);
+      transform: scale(1.05);
+      color: var(--color-primary);
+      text-shadow: 0 0 8px currentColor;
+    }
+    
+    @include media-down('sm') {
+      font-size: var(--font-size-xs);
+      padding: 0.375rem 0.75rem;
+    }
+    
+    &.top-left {
+      top: 2rem;
+      left: 2rem;
+      
+      @include media-down('sm') {
+        top: 1rem;
+        left: 1rem;
+      }
+    }
+    
+    &.top-right {
+      top: 2rem;
+      right: 2rem;
+      
+      @include media-down('sm') {
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+    
+    &.bottom-left {
+      bottom: 2rem;
+      left: 2rem;
+      
+      @include media-down('sm') {
+        bottom: 1rem;
+        left: 1rem;
+      }
+    }
+    
+    &.bottom-right {
+      bottom: 2rem;
+      right: 2rem;
+      
+      @include media-down('sm') {
+        bottom: 1rem;
+        right: 1rem;
+      }
+    }
+    
+    &.center-left {
+      top: 50%;
+      left: 2rem;
+      transform: translateY(-50%);
+      
+      @include media-down('sm') {
+        left: 1rem;
+      }
+    }
+    
+    &.center-right {
+      top: 50%;
+      right: 2rem;
+      transform: translateY(-50%);
+      
+      @include media-down('sm') {
+        right: 1rem;
+      }
+    }
+  }
+}
