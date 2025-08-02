@@ -10,8 +10,8 @@
   <defs>
     <style>
       .uuid-dcedaa10-5b7c-4c19-9ace-eecb11e46acb {
-        fill: #fff;
-        stroke: #231f20;
+        fill: #2563eb;
+        stroke: #1e3a8a;
         stroke-miterlimit: 10;
         stroke-width: 25px;
       }
