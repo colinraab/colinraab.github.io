@@ -1,3 +1,11 @@
+<!--
+  about.astro
+  
+  About page showcasing Colin's background, education, and skills.
+  Features a centered glass panel layout with skill categorization.
+  Responsive design with mobile-optimized typography and layout.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 
@@ -162,7 +170,7 @@ const createPath = (path: string) => {
     margin: 0;
     padding: 0;
     
-    @include media-down('sm') {
+    @include media-down('md') {
       gap: 0.375rem;
       text-align: center;
     }
@@ -178,11 +186,11 @@ const createPath = (path: string) => {
     width: 100%;
     box-sizing: border-box;
     
-    @include media-down('sm') {
-      flex-direction: column;
-      gap: 0.25rem;
+    @include media-down('md') {
+      display: block;
       text-align: center;
       font-size: var(--font-size-xs);
+      margin-bottom: 0.5rem;
     }
   }
 
@@ -193,8 +201,11 @@ const createPath = (path: string) => {
     min-width: 60px;
     flex-shrink: 0;
     
-    @include media-down('sm') {
+    @include media-down('md') {
+      display: block;
       min-width: auto;
+      text-align: center !important;
+      margin-bottom: 0.25rem;
     }
   }
 
@@ -204,9 +215,12 @@ const createPath = (path: string) => {
     word-wrap: break-word;
     overflow-wrap: break-word;
     
-    @include media-down('sm') {
+    @include media-down('md') {
+      display: block;
       font-size: var(--font-size-xs);
       line-height: 1.4;
+      text-align: center !important;
+      width: 100%;
     }
   }
 </style>

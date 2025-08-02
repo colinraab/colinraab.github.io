@@ -1,3 +1,11 @@
+<!--
+  lessons.astro
+  
+  Music lessons service page offering 1-on-1 instruction.
+  Details teaching services, pricing, and contact information.
+  Covers music production, audio engineering, and music theory instruction.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 ---
@@ -440,7 +448,11 @@ import PageLayout from '../layouts/PageLayout.astro';
     const reviewsTrack = document.getElementById('reviewsTrack') as HTMLElement;
     const reviewsContainer = document.getElementById('reviewsContainer') as HTMLElement;
     
-    if (!reviewsTrack || !reviewsContainer) return;
+    if (!reviewsTrack || !reviewsContainer) {
+      // If elements aren't ready yet, try again after a short delay
+      setTimeout(initializeInfiniteScroll, 50);
+      return;
+    }
     
     // Check if already initialized to prevent duplicates
     if (reviewsTrack.dataset.initialized === 'true') return;
@@ -507,6 +519,10 @@ import PageLayout from '../layouts/PageLayout.astro';
         cancelAnimationFrame(animationId);
         animationId = null;
       }
+      // Reset initialization flag
+      if (reviewsTrack) {
+        reviewsTrack.dataset.initialized = 'false';
+      }
     }
     
     window.addEventListener('beforeunload', cleanup);
@@ -515,8 +531,21 @@ import PageLayout from '../layouts/PageLayout.astro';
     (window as any).lessonsScrollCleanup = cleanup;
   }
 
+  // Function to safely initialize after DOM is ready
+  function safeInitialize() {
+    // Add a longer delay for view transitions to ensure DOM is fully rendered
+    setTimeout(() => {
+      initializeInfiniteScroll();
+    }, 200);
+  }
+
   // Initialize on first load
-  document.addEventListener('DOMContentLoaded', initializeInfiniteScroll);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeInfiniteScroll);
+  } else {
+    // Document is already loaded
+    initializeInfiniteScroll();
+  }
   
   // Re-initialize after Astro view transitions
   document.addEventListener('astro:after-swap', () => {
@@ -525,7 +554,17 @@ import PageLayout from '../layouts/PageLayout.astro';
       (window as any).lessonsScrollCleanup();
     }
     
-    // Initialize with a small delay to ensure DOM is ready
-    setTimeout(initializeInfiniteScroll, 100);
+    // Use longer delay and retry logic for view transitions
+    safeInitialize();
+  });
+
+  // Also listen for astro:page-load as a fallback
+  document.addEventListener('astro:page-load', () => {
+    // Clean up previous instance if it exists
+    if ((window as any).lessonsScrollCleanup) {
+      (window as any).lessonsScrollCleanup();
+    }
+    
+    safeInitialize();
   });
 </script>

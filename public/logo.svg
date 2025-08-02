@@ -1,3 +1,11 @@
+<!--
+  logo.svg
+  
+  Main logo SVG for my portfolio website, inspired by a flower and my initials (CR).
+  Used in animated background component and branding elements.
+  Vector format ensuring scalability across all device sizes.
+-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="uuid-b3469467-8eea-4df1-ac42-dcc45644b3f4" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1001.525">
   <defs>

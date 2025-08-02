@@ -1,0 +1,58 @@
+/**
+ * _nav.scss
+ * 
+ * Navigation component styles for popup modal and central content layout.
+ * Handles navigation links, theme toggle button, and responsive navigation UI.
+ * Provides styling for the glass panel modal navigation system.
+ */
+
+.central-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.popup-modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 10px;
+    
+    .nav-link {
+        color: var(--color-text-primary);
+        text-decoration: none;
+        font-size: 1.2rem;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    .theme-toggle-nav {
+        background: none;
+        border: none;
+        color: var(--color-text-primary) !important;
+        text-decoration: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        text-align: left;
+        padding: 0;
+        font-family: inherit;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

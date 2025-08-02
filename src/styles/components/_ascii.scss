@@ -58,12 +58,43 @@
   // Animation
   animation: asciiPulse 4s ease-in-out infinite alternate;
   
+  // Progressive reveal class
+  &.progressive-reveal {
+    // Don't completely disable animation, just reduce it during reveal
+    animation: asciiPulseSubtle 4s ease-in-out infinite alternate;
+    
+    // Start with subtle glow during reveal
+    text-shadow: 
+      0 0 3px var(--color-ascii-glow),
+      0 0 6px var(--color-ascii-glow),
+      0 0 9px var(--color-ascii-glow);
+  }
+  
+  // Class added when reveal is complete - smoother transition
+  &.reveal-complete {
+    animation: asciiPulse 4s ease-in-out infinite alternate;
+    // Remove the transition to avoid abrupt changes
+  }
+  
   @include media-down('sm') {
     font-size: clamp(4px, 1.5vmin, 10px);
     opacity: 0.4;
     text-shadow: 
       0 0 3px var(--color-ascii-glow),
       0 0 6px var(--color-ascii-glow);
+      
+    &.progressive-reveal {
+      text-shadow: 
+        0 0 2px var(--color-ascii-glow),
+        0 0 4px var(--color-ascii-glow);
+      // Ensure consistent opacity during progressive reveal
+      opacity: 0.4;
+    }
+    
+    &.reveal-complete {
+      // Smooth transition back to normal mobile opacity
+      opacity: 0.4;
+    }
   }
 }
 
@@ -81,6 +112,41 @@
       0 0 8px var(--color-ascii-glow),
       0 0 16px var(--color-ascii-glow),
       0 0 24px var(--color-ascii-glow);
+  }
+}
+
+@keyframes asciiPulseSubtle {
+  0% {
+    opacity: 0.4;
+    text-shadow: 
+      0 0 3px var(--color-ascii-glow),
+      0 0 6px var(--color-ascii-glow),
+      0 0 9px var(--color-ascii-glow);
+  }
+  100% {
+    opacity: 0.5;
+    text-shadow: 
+      0 0 4px var(--color-ascii-glow),
+      0 0 8px var(--color-ascii-glow),
+      0 0 12px var(--color-ascii-glow);
+  }
+}
+
+// Mobile-specific subtle animation
+@media (max-width: 768px) {
+  @keyframes asciiPulseSubtle {
+    0% {
+      opacity: 0.3;
+      text-shadow: 
+        0 0 2px var(--color-ascii-glow),
+        0 0 4px var(--color-ascii-glow);
+    }
+    100% {
+      opacity: 0.4;
+      text-shadow: 
+        0 0 3px var(--color-ascii-glow),
+        0 0 6px var(--color-ascii-glow);
+    }
   }
 }
 

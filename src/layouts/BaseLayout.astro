@@ -1,6 +1,16 @@
+<!--
+  BaseLayout.astro
+  
+  Base layout component providing the fundamental HTML structure for all pages.
+  Handles meta tags, fonts, theme management, view transitions, and global scripts.
+  Includes favicon, Open Graph tags, and font loading optimization.
+  Manages client-side routing and theme persistence across page transitions.
+-->
+
 ---
 import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
+import GlobalAudioPlayer from '../components/GlobalAudioPlayer.astro';
 
 export interface Props {
   title: string;
@@ -32,7 +42,6 @@ const createAssetPath = (path: string) => {
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={createAssetPath('favicon.svg')} />
-    <link rel="icon" type="image/x-icon" href={createAssetPath('favicon.ico')} />
     
     <!-- Google Fonts - DM Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,11 +60,6 @@ const createAssetPath = (path: string) => {
     <meta property="og:url" content={Astro.url} />
     <meta property="og:site_name" content="Colin Raab's Portfolio" />
     
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    
     <!-- Theme -->
     <meta name="theme-color" content="#2563eb" />
     
@@ -70,6 +74,11 @@ const createAssetPath = (path: string) => {
         document.documentElement.setAttribute('data-theme', savedTheme);
         document.documentElement.classList.remove('theme-light', 'theme-dark');
         document.documentElement.classList.add(`theme-${savedTheme}`);
+        
+        // Make theme available globally
+        if (typeof window !== 'undefined') {
+          window.currentTheme = savedTheme;
+        }
       })();
     </script>
     
@@ -87,6 +96,12 @@ const createAssetPath = (path: string) => {
       
       ::view-transition-new(root) {
         animation-name: fade-in;
+      }
+      
+      /* Keep global audio player persistent during transitions */
+      ::view-transition-old(global-audio-player),
+      ::view-transition-new(global-audio-player) {
+        animation: none;
       }
       
       @keyframes fade-out {
@@ -203,6 +218,8 @@ const createAssetPath = (path: string) => {
   </head>
   
   <body>
+    <GlobalAudioPlayer />
+    
     <div class="site-wrapper centered-container">
       <slot />
     </div>
@@ -212,17 +229,28 @@ const createAssetPath = (path: string) => {
     <script define:vars={{ baseUrl }}>
     // Theme persistence for view transitions
     (function() {
+        // Store the current theme in a global variable for other scripts to access
+        window.currentTheme = localStorage.getItem('theme') || 'dark';
+        
         // Preserve theme state before and after transitions
         document.addEventListener('astro:before-swap', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
             localStorage.setItem('theme', currentTheme);
+            window.currentTheme = currentTheme;
         });
 
         document.addEventListener('astro:after-swap', () => {
             const savedTheme = localStorage.getItem('theme') || 'dark';
+            window.currentTheme = savedTheme;
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.documentElement.classList.remove('theme-light', 'theme-dark');
             document.documentElement.classList.add(`theme-${savedTheme}`);
+            
+            // Dispatch a custom event to notify other components of theme change
+            const themeChangeEvent = new CustomEvent('theme-restored', { 
+                detail: { theme: savedTheme } 
+            });
+            document.dispatchEvent(themeChangeEvent);
         });
     })();
     </script>

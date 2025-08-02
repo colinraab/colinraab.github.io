@@ -5,7 +5,8 @@
 
 export class ThemeController {
   constructor() {
-    this.theme = this.getStoredTheme() || 'dark';
+    // Get theme from global variable first (set by BaseLayout), then localStorage, then default
+    this.theme = this.getCurrentThemeFromDOM() || this.getStoredTheme() || 'dark';
     this.callbacks = [];
     this.init();
   }
@@ -13,6 +14,22 @@ export class ThemeController {
   init() {
     this.applyTheme();
     this.setupMediaQuery();
+    
+    // Listen for theme restoration events from BaseLayout
+    document.addEventListener('theme-restored', (event) => {
+      const restoredTheme = event.detail.theme;
+      if (restoredTheme !== this.theme) {
+        this.theme = restoredTheme;
+        this.callbacks.forEach(callback => callback(this.theme));
+      }
+    });
+  }
+
+  getCurrentThemeFromDOM() {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme');
+    }
+    return null;
   }
 
   getStoredTheme() {
@@ -58,7 +75,7 @@ export class ThemeController {
   }
 
   setTheme(theme) {
-    if (theme === 'dark' || theme === 'light') {
+    if ((theme === 'dark' || theme === 'light') && theme !== this.theme) {
       this.theme = theme;
       this.setStoredTheme(theme);
       this.applyTheme();

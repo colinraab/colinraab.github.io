@@ -1,3 +1,11 @@
+/**
+ * astro.config.mjs
+ * 
+ * Astro framework configuration file for my portfolio website.
+ * Configures build settings, base URL for GitHub Pages deployment, and integrations.
+ * Handles both development and production environments with proper path routing.
+ */
+
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';

@@ -1,0 +1,554 @@
+<!--
+  work.astro
+  
+  Professional work experience page detailing employment history and achievements.
+  Features work experience timeline, company details, and professional accomplishments.
+  Highlights roles in software engineering, music technology, and creative industries.
+-->
+
+---
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Work experience data structure
+const workExperience = [
+  {
+    id: 'aurmor',
+    title: 'Full Stack Software Engineer',
+    company: 'Aurmor.ai',
+    location: 'Remote',
+    period: '2024 - Present',
+    type: 'Full-time',
+    category: 'Software Engineering',
+    description: 'Systems software engineer designing firmware, backend, frontend, and a standalone app for a youth sports wellness startup.',
+    responsibilities: [
+      'Website development using Node.js and React to interact with relational databases (Supabase, PostgreSQL)',
+      'JUCE (C++) and ESP32 development for microcontroller systems with desktop application integration',
+      'Monitor and display serial data from embedded devices in real-time web interfaces',
+      'Implement secure authentication and data management systems',
+      'Collaborate on product architecture and user experience design'
+    ],
+    technologies: ['Node.js', 'React', 'C++', 'JUCE', 'ESP32', 'PostgreSQL', 'Supabase', 'Python', 'Machine Learning'],
+    achievements: [
+      'Built desktop application for real-time data visualization and control',
+      'Built scalable web application serving real-time data from IoT devices',
+      'Designed and implemented database schema, RLS policies, and secure authentication',
+      'Contributed to product development from prototype to production'
+    ],
+    status: 'Current',
+    link: 'https://aurmor.ai'
+  },
+  {
+    id: 'recording-services',
+    title: 'Recording and Sound Engineer',
+    company: 'University of Miami Frost School of Music',
+    location: 'Coral Gables, FL',
+    period: '2019 - 2023',
+    type: 'Part-time',
+    category: 'Audio Engineering',
+    description: 'Professional audio recording and live sound engineering for high-profile concerts, recitals, and studio sessions in world-class facilities.',
+    responsibilities: [
+      'Set up and operate professional recording equipment for recitals and large concerts',
+      'Live sound engineering in concert hall and recital hall environments',
+      'Post-production and audio editing for recorded performances',
+      'Equipment maintenance and troubleshooting',
+      'Collaboration with visiting artists and professional recording engineers',
+      'Training and mentoring junior audio engineering students'
+    ],
+    technologies: ['Pro Tools', 'Logic Pro', 'Sequoia', 'SSL Consoles', 'API Consoles', 'Yamaha Consoles'],
+    achievements: [
+      'Worked with renowned artists including CNCO, Luis Fonsi, Maria Schneider, and JACK Quartet',
+      'Shadowed professional recording company Soundmirror',
+      'Maintained consistent high-quality recordings across diverse musical genres',
+    ],
+    status: 'Completed',
+    link: null
+  },
+  {
+    id: 'tech-support',
+    title: 'Student Technology Help Desk Employee',
+    company: 'University of Miami',
+    location: 'Coral Gables, FL',
+    period: '2019 - 2023',
+    type: 'Part-time',
+    category: 'Technical Support',
+    description: 'Providing comprehensive technical support to university students and faculty.',
+    responsibilities: [
+      'Assist undergraduate and graduate students with computer and technology issues remotely and in person',
+      'Troubleshoot hardware and software problems across Windows and Mac platforms',
+      'Provide support for Adobe Creative Suite, Google Workspace, and Microsoft Office',
+      'Document and track support tickets and resolutions',
+      'Conduct technology training sessions for students and staff',
+      'Collaborate with IT department on campus-wide technology initiatives'
+    ],
+    technologies: ['Windows', 'macOS', 'Adobe Creative Suite', 'Google Workspace', 'Microsoft Office', 'Remote Desktop', 'ServiceNow'],
+    achievements: [
+      'Maintained high customer satisfaction ratings throughout employment',
+      'Reduced average ticket resolution time through efficient troubleshooting',
+      'Contributed to knowledge base documentation for common issues',
+      'Recognized for exceptional communication skills with diverse user base'
+    ],
+    status: 'Completed',
+    link: null
+  }
+];
+
+// Skills categorization
+const skillCategories = {
+  'Programming Languages': ['C++', 'JavaScript', 'TypeScript', 'Python', 'MATLAB', 'SQL'],
+  'Web Technologies': ['Node.js', 'React', 'HTML/CSS', 'RESTful APIs'],
+  'Audio/Music Technology': ['JUCE', 'Max/MSP'],
+  'Machine Learning': ['Scikit-learn', 'PyTorch', 'NumPy', 'Pandas', 'OpenCV'],
+  'Hardware/Embedded': ['ESP32', 'Arduino', 'Raspberry Pi', 'Nvidia Jetson'],
+  'Tools & Platforms': ['Git', 'Docker', 'Linux', 'PostgreSQL', 'Supabase']
+};
+---
+
+<PageLayout title="Work Experience - Colin Raab" description="Explore Colin's professional work experience in software engineering, research, audio engineering, and technical support.">
+  <section class="section">
+    <div class="container">
+      <div class="page-hero">
+        <h1>Work Experience</h1>
+        <p class="lead">
+          Professional experience spanning software engineering, audio production, and technical support
+        </p>
+      </div>
+      
+      <!-- Work Experience Grid -->
+      <div class="work-grid">
+        {workExperience.map((job) => (
+          <div class="work-card" data-category={job.category.toLowerCase().replace(/\s+/g, '-')}>
+            <div class="card-header">
+              <div class="category-badge" data-category={job.category.toLowerCase().replace(/\s+/g, '-')}>
+                {job.category}
+              </div>
+              <div class="status-badge" data-status={job.status.toLowerCase().replace(/\s+/g, '-')}>
+                {job.status}
+              </div>
+            </div>
+            
+            <div class="card-content">
+              <h3 class="job-title">{job.title}</h3>
+              
+              <div class="job-meta">
+                <div class="company-info">
+                  <span class="company">{job.company}</span>
+                  <span class="location">{job.location}</span>
+                </div>
+                <div class="period-info">
+                  <span class="period">{job.period}</span>
+                  <span class="type">{job.type}</span>
+                </div>
+              </div>
+              
+              <p class="job-description">{job.description}</p>
+              
+              <div class="responsibilities-section">
+                <h4>Key Responsibilities</h4>
+                <ul class="responsibilities-list">
+                  {job.responsibilities.map((responsibility) => (
+                    <li>{responsibility}</li>
+                  ))}
+                </ul>
+              </div>
+              
+              {job.achievements && job.achievements.length > 0 && (
+                <div class="achievements-section">
+                  <h4>Key Achievements</h4>
+                  <ul class="achievements-list">
+                    {job.achievements.map((achievement) => (
+                      <li>{achievement}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              <div class="technologies-section">
+                <h4>Technologies Used</h4>
+                <div class="technologies-container">
+                  {job.technologies.map((tech) => (
+                    <span class="tech-tag">{tech}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {job.link && (
+              <div class="card-footer">
+                <a href={job.link} class="company-link" target="_blank" rel="noopener noreferrer">
+                  Visit Company →
+                </a>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <!-- Skills Overview -->
+      <div class="skills-section">
+        <h2>Technical Skills</h2>
+        <div class="skills-grid">
+          {Object.entries(skillCategories).map(([category, skills]) => (
+            <div class="skill-category">
+              <h3 class="skill-category-title">{category}</h3>
+              <div class="skills-list">
+                {skills.map((skill) => (
+                  <span class="skill-tag">{skill}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style lang="scss">
+  @use '../styles/helpers/responsive' as *;
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+  @use '../styles/helpers/grid' as *;
+
+  .page-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    
+    h1 {
+      @include font-size('5xl');
+      margin-bottom: 1rem;
+      
+      @include media-down('sm') {
+        @include font-size('4xl');
+      }
+    }
+    
+    .lead {
+      @include font-size('xl');
+      @include text-color('text-secondary');
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+  }
+
+  // Work Grid Styles
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 5rem;
+    
+    @include media-up('xl') {
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    }
+    
+    @include media-down('md') {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    
+    @include media-down('sm') {
+      gap: 1.5rem;
+    }
+  }
+
+  .work-card {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      border-color: var(--color-primary);
+    }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    gap: 1rem;
+  }
+
+  .category-badge {
+    @include font-size('xs');
+    @include font-weight('semibold');
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    // Category-specific colors
+    &[data-category="software-engineering"] {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    &[data-category="research"] {
+      background: rgba(147, 51, 234, 0.15);
+      color: #a855f7;
+      border: 1px solid rgba(147, 51, 234, 0.3);
+    }
+    
+    &[data-category="audio-engineering"] {
+      background: rgba(249, 115, 22, 0.15);
+      color: #f97316;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+    
+    &[data-category="technical-support"] {
+      background: rgba(14, 165, 233, 0.15);
+      color: #0ea5e9;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+  }
+
+  .status-badge {
+    @include font-size('xs');
+    @include font-weight('medium');
+    padding: 0.25rem 0.625rem;
+    border-radius: 15px;
+    
+    &[data-status="current"] {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    
+    &[data-status="ongoing"] {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    &[data-status="completed"] {
+      background: rgba(107, 114, 128, 0.1);
+      color: #6b7280;
+      border: 1px solid rgba(107, 114, 128, 0.2);
+    }
+  }
+
+  .card-content {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+  }
+
+  .job-title {
+    @include font-size('xl');
+    @include font-weight('bold');
+    @include text-color('text-primary');
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .job-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    
+    @include media-down('sm') {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .company-info,
+    .period-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .company {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      @include text-color('text-secondary');
+    }
+    
+    .location,
+    .type {
+      @include font-size('xs');
+      @include text-color('text-muted');
+    }
+    
+    .period {
+      @include font-size('sm');
+      @include font-weight('medium');
+      @include text-color('text-secondary');
+      font-family: var(--font-family-mono);
+    }
+  }
+
+  .job-description {
+    @include font-size('sm');
+    @include text-color('text-secondary');
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .responsibilities-section,
+  .achievements-section {
+    margin-bottom: 1.5rem;
+    
+    h4 {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      @include text-color('text-primary');
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .responsibilities-list,
+  .achievements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      @include font-size('xs');
+      @include text-color('text-secondary');
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+      padding-left: 1rem;
+      position: relative;
+      
+      &:before {
+        content: '•';
+        color: var(--color-primary);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .achievements-list li:before {
+    content: '★';
+  }
+
+  .technologies-section {
+    margin-bottom: 1rem;
+    
+    h4 {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      @include text-color('text-primary');
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .technologies-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    
+    .tech-tag {
+      @include font-size('xs');
+      @include font-weight('medium');
+      padding: 0.25rem 0.625rem;
+      @include bg-color('bg-tertiary');
+      @include text-color('text-muted');
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+    }
+  }
+
+  .card-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    
+    .company-link {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: var(--color-primary-light);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Skills Section
+  .skills-section {
+    margin-top: 4rem;
+    
+    h2 {
+      @include font-size('3xl');
+      @include font-weight('bold');
+      @include text-color('text-primary');
+      text-align: center;
+      margin-bottom: 2.5rem;
+      
+      @include media-down('sm') {
+        @include font-size('2xl');
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    
+    @include media-down('sm') {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .skill-category {
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .skill-category-title {
+      @include font-size('lg');
+      @include font-weight('semibold');
+      @include text-color('text-primary');
+      margin-bottom: 1rem;
+    }
+    
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      
+      .skill-tag {
+        @include font-size('xs');
+        @include font-weight('medium');
+        padding: 0.375rem 0.75rem;
+        background: linear-gradient(135deg, var(--color-primary-alpha-10), var(--color-primary-alpha-20));
+        color: var(--color-primary);
+        border-radius: 12px;
+        border: 1px solid var(--color-primary-alpha-30);
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: var(--color-primary-alpha-20);
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+</style>

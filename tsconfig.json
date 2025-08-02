@@ -1,3 +1,10 @@
+/**
+ * tsconfig.json
+ * 
+ * TypeScript configuration for the Astro portfolio project.
+ * Extends Astro's strict TypeScript config with custom path mappings.
+ * Enables type checking and provides better development experience.
+ */
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {

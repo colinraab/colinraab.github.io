@@ -1,5 +1,14 @@
+<!--
+  music.astro
+  
+  Music portfolio page displaying Colin's compositions and musical works.
+  Features audio player integration, track listings, and embedded media.
+  Showcases original compositions, electronic music, and sound design projects.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+import PlayButton from '../components/PlayButton.astro';
 ---
 
 <PageLayout title="Music - Colin Raab" description="Explore Colin's music.">
@@ -13,12 +22,10 @@ import PageLayout from '../layouts/PageLayout.astro';
       </div>
       
       <div class="music-grid">
-        <!-- TODO: Replace with actual music projects and Cloudinary audio/artwork URLs -->
-        
-        <!-- Example Music Project -->
+        <!-- Example Music Project 
         <article class="music-card">
           <div class="music-artwork">
-            <img src="https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/music/electronic-composition-cover.jpg" alt="Electronic Composition Artwork" /> <!-- TODO: Replace with actual Cloudinary artwork URL -->
+            <img src="" alt="Electronic Composition Artwork" /> 
           </div>
           <div class="music-content">
             <h3>Electronic Composition</h3>
@@ -26,59 +33,218 @@ import PageLayout from '../layouts/PageLayout.astro';
             <p>An atmospheric electronic piece exploring texture and space through layered synthesizers and processed field recordings.</p>
             <div class="music-player">
               <audio controls>
-                <source src="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1234567890/portfolio/music/electronic-composition.mp3" type="audio/mpeg"> <!-- TODO: Replace with actual Cloudinary audio URL -->
+                <source src="" type="audio/mpeg">
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div class="music-links">
-              <a href="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1234567890/portfolio/music/electronic-composition.mp3" class="btn btn--primary" download>Download</a> <!-- TODO: Replace with actual Cloudinary audio URL -->
+              <a href="" class="btn btn--primary" download>Download</a>
+            </div>
+          </div>
+        </article> -->
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Love the whole way through!</h3>
+            <p class="music-genre">Happy Hardcore / Vocaloid</p>
+            <p>Upbeat Y2K dance track that takes the listener on a journey</p>
+            <PlayButton 
+              track={{
+                title: "Love the whole way through!",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824258/250625_violincore_5_nwkthf.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Avant-garde</h3>
+            <p class="music-genre">Tech House</p>
+            <p>Hard-hitting club track with experimental elements</p>
+            <PlayButton 
+              track={{
+                title: "Avant-garde",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824256/250625_future_tech_6_haf8dg.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Beat and Break</h3>
+            <p class="music-genre">Classical Guitar / Hip Hop</p>
+            <p>Guitar (by Stephaney Quintero) with a lofi breakbeat</p>
+            <PlayButton 
+              track={{
+                title: "Beat and Break",
+                artist: "Colin Raab and Stephaney Quintero",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824257/240807_beat_and_break_v4_uxdls3.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>1844</h3>
+            <p class="music-genre">French Touch / Art Song</p>
+            <p>A modern take on Schumann's Dichterliebe mvt. 1</p>
+            <PlayButton 
+              track={{
+                title: "1844",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824257/250511_1844_5_wikpou.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Nowhere</h3>
+            <p class="music-genre">Downtempo</p>
+            <p>Moody electronic piece with distorted vocals and an orchestra climax</p>
+            <PlayButton 
+              track={{
+                title: "Nowhere",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824256/240306_nowhere_9_p902bx.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Blizzard</h3>
+            <p class="music-genre">Breakcore / Industrial</p>
+            <p>Composed entirely from YouTube sampled audio</p>
+            <PlayButton 
+              track={{
+                title: "Blizzard",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824255/240218_Blizzard_3_ttxxsl.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Post-Nostalgia</h3>
+            <p class="music-genre">Indie Rock / Shoegaze</p>
+            <p>YouTube samples plus original guitar parts</p>
+            <PlayButton 
+              track={{
+                title: "Post-Nostalgia",
+                artist: "Colin Raab",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824255/240812_post-nostalgia_v3_ztthlp.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="music-card">
+          <div class="music-content">
+            <h3>Gold Hound Elevator DJ Set</h3>
+            <p class="music-genre">House Variety</p>
+            <div class="music-player">
+              <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ClwYFVMDVCo?si=XNDdwlPsuhCjyEND" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </div>
             </div>
           </div>
         </article>
         
       </div>
       
-      <div class="musical-journey">
-        <h2>Musical Journey</h2>
-        <div class="journey-content">
-          <p>
-            My musical journey spans multiple genres and instruments, from singing opera 
-            to performing electronic music. I am a classiically trained lyric baritone/tenor with ten years of formal training and a soft spot for Romantic British art song.
-          </p>
-          
-          <div class="instruments-skills">
-            <div class="skill-group">
-              <h3>Instruments</h3>
-              <ul>
-                <li>Classical Voice</li>
-                <li>Violin</li>
-                <li>Guitar (Acoustic & Electric)</li>
-                <li>Piano</li>
-              </ul>
+      <!-- Classical Voice Section -->
+      <section class="content-section">
+        <h2>Classical Voice</h2>
+        <p>Lyric baritone/tenor with ten years of formal training. range: F2-B5. I have a particular soft spot for Romantic-period British composers. Former teachers include: Samuel Faustine, Stephen Kuykendall, Dr. Stephannie Moore, Dr. Scott Tripp, Dr. Alex Colaizzi, Jeanette Thompson, and Pierce Peter Brandt.</p>
+        
+        <div class="music-grid">
+          <article class="music-card">
+            <div class="music-content">
+              <h3>Vaughan Williams - Whither Must I Wander</h3>
+              <p class="music-genre">British Art Song</p>
+              <p>From "The Songs of Travel"</p>
+              <PlayButton 
+                track={{
+                  title: "Whither Must I Wander",
+                  artist: "Vaughan Williams",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824156/whither_must_i_wander_weg3da.ogg"
+                }}
+              />
             </div>
-            
-            <div class="skill-group">
-              <h3>Production</h3>
-              <ul>
-                <li>Ableton Live</li>
-                <li>Sound Synthesis</li>
-                <li>MIDI Programming</li>
-                <li>Audio Processing</li>
-              </ul>
+          </article>
+
+          <article class="music-card">
+            <div class="music-content">
+              <h3>Korngold - Mein Sehnen</h3>
+              <p class="music-genre">German Lied</p>
+              <p>From "Die tote Stadt"</p>
+              <PlayButton 
+                track={{
+                  title: "Mein Sehnen",
+                  artist: "Korngold",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824154/mein_sehnen_kvst1j.ogg"
+                }}
+              />
             </div>
-            
-            <div class="skill-group">
-              <h3>Genres</h3>
-              <ul>
-                <li>Electronic Dance Music</li>
-                <li>Ambient</li>
-                <li>Cinematic</li>
-                <li>Experimental</li>
-              </ul>
+          </article>
+
+          <article class="music-card">
+            <div class="music-content">
+              <h3>Don McLean - Vincent</h3>
+              <p class="music-genre">Folk Rock</p>
+              <p>From "American Pie"</p>
+              <PlayButton 
+                track={{
+                  title: "Vincent",
+                  artist: "Don McLean",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824156/vincent_qewhka.ogg"
+                }}
+              />
             </div>
-          </div>
+          </article>
+
+          <article class="music-card">
+            <div class="music-content">
+              <h3>Mascagni - Ave Maria</h3>
+              <p class="music-genre">Sacred</p>
+              <p>Lesser known adaptation in Italian</p>
+              <PlayButton 
+                track={{
+                  title: "Ave Maria",
+                  artist: "Mascagni",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824154/ave_maria_bbxk6u.ogg"
+                }}
+              />
+            </div>
+          </article>
+
+          <article class="music-card">
+            <div class="music-content">
+              <h3>Douglas Moore - Warm As The Autumn Light</h3>
+              <p class="music-genre">American Opera</p>
+              <p>From "The Ballad of Baby Doe"</p>
+              <PlayButton 
+                track={{
+                  title: "Warm As The Autumn Light",
+                  artist: "Douglas Moore",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753824154/warm_as_the_autumn_light_dt9wpg.ogg"
+                }}
+              />
+            </div>
+          </article>
         </div>
-      </div>
+      </section>
+      
     </div>
   </section>
 </PageLayout>
@@ -123,6 +289,9 @@ import PageLayout from '../layouts/PageLayout.astro';
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     
     &:hover {
       transform: translateY(-4px);
@@ -152,6 +321,9 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .music-content {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     
     h3 {
       @include font-size('xl');
@@ -195,6 +367,25 @@ import PageLayout from '../layouts/PageLayout.astro';
       border-radius: 4px;
       border: 1px solid var(--color-border);
     }
+    
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+      }
+    }
   }
 
   .music-links {
@@ -230,64 +421,6 @@ import PageLayout from '../layouts/PageLayout.astro';
       &:hover {
         @include bg-color('primary');
         color: white;
-      }
-    }
-  }
-
-  .musical-journey {
-    margin-top: 4rem;
-    
-    h2 {
-      @include font-size('3xl');
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-  }
-
-  .journey-content {
-    max-width: 800px;
-    margin: 0 auto;
-    
-    p {
-      @include font-size('lg');
-      @include line-height('relaxed');
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-  }
-
-  .instruments-skills {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .skill-group {
-    @include bg-color('bg-secondary');
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
-    
-    h3 {
-      @include font-size('xl');
-      @include font-weight('semibold');
-      margin-bottom: 1rem;
-      @include text-color('primary');
-    }
-    
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      
-      li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid var(--color-border-light);
-        
-        &:last-child {
-          border-bottom: none;
-        }
       }
     }
   }

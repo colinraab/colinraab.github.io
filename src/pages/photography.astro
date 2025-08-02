@@ -1,33 +1,112 @@
+<!--
+  photography.astro
+  
+  Photography portfolio page displaying Colin's architectural and landscape photography.
+  Features photo albums, lightbox galleries, and image optimization.
+  Showcases work from various locations with responsive gallery layouts.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 
 // Photo album data structure
-// TODO: Replace placeholder URLs with Cloudinary links
 const photoAlbums = [
-  {
-    id: 'montreal-25',
-    title: 'Montreal `25',
-    description: 'Recent work from Montreal exploring its architectural beauty, 2025',
-    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-25/cover.jpg', // TODO: Replace with actual Cloudinary URL
-    images: [
-      {
-        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-25/image-1.jpg', // TODO: Replace with actual Cloudinary URL
-        alt: 'Montreal Contemporary',
-        title: 'Modern Montreal',
-        camera: 'Canon R10',
-        lens: '18-45mm f/4.5-6.3',
-        year: '2025'
-      }
-    ]
-  },
   {
     id: 'florida-southern-25',
     title: 'Florida Southern `25',
     description: 'Frank Lloyd Wright architecture, Lakeland, Florida, 2025',
-    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/florida-southern-25/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083583/IMG_0754_freaxp.jpg',
     images: [
       {
-        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/florida-southern-25/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083583/IMG_0754_freaxp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083582/IMG_0765_khnc0a.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083582/IMG_0798_msc1wp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0776_urqqeo.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0759_ydhbb5.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0793_j53sdd.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083580/IMG_0796_hnzsrk.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0753_cbbfbp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0778_tp4prx.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0756_mkwxj5.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083578/IMG_0746_jwhltx.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083578/IMG_0757_baoqix.jpg',
         alt: 'Florida Southern Campus',
         title: 'Chldren of the Sun',
         camera: 'Canon R10',
@@ -40,13 +119,75 @@ const photoAlbums = [
     id: 'montreal-23',
     title: 'Montreal `23',
     description: 'Street photography and urban exploration in Montreal, 2023',
-    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-23/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084164/BBB03850_eercan.jpg',
     images: [
       {
-        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/montreal-23/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084164/BBB03850_eercan.jpg',
         alt: 'Montreal Street Scene',
         title: 'Urban Life',
-        description: 'Candid moments in Montreal streets',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084095/BBB04065_qy1rg7.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084237/BBB03997_i81zit.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084229/BBB04020_i2vzdj.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084168/BBB04002_rayg3u.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084125/BBB03846_ugsbpx.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084116/BBB03900_wniatk.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084106/BBB03956_dafhvt.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084103/BBB03985_h1symv.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084099/BBB03978_zqyrnz.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
         camera: 'Sony A7sii',
         year: '2023'
       },
@@ -56,13 +197,154 @@ const photoAlbums = [
     id: 'sitka-alaska-22',
     title: 'Sitka `22',
     description: 'Natural landscapes and wildlife photography in Sitka, Alaska, 2022',
-    coverImage: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/sitka-alaska-22/cover.jpg', // TODO: Replace with actual Cloudinary URL
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/eagle_xtbz5s.jpg',
     images: [
       {
-        src: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1234567890/portfolio/sitka-alaska-22/image-1.jpg', // TODO: Replace with actual Cloudinary URL
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/eagle_xtbz5s.jpg',
         alt: 'Alaskan Wilderness',
         title: 'Sitka Landscape',
         camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084042/mountain_o5ihww.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084040/plane_mprfwx.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084042/swing_t3gqza.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084041/church_qfp4gr.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084040/flowers_urnvat.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/mountains_w0nbwa.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/weathervane_ilyok5.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/bench_kf3ev8.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/houses_kbj1an.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/totem_mu554u.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+    ]
+  },
+  {
+    id: 'nampa-idaho-22',
+    title: 'Nampa `22',
+    description: 'Street and landscape film photography in Nampa, Idaho, 2022',
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/AA008_s5bipu.jpg',
+    images: [
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/AA008_s5bipu.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083996/train_gqnckn.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/mailman_kwv71i.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/house_hy3u25.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084056/pottery_aqlyg7.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083995/farmland_gcotwa.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083995/traffic_cjqzif.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/lounge_qiylxa.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/tiny_s_qecook.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
         year: '2022'
       },
     ]
@@ -103,7 +385,6 @@ const photoAlbums = [
       <div class="gallery-modal" id="galleryModal">
         <div class="gallery-container">
           <div class="gallery-header">
-            <h2 class="gallery-title"></h2>
             <button class="close-btn" id="closeGallery">&times;</button>
           </div>
           
@@ -111,15 +392,6 @@ const photoAlbums = [
             <button class="nav-btn prev-btn" id="prevImage">&#8249;</button>
             <div class="main-image-container">
               <img class="main-image" id="mainImage" alt="" />
-              <div class="image-info">
-                <h3 class="image-title"></h3>
-                <p class="image-description"></p>
-                <div class="image-meta">
-                  <span class="meta-camera"></span>
-                  <span class="meta-lens"></span>
-                  <span class="meta-year"></span>
-                </div>
-              </div>
             </div>
             <button class="nav-btn next-btn" id="nextImage">&#8250;</button>
           </div>
@@ -286,12 +558,14 @@ const photoAlbums = [
 
   .gallery-container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     max-width: 1400px;
     margin: 0 auto;
     padding: 1rem;
+    overflow: hidden; // Prevent container overflow
     
     @include media-down('sm') {
       padding: 0.5rem;
@@ -299,36 +573,33 @@ const photoAlbums = [
   }
 
   .gallery-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    
-    .gallery-title {
-      color: white;
-      @include font-size('xl');
-      @include font-weight('semibold');
-      margin: 0;
-    }
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    z-index: 100;
+    background: none;
+    border: none;
     
     .close-btn {
-      background: none;
+      background: rgba(0, 0, 0, 0.7);
       border: none;
       color: white;
-      @include font-size('3xl');
+      @include font-size('2xl');
       cursor: pointer;
-      padding: 0;
-      width: 40px;
-      height: 40px;
+      padding: 0.5rem;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      transition: background-color 0.2s ease;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
       
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.1);
       }
     }
   }
@@ -340,7 +611,10 @@ const photoAlbums = [
     justify-content: center;
     gap: 1rem;
     min-height: 0;
-    padding: 1rem 0;
+    padding: 2rem 1rem 1rem 1rem;
+    height: calc(100vh - 120px); // Account for thumbnails space
+    max-height: calc(100vh - 120px);
+    overflow: hidden; // Prevent content from overflowing
   }
 
   .nav-btn {
@@ -374,10 +648,8 @@ const photoAlbums = [
       }
     }
     
-    @include media-down('sm') {
-      width: 50px;
-      height: 50px;
-      @include font-size('xl');
+    @include media-down('md') {
+      display: none; // Hide navigation arrows on mobile/tablet
     }
   }
 
@@ -390,60 +662,56 @@ const photoAlbums = [
     gap: 1rem;
     max-height: 100%;
     min-height: 0;
+    position: relative;
+    width: 100%;
+    overflow: hidden; // Prevent image from overflowing container
+    
+    @include media-down('md') {
+      // Add touch area and user select prevention for better mobile experience
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      
+      // Add subtle visual hint for swipe on mobile
+      &::after {
+        content: 'Swipe to navigate';
+        position: absolute;
+        bottom: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.6);
+        @include font-size('xs');
+        pointer-events: none;
+        opacity: 0;
+        animation: fadeInOut 3s ease-in-out;
+        animation-delay: 1s;
+      }
+    }
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 
   .main-image {
     max-width: 100%;
-    max-height: 70vh;
+    max-height: 100%; // Constrain to container height instead of viewport
+    width: auto;
+    height: auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: block; // Ensure proper display
     
     @include media-down('sm') {
-      max-height: 60vh;
-    }
-  }
-
-  .image-info {
-    text-align: center;
-    color: white;
-    max-width: 600px;
-    
-    .image-title {
-      @include font-size('lg');
-      @include font-weight('semibold');
-      margin-bottom: 0.5rem;
-    }
-    
-    .image-description {
-      @include font-size('sm');
-      margin-bottom: 1rem;
-      opacity: 0.8;
-    }
-    
-    .image-meta {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      
-      span {
-        @include font-size('xs');
-        padding: 0.25rem 0.75rem;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        backdrop-filter: blur(10px);
-      }
-      
-      @include media-down('sm') {
-        gap: 0.5rem;
-      }
+      max-height: 100%; // Use container constraints on mobile too
     }
   }
 
   .gallery-thumbnails {
-    padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem 0 1rem 0; // Increased top padding to ensure gap
+    margin-top: 1rem; // Additional margin for spacing
   }
 
   .thumbnails-container {
@@ -505,215 +773,661 @@ const photoAlbums = [
   }
 </style>
 
-<script define:vars={{ photoAlbums }}>
-  // Pass photo albums data to global scope
-  window.photoAlbums = photoAlbums;
-</script>
+<script is:inline>
+// Photo Gallery JavaScript - Using inline script for view transitions compatibility
 
-<script>
-  // @ts-nocheck
-  // Photo Gallery JavaScript
-  class PhotoGallery {
-    constructor() {
-      this.albums = window.photoAlbums || [];
-      this.currentAlbum = null;
-      this.currentImageIndex = 0;
-      this.modal = null;
-      
-      this.init();
-    }
-    
-    init() {
-      this.setupAlbumClicks();
-      this.setupModal();
-      this.setupKeyboardNavigation();
-    }
-    
-    setupAlbumClicks() {
-      const albumCards = document.querySelectorAll('.album-card');
-      
-      albumCards.forEach(card => {
-        card.addEventListener('click', () => {
-          const albumId = card.dataset.albumId;
-          if (albumId) {
-            this.openAlbum(albumId);
-          }
-        });
-      });
-    }
-    
-    setupModal() {
-      this.modal = document.getElementById('galleryModal');
-      const closeBtn = document.getElementById('closeGallery');
-      const prevBtn = document.getElementById('prevImage');
-      const nextBtn = document.getElementById('nextImage');
-      
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => this.closeGallery());
-      }
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => this.previousImage());
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => this.nextImage());
-      }
-      
-      // Close on background click
-      if (this.modal) {
-        this.modal.addEventListener('click', (e) => {
-          if (e.target === this.modal) {
-            this.closeGallery();
-          }
-        });
-      }
-    }
-    
-    setupKeyboardNavigation() {
-      document.addEventListener('keydown', (e) => {
-        if (!this.modal || !this.modal.classList.contains('active')) return;
-        
-        switch(e.key) {
-          case 'Escape':
-            this.closeGallery();
-            break;
-          case 'ArrowLeft':
-            this.previousImage();
-            break;
-          case 'ArrowRight':
-            this.nextImage();
-            break;
-        }
-      });
-    }
-    
-    openAlbum(albumId) {
-      this.currentAlbum = this.albums.find(album => album.id === albumId);
-      if (!this.currentAlbum || !this.modal) return;
-      
-      this.currentImageIndex = 0;
-      this.modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      this.updateGalleryContent();
-      this.createThumbnails();
-    }
-    
-    closeGallery() {
-      if (this.modal) {
-        this.modal.classList.remove('active');
-      }
-      document.body.style.overflow = '';
-      this.currentAlbum = null;
-    }
-    
-    updateGalleryContent() {
-      if (!this.currentAlbum) return;
-      
-      const currentImage = this.currentAlbum.images[this.currentImageIndex];
-      
-      // Update title
-      const galleryTitle = document.querySelector('.gallery-title');
-      if (galleryTitle) {
-        galleryTitle.textContent = this.currentAlbum.title;
-      }
-      
-      // Update main image
-      const mainImage = document.getElementById('mainImage');
-      if (mainImage && 'src' in mainImage && 'alt' in mainImage) {
-        mainImage.src = currentImage.src;
-        mainImage.alt = currentImage.alt;
-      }
-      
-      // Update image info
-      const imageTitle = document.querySelector('.image-title');
-      const imageDescription = document.querySelector('.image-description');
-      const metaCamera = document.querySelector('.meta-camera');
-      const metaLens = document.querySelector('.meta-lens');
-      const metaYear = document.querySelector('.meta-year');
-      
-      if (imageTitle) imageTitle.textContent = currentImage.title;
-      if (imageDescription) imageDescription.textContent = currentImage.description;
-      if (metaCamera) metaCamera.textContent = currentImage.camera;
-      if (metaLens) metaLens.textContent = currentImage.lens;
-      if (metaYear) metaYear.textContent = currentImage.year;
-      
-      // Update navigation buttons
-      const prevBtn = document.getElementById('prevImage');
-      const nextBtn = document.getElementById('nextImage');
-      
-      if (prevBtn && 'disabled' in prevBtn) {
-        prevBtn.disabled = this.currentImageIndex === 0;
-      }
-      if (nextBtn && 'disabled' in nextBtn) {
-        nextBtn.disabled = this.currentImageIndex === this.currentAlbum.images.length - 1;
-      }
-      
-      // Update thumbnails
-      this.updateThumbnailActive();
-    }
-    
-    createThumbnails() {
-      const container = document.getElementById('thumbnailsContainer');
-      if (!container || !this.currentAlbum) return;
-      
-      container.innerHTML = '';
-      
-      this.currentAlbum.images.forEach((image, index) => {
-        const thumbnail = document.createElement('div');
-        thumbnail.className = 'thumbnail';
-        if (index === this.currentImageIndex) {
-          thumbnail.classList.add('active');
-        }
-        
-        const img = document.createElement('img');
-        img.src = image.src;
-        img.alt = image.alt;
-        img.loading = 'lazy';
-        
-        thumbnail.appendChild(img);
-        thumbnail.addEventListener('click', () => {
-          this.currentImageIndex = index;
-          this.updateGalleryContent();
-        });
-        
-        container.appendChild(thumbnail);
-      });
-    }
-    
-    updateThumbnailActive() {
-      const thumbnails = document.querySelectorAll('.thumbnail');
-      thumbnails.forEach((thumb, index) => {
-        thumb.classList.toggle('active', index === this.currentImageIndex);
-      });
-      
-      // Scroll active thumbnail into view
-      const activeThumbnail = thumbnails[this.currentImageIndex];
-      if (activeThumbnail) {
-        activeThumbnail.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
-      }
-    }
-    
-    previousImage() {
-      if (this.currentImageIndex > 0) {
-        this.currentImageIndex--;
-        this.updateGalleryContent();
-      }
-    }
-    
-    nextImage() {
-      if (this.currentAlbum && this.currentImageIndex < this.currentAlbum.images.length - 1) {
-        this.currentImageIndex++;
-        this.updateGalleryContent();
-      }
-    }
+// Photo albums data - embedded directly to work with view transitions
+const photoAlbumsData = [
+  {
+    id: 'florida-southern-25',
+    title: 'Florida Southern `25',
+    description: 'Frank Lloyd Wright architecture, Lakeland, Florida, 2025',
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083583/IMG_0754_freaxp.jpg',
+    images: [
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083583/IMG_0754_freaxp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083582/IMG_0765_khnc0a.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083582/IMG_0798_msc1wp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0776_urqqeo.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0759_ydhbb5.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083581/IMG_0793_j53sdd.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083580/IMG_0796_hnzsrk.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0753_cbbfbp.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0778_tp4prx.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083579/IMG_0756_mkwxj5.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083578/IMG_0746_jwhltx.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083578/IMG_0757_baoqix.jpg',
+        alt: 'Florida Southern Campus',
+        title: 'Chldren of the Sun',
+        camera: 'Canon R10',
+        lens: '18-45mm f/4.5-6.3',
+        year: '2025'
+      },
+    ]
+  },
+  {
+    id: 'montreal-23',
+    title: 'Montreal `23',
+    description: 'Street photography and urban exploration in Montreal, 2023',
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084164/BBB03850_eercan.jpg',
+    images: [
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084164/BBB03850_eercan.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084095/BBB04065_qy1rg7.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084237/BBB03997_i81zit.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084229/BBB04020_i2vzdj.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084168/BBB04002_rayg3u.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084125/BBB03846_ugsbpx.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084116/BBB03900_wniatk.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084106/BBB03956_dafhvt.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084103/BBB03985_h1symv.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084099/BBB03978_zqyrnz.jpg',
+        alt: 'Montreal Street Scene',
+        title: 'Urban Life',
+        camera: 'Sony A7sii',
+        year: '2023'
+      },
+    ]
+  },
+  {
+    id: 'sitka-alaska-22',
+    title: 'Sitka `22',
+    description: 'Natural landscapes and wildlife photography in Sitka, Alaska, 2022',
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/eagle_xtbz5s.jpg',
+    images: [
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/eagle_xtbz5s.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084042/mountain_o5ihww.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084040/plane_mprfwx.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084042/swing_t3gqza.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084041/church_qfp4gr.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084040/flowers_urnvat.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/mountains_w0nbwa.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084039/weathervane_ilyok5.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/bench_kf3ev8.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/houses_kbj1an.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084038/totem_mu554u.jpg',
+        alt: 'Alaskan Wilderness',
+        title: 'Sitka Landscape',
+        camera: 'Olympus OM-10',
+        year: '2022'
+      },
+    ]
+  },
+  {
+    id: 'nampa-idaho-22',
+    title: 'Nampa `22',
+    description: 'Street and landscape film photography in Nampa, Idaho, 2022',
+    coverImage: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/AA008_s5bipu.jpg',
+    images: [
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/AA008_s5bipu.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083996/train_gqnckn.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/mailman_kwv71i.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/house_hy3u25.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754084056/pottery_aqlyg7.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083995/farmland_gcotwa.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083995/traffic_cjqzif.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/lounge_qiylxa.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+      {
+        src: 'https://res.cloudinary.com/dn8qfu68i/image/upload/v1754083994/tiny_s_qecook.jpg',
+        alt: 'Nampa, Idaho',
+        title: 'Idahoan Scene',
+        camera: 'Leica m3',
+        year: '2022'
+      },
+    ]
+  }
+];
+
+// Gallery state variables
+let currentAlbum = null;
+let currentImageIndex = 0;
+let modal = null;
+
+function setupPhotoGallery() {
+  // Only setup if we're on the photography page and have album cards
+  const isPhotographyPage = window.location.pathname.includes('photography') || 
+                            window.location.pathname.endsWith('/photography');
+  const albumCards = document.querySelectorAll('.album-card');
+  
+  if (!isPhotographyPage || albumCards.length === 0) {
+    return;
   }
   
-  // Initialize gallery when DOM is loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    new PhotoGallery();
+  // Setup album card click handlers
+  albumCards.forEach(card => {
+    // Remove any existing handler to prevent duplicates
+    card.removeEventListener('click', card.albumClickHandler);
+    
+    // Create and store the handler on the element
+    card.albumClickHandler = function() {
+      const albumId = this.dataset.albumId;
+      if (albumId) {
+        openAlbum(albumId);
+      }
+    };
+    
+    // Add the event listener
+    card.addEventListener('click', card.albumClickHandler);
   });
+  
+  // Setup modal controls
+  setupModalControls();
+  
+  // Setup keyboard navigation
+  setupKeyboardNavigation();
+  
+  // Setup touch/swipe navigation for mobile
+  setupTouchNavigation();
+}
+
+function setupModalControls() {
+  modal = document.getElementById('galleryModal');
+  if (!modal) return;
+  
+  const closeBtn = document.getElementById('closeGallery');
+  const prevBtn = document.getElementById('prevImage');
+  const nextBtn = document.getElementById('nextImage');
+  
+  // Remove existing handlers to prevent duplicates
+  if (closeBtn) {
+    closeBtn.removeEventListener('click', closeBtn.galleryCloseHandler);
+    closeBtn.galleryCloseHandler = () => closeGallery();
+    closeBtn.addEventListener('click', closeBtn.galleryCloseHandler);
+  }
+  
+  if (prevBtn) {
+    prevBtn.removeEventListener('click', prevBtn.galleryPrevHandler);
+    prevBtn.galleryPrevHandler = () => previousImage();
+    prevBtn.addEventListener('click', prevBtn.galleryPrevHandler);
+  }
+  
+  if (nextBtn) {
+    nextBtn.removeEventListener('click', nextBtn.galleryNextHandler);
+    nextBtn.galleryNextHandler = () => nextImage();
+    nextBtn.addEventListener('click', nextBtn.galleryNextHandler);
+  }
+  
+  // Modal background click
+  modal.removeEventListener('click', modal.galleryBackgroundHandler);
+  modal.galleryBackgroundHandler = function(e) {
+    if (e.target === modal) {
+      closeGallery();
+    }
+  };
+  modal.addEventListener('click', modal.galleryBackgroundHandler);
+}
+
+function setupKeyboardNavigation() {
+  // Remove existing global keyboard handler to prevent duplicates
+  document.removeEventListener('keydown', document.galleryKeyHandler);
+  
+  document.galleryKeyHandler = function(e) {
+    if (!modal || !modal.classList.contains('active')) return;
+    
+    switch(e.key) {
+      case 'Escape':
+        closeGallery();
+        break;
+      case 'ArrowLeft':
+        previousImage();
+        break;
+      case 'ArrowRight':
+        nextImage();
+        break;
+    }
+  };
+  
+  document.addEventListener('keydown', document.galleryKeyHandler);
+}
+
+function setupTouchNavigation() {
+  // Remove existing touch handlers to prevent duplicates
+  document.removeEventListener('touchstart', document.galleryTouchStartHandler);
+  document.removeEventListener('touchend', document.galleryTouchEndHandler);
+  
+  let touchStartX = null;
+  let touchStartY = null;
+  const minSwipeDistance = 50; // Minimum distance for a swipe
+  const maxVerticalDistance = 100; // Maximum vertical movement to still count as horizontal swipe
+  
+  document.galleryTouchStartHandler = function(e) {
+    // Only handle touches when gallery is open and on the main image area
+    if (!modal || !modal.classList.contains('active')) return;
+    
+    const mainImageContainer = document.querySelector('.main-image-container');
+    const mainImage = document.querySelector('.main-image');
+    const target = e.target;
+    
+    // Only handle touches on the main image or its container
+    if (!mainImageContainer.contains(target) && target !== mainImage) return;
+    
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  };
+  
+  document.galleryTouchEndHandler = function(e) {
+    // Only handle touches when gallery is open
+    if (!modal || !modal.classList.contains('active')) return;
+    if (touchStartX === null || touchStartY === null) return;
+    
+    const mainImageContainer = document.querySelector('.main-image-container');
+    const mainImage = document.querySelector('.main-image');
+    const target = e.target;
+    
+    // Only handle touches on the main image or its container
+    if (!mainImageContainer.contains(target) && target !== mainImage) return;
+    
+    const touch = e.changedTouches[0];
+    const touchEndX = touch.clientX;
+    const touchEndY = touch.clientY;
+    
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = Math.abs(touchEndY - touchStartY);
+    
+    // Reset touch coordinates
+    touchStartX = null;
+    touchStartY = null;
+    
+    // Check if this was a horizontal swipe (not too much vertical movement)
+    if (deltaY > maxVerticalDistance) return;
+    
+    // Check if swipe distance is sufficient
+    if (Math.abs(deltaX) < minSwipeDistance) return;
+    
+    // Determine swipe direction and navigate
+    if (deltaX > 0) {
+      // Swipe right - go to previous image
+      previousImage();
+    } else {
+      // Swipe left - go to next image
+      nextImage();
+    }
+  };
+  
+  document.addEventListener('touchstart', document.galleryTouchStartHandler, { passive: true });
+  document.addEventListener('touchend', document.galleryTouchEndHandler, { passive: true });
+}
+
+function openAlbum(albumId) {
+  currentAlbum = photoAlbumsData.find(album => album.id === albumId);
+  if (!currentAlbum || !modal) return;
+  
+  currentImageIndex = 0;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  
+  updateGalleryContent();
+  createThumbnails();
+}
+
+function closeGallery() {
+  if (modal) {
+    modal.classList.remove('active');
+  }
+  document.body.style.overflow = '';
+  currentAlbum = null;
+}
+
+function updateGalleryContent() {
+  if (!currentAlbum) return;
+  
+  const currentImage = currentAlbum.images[currentImageIndex];
+  
+  // Update title
+  const galleryTitle = document.querySelector('.gallery-title');
+  if (galleryTitle) {
+    galleryTitle.textContent = currentAlbum.title;
+  }
+  
+  // Update main image
+  const mainImage = document.getElementById('mainImage');
+  if (mainImage) {
+    mainImage.src = currentImage.src;
+    mainImage.alt = currentImage.alt;
+  }
+  
+  // Update image info
+  const imageTitle = document.querySelector('.image-title');
+  const imageDescription = document.querySelector('.image-description');
+  const metaCamera = document.querySelector('.meta-camera');
+  const metaLens = document.querySelector('.meta-lens');
+  const metaYear = document.querySelector('.meta-year');
+  
+  if (imageTitle) imageTitle.textContent = currentImage.title;
+  if (imageDescription) imageDescription.textContent = currentImage.description;
+  if (metaCamera) metaCamera.textContent = currentImage.camera;
+  if (metaLens) metaLens.textContent = currentImage.lens || '';
+  if (metaYear) metaYear.textContent = currentImage.year;
+  
+  // Update navigation buttons
+  const prevBtn = document.getElementById('prevImage');
+  const nextBtn = document.getElementById('nextImage');
+  
+  if (prevBtn) {
+    prevBtn.disabled = currentImageIndex === 0;
+  }
+  if (nextBtn) {
+    nextBtn.disabled = currentImageIndex === currentAlbum.images.length - 1;
+  }
+  
+  // Update thumbnails
+  updateThumbnailActive();
+}
+
+function createThumbnails() {
+  const container = document.getElementById('thumbnailsContainer');
+  if (!container || !currentAlbum) return;
+  
+  container.innerHTML = '';
+  
+  currentAlbum.images.forEach((image, index) => {
+    const thumbnail = document.createElement('div');
+    thumbnail.className = 'thumbnail';
+    if (index === currentImageIndex) {
+      thumbnail.classList.add('active');
+    }
+    
+    const img = document.createElement('img');
+    img.src = image.src;
+    img.alt = image.alt;
+    img.loading = 'lazy';
+    
+    thumbnail.appendChild(img);
+    
+    // Create click handler
+    thumbnail.thumbnailClickHandler = function() {
+      currentImageIndex = index;
+      updateGalleryContent();
+    };
+    thumbnail.addEventListener('click', thumbnail.thumbnailClickHandler);
+    
+    container.appendChild(thumbnail);
+  });
+}
+
+function updateThumbnailActive() {
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  thumbnails.forEach((thumb, index) => {
+    thumb.classList.toggle('active', index === currentImageIndex);
+  });
+  
+  // Scroll active thumbnail into view
+  const activeThumbnail = thumbnails[currentImageIndex];
+  if (activeThumbnail) {
+    activeThumbnail.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
+}
+
+function previousImage() {
+  if (currentImageIndex > 0) {
+    currentImageIndex--;
+    updateGalleryContent();
+  }
+}
+
+function nextImage() {
+  if (currentAlbum && currentImageIndex < currentAlbum.images.length - 1) {
+    currentImageIndex++;
+    updateGalleryContent();
+  }
+}
+
+// Setup on initial DOM load
+document.addEventListener('DOMContentLoaded', setupPhotoGallery);
+
+// Re-setup after Astro page transitions
+document.addEventListener('astro:after-swap', setupPhotoGallery);
+
+// Also setup immediately if DOM is already ready
+if (document.readyState === 'loading') {
+  // DOM is still loading, event listeners above will handle it
+} else {
+  // DOM is already ready, setup immediately
+  setupPhotoGallery();
+}
 </script>

@@ -6,7 +6,6 @@
 export class ASCIIGenerator {
   constructor() {
     this.chars = ['.', ':', ';', '+', '*', '%', '@', '#'];
-    this.lightChars = ['.', ',', "'", '`', '^', '"', '~', '-'];
     this.patterns = {
       waves: this.generateWaves.bind(this),
       grid: this.generateGrid.bind(this),
@@ -34,9 +33,14 @@ export class ASCIIGenerator {
   // Generate grid patterns
   generateGrid(width, height, density = 0.3) {
     let result = '';
+    // Adjust spacing to create square-appearing grid cells
+    // Since characters are ~0.6 aspect ratio (width/height), we need wider spacing horizontally
+    const horizontalSpacing = 6; // Wider horizontal spacing
+    const verticalSpacing = 4;   // Narrower vertical spacing
+    
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        if ((x % 4 === 0 || y % 3 === 0) && Math.random() < density) {
+        if ((x % horizontalSpacing === 0 || y % verticalSpacing === 0) && Math.random() < density) {
           result += this.chars[Math.floor(Math.random() * 4) + 2];
         } else {
           result += this.chars[Math.floor(Math.random() * 2)];
@@ -68,10 +72,15 @@ export class ASCIIGenerator {
   // Generate circuit-like patterns
   generateCircuit(width, height) {
     let result = '';
+    // Adjust spacing to create square-appearing grid cells
+    // Since characters are ~0.6 aspect ratio (width/height), we need wider spacing horizontally
+    const horizontalSpacing = 10; // Wider horizontal spacing for square cells
+    const verticalSpacing = 6;    // Vertical spacing
+    
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const isLine = (x % 8 === 0) || (y % 6 === 0);
-        const isJunction = (x % 8 === 0) && (y % 6 === 0);
+        const isLine = (x % horizontalSpacing === 0) || (y % verticalSpacing === 0);
+        const isJunction = (x % horizontalSpacing === 0) && (y % verticalSpacing === 0);
         
         if (isJunction) {
           result += '+';
@@ -104,12 +113,11 @@ export class ASCIIGenerator {
     // On mobile, add some extra space to ensure full coverage
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
-      vw += 20; // Add extra width
-      vh += 20; // Add extra height
+      vw += 20;
+      vh += 20;
     }
     
     // Calculate based on actual font size being used
-    // Using CSS clamp(4px, 1.5vmin, 10px) on mobile, clamp(6px, 1vmin, 14px) on desktop
     let fontSize;
     if (isMobile) {
       const vmin = Math.min(vw, vh) / 100;
@@ -123,8 +131,8 @@ export class ASCIIGenerator {
     const charWidth = fontSize * 0.6;
     const lineHeight = fontSize;
     
-    const width = Math.ceil(vw / charWidth) + 2; // Add extra columns
-    const height = Math.ceil(vh / lineHeight) + 2; // Add extra rows
+    const width = Math.ceil(vw / charWidth) + 2; 
+    const height = Math.ceil(vh / lineHeight) + 2;
     
     return { width, height };
   }
@@ -145,7 +153,7 @@ export class ASCIIGenerator {
 
 // Animation controller for dynamic ASCII
 export class ASCIIAnimator {
-  constructor(element, generator, pattern = 'waves', fps = 12) {
+  constructor(element, generator, pattern = 'waves', fps = 12, options = {}) {
     this.element = element;
     this.generator = generator;
     this.pattern = pattern;
@@ -155,12 +163,26 @@ export class ASCIIAnimator {
     this.fps = fps;
     this.frameInterval = 1000 / fps; // ms between frames
     this.lastFrameTime = 0;
+    
+    // Progressive reveal options
+    this.progressiveReveal = options.progressiveReveal || false;
+    this.revealDuration = options.revealDuration || 2000;
+    this.revealStartTime = null;
+    this.fullPattern = '';
+    this.patternPositions = [];
   }
 
   start() {
     if (this.isAnimating) return;
     this.isAnimating = true;
     this.lastFrameTime = Date.now();
+    
+    // Initialize progressive reveal if enabled
+    if (this.progressiveReveal) {
+      this.revealStartTime = Date.now();
+      this.initializeProgressiveReveal();
+    }
+    
     this.animate();
   }
 
@@ -169,6 +191,51 @@ export class ASCIIAnimator {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
     }
+  }
+
+  initializeProgressiveReveal() {
+    // Generate the full pattern once
+    const currentTime = Date.now() - this.startTime;
+    this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
+    
+    // Create an array of all non-whitespace character positions for random reveal
+    this.patternPositions = [];
+    for (let i = 0; i < this.fullPattern.length; i++) {
+      const char = this.fullPattern[i];
+      if (char !== ' ' && char !== '\n') {
+        this.patternPositions.push(i);
+      }
+    }
+    
+    // Shuffle the positions for random reveal order
+    for (let i = this.patternPositions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.patternPositions[i], this.patternPositions[j]] = [this.patternPositions[j], this.patternPositions[i]];
+    }
+  }
+
+  getProgressivePattern(progress) {
+    if (!this.progressiveReveal || progress >= 1) {
+      return this.fullPattern;
+    }
+    
+    // Create a pattern with spaces for unrevealed characters
+    let revealedPattern = '';
+    const revealCount = Math.floor(this.patternPositions.length * progress);
+    const revealedPositions = new Set(this.patternPositions.slice(0, revealCount));
+    
+    for (let i = 0; i < this.fullPattern.length; i++) {
+      const char = this.fullPattern[i];
+      if (char === '\n') {
+        revealedPattern += char;
+      } else if (char === ' ' || revealedPositions.has(i)) {
+        revealedPattern += char;
+      } else {
+        revealedPattern += ' ';
+      }
+    }
+    
+    return revealedPattern;
   }
 
   animate() {
@@ -180,7 +247,30 @@ export class ASCIIAnimator {
     // Only update if enough time has passed
     if (deltaTime >= this.frameInterval) {
       const currentTime = now - this.startTime;
-      const ascii = this.generator.generate(this.pattern, { time: currentTime });
+      
+      let ascii;
+      if (this.progressiveReveal && this.revealStartTime) {
+        const revealElapsed = now - this.revealStartTime;
+        const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
+        
+        // For static patterns like 'circuit', keep the same pattern
+        // For animated patterns like 'waves', update the pattern
+        if (this.pattern === 'waves') {
+          this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
+          // Update pattern positions for new pattern
+          this.updatePatternPositions();
+        }
+        
+        ascii = this.getProgressivePattern(revealProgress);
+        
+        // Once reveal is complete, switch to normal animation
+        if (revealProgress >= 1) {
+          this.progressiveReveal = false;
+        }
+      } else {
+        ascii = this.generator.generate(this.pattern, { time: currentTime });
+      }
+      
       this.element.textContent = ascii;
       this.lastFrameTime = now;
     }
@@ -188,12 +278,39 @@ export class ASCIIAnimator {
     this.animationId = requestAnimationFrame(() => this.animate());
   }
 
+  updatePatternPositions() {
+    // Update positions for animated patterns
+    this.patternPositions = [];
+    for (let i = 0; i < this.fullPattern.length; i++) {
+      const char = this.fullPattern[i];
+      if (char !== ' ' && char !== '\n') {
+        this.patternPositions.push(i);
+      }
+    }
+    
+    // Shuffle the positions for random reveal order
+    for (let i = this.patternPositions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.patternPositions[i], this.patternPositions[j]] = [this.patternPositions[j], this.patternPositions[i]];
+    }
+  }
+
   resize() {
     // Regenerate on resize
     if (this.isAnimating) {
       const currentTime = Date.now() - this.startTime;
-      const ascii = this.generator.generate(this.pattern, { time: currentTime });
-      this.element.textContent = ascii;
+      
+      if (this.progressiveReveal && this.revealStartTime) {
+        // Reinitialize progressive reveal with new dimensions
+        this.initializeProgressiveReveal();
+        const revealElapsed = Date.now() - this.revealStartTime;
+        const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
+        const ascii = this.getProgressivePattern(revealProgress);
+        this.element.textContent = ascii;
+      } else {
+        const ascii = this.generator.generate(this.pattern, { time: currentTime });
+        this.element.textContent = ascii;
+      }
     }
   }
 }

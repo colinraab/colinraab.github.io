@@ -1,26 +1,28 @@
+<!--
+  Navigation.astro
+  
+  Main navigation component and hero section for the portfolio homepage.
+  Features animated hero content with typewriter effects, glass panel styling,
+  and responsive navigation handling. Integrates with Astro Client Router for
+  smooth page transitions and manages theme persistence.
+-->
+
 ---
 // Get the base URL for proper navigation paths
 const baseUrl = import.meta.env.BASE_URL;
 
 // Helper function to create proper paths
-const createPath = (path: string) => {
+function createPath(path: string) {
   if (path === '') return baseUrl; // Home page
-  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
-};
-
-const navItems = [
-  { href: createPath(''), label: 'Home' },
-  { href: createPath('about'), label: 'About' },
-  { href: createPath('resume.html'), label: 'Resume' },
-  { href: createPath('programming'), label: 'Programming' },
-  { href: createPath('research'), label: 'Research' },
-  { href: createPath('music'), label: 'Music' },
-  { href: createPath('audioengineering'), label: 'Audio Engineering' },
-  { href: createPath('lessons'), label: 'Lessons' },
-  { href: createPath('photography'), label: 'Photography' },
-];
-
-const currentPath = Astro.url.pathname;
+  
+  // Normalize baseUrl to always end with /
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+  
+  // Remove leading slash from path if present to avoid double slashes
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  return normalizedBase + normalizedPath;
+}
 ---
 
 <!-- Hero content for home page -->

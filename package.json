@@ -7,25 +7,20 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "analyze": "npm run build && node scripts/performance-monitor.js",
-    "lighthouse": "npm run build && npm run preview & sleep 3 && lighthouse http://localhost:4321 --output html --output-path ./lighthouse-report.html && pkill -f 'astro preview'",
-    "size-check": "npm run build && echo 'Bundle Size:' && du -sh dist/ && echo 'Detailed Analysis:' && node scripts/performance-monitor.js"
+    "astro": "astro"
   },
   "dependencies": {
     "animejs": "^4.0.2",
     "astro": "^5.7.13",
     "autoprefixer": "^10.4.21",
-    "gsap": "^3.13.0",
-    "lenis": "^1.3.3",
     "modern-normalize": "^3.0.1",
     "sass": "^1.89.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/colinraab/portfolio.git"
+    "url": "https://github.com/colinraab/colinraab.github.io.git"
   },
-  "homepage": "https://colinraab.github.io/portfolio",
+  "homepage": "https://github.com/colinraab/colinraab.github.io",
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "lighthouse": "^12.8.0",

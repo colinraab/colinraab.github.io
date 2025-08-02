@@ -1,12 +1,27 @@
+<!--
+  Footer.astro
+  
+  Site footer component with navigation links, social media links, and theme toggle.
+  Features responsive design, external link icons, and maintains consistent styling.
+  Includes copyright information and accessibility features.
+-->
+
 ---
 // Get the base URL for proper navigation paths
 const baseUrl = import.meta.env.BASE_URL;
 
 // Helper function to create proper paths
-const createPath = (path: string) => {
+function createPath(path: string) {
   if (path === '') return baseUrl; // Home page
-  return baseUrl.endsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
-};
+  
+  // Normalize baseUrl to always end with /
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+  
+  // Remove leading slash from path if present to avoid double slashes
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  return normalizedBase + normalizedPath;
+}
 ---
 
 <div id="persistent-nav-container">
@@ -35,21 +50,78 @@ const createPath = (path: string) => {
     <div class="links-container">
         <a href={createPath('about')} class="nav-link">About</a>
         <a href={createPath('resume.html')} class="nav-link" target="_blank">Resume</a>
+        <a href={createPath('work')} class="nav-link">Work</a>
         <a href={createPath('programming')} class="nav-link">Programming</a>
         <a href={createPath('research')} class="nav-link">Research</a>
         <a href={createPath('music')} class="nav-link">Music</a>
         <a href={createPath('audioengineering')} class="nav-link">Audio Engineering</a>
         <a href={createPath('lessons')} class="nav-link">Lessons</a>
         <a href={createPath('photography')} class="nav-link">Photography</a>
+        <button id="theme-toggle-nav" class="theme-toggle-nav nav-link">Switch to Light Mode</button>
     </div>
 </div>
 
-<script define:vars={{ baseUrl }}>
+<script>
+import { ThemeController } from '../utils/ThemeController.js';
+
+// Declare anime.js for TypeScript
+declare const anime: any;
+
 (function() {
+    // Initialize theme controller for the modal
+    let themeController: any = null;
+
+    function initializeThemeToggle() {
+        if (!themeController) {
+            themeController = new ThemeController();
+        }
+
+        function updateThemeToggleText(theme: string) {
+            const themeToggleButton = document.getElementById('theme-toggle-nav');
+            if (themeToggleButton) {
+                themeToggleButton.textContent = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+                
+                // Force the color based on theme since CSS variables might not work properly
+                const textColor = theme === 'dark' ? '#f5f5f5' : '#1a1a1a';
+                themeToggleButton.style.color = textColor;
+            }
+        }
+
+        const themeToggleButton = document.getElementById('theme-toggle-nav');
+        if (themeToggleButton) {
+            // Remove existing listeners by replacing the element
+            const newButton = themeToggleButton.cloneNode(true) as HTMLElement;
+            themeToggleButton.parentNode?.replaceChild(newButton, themeToggleButton);
+            
+            // Add click listener to the new button
+            newButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const newTheme = themeController.toggle();
+                updateThemeToggleText(newTheme);
+            });
+        }
+
+        // Initialize with current theme - check DOM first for accuracy
+        const domTheme = document.documentElement.getAttribute('data-theme');
+        const currentTheme = domTheme || themeController.getCurrentTheme();
+        
+        // Sync theme controller with DOM if they're different
+        if (domTheme && domTheme !== themeController.getCurrentTheme()) {
+            themeController.setTheme(domTheme);
+        }
+        
+        updateThemeToggleText(currentTheme);
+        themeController.onThemeChange(updateThemeToggleText);
+    }
+
     function initializeFooterNavigation() {
         const persistentNavContainer = document.getElementById('persistent-nav-container');
         const popupModal = document.getElementById('popup-modal');
-        const isHomePage = window.location.pathname === baseUrl || window.location.pathname === baseUrl.replace(/\/$/, '') + '/';
+        // Use location.pathname directly for homepage check
+        const isHomePage = window.location.pathname === '/' || 
+                          window.location.pathname === '/colinraab.github.io/' || 
+                          window.location.pathname.endsWith('/index.html');
 
         if (!persistentNavContainer || !popupModal) return;
 
@@ -63,7 +135,7 @@ const createPath = (path: string) => {
             // Add modal-open class to body for mobile footer behavior
             document.body.classList.add('modal-open');
             
-            window.anime({
+            anime({
                 targets: popupModal,
                 opacity: 1,
                 duration: 200,
@@ -78,7 +150,7 @@ const createPath = (path: string) => {
         const hideModal = () => {
             if (!isModalOpen) return;
             
-            window.anime({
+            anime({
                 targets: popupModal,
                 opacity: 0,
                 duration: 300,
@@ -93,7 +165,7 @@ const createPath = (path: string) => {
             });
         };
 
-        const morphToModal = (glassPanel) => {
+        const morphToModal = (glassPanel: HTMLElement) => {
             if (isModalOpen || isNavigating) return;
             isModalOpen = true;
             
@@ -132,7 +204,7 @@ const createPath = (path: string) => {
             glassPanel.style.transformOrigin = 'center center';
             
             // Create animation timeline using the global anime object
-            const timeline = window.anime.timeline({
+            const timeline = anime.timeline({
                 easing: 'easeInOutCubic'
             });
             
@@ -187,10 +259,10 @@ const createPath = (path: string) => {
         const resetToGlassPanel = () => {
             if (!isModalOpen || isNavigating) return;
             
-            const glassPanel = document.querySelector('.glass-panel');
+            const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
             if (!glassPanel) return;
             
-            const heroContent = glassPanel.querySelector('.hero-content');
+            const heroContent = glassPanel.querySelector('.hero-content') as HTMLElement;
             if (!heroContent) return;
             
             // Simple approach - just fade out modal and restore glass panel
@@ -232,8 +304,8 @@ const createPath = (path: string) => {
 
         // Close modal when clicking outside
         document.addEventListener('click', (event) => {
-            const target = event.target;
-            if (isModalOpen && !isNavigating && !popupModal.contains(target) && !target.closest('.glass-panel') && !target.closest('.persistent-name')) {
+            const target = event.target as HTMLElement;
+            if (target && isModalOpen && !isNavigating && !popupModal.contains(target) && !target.closest('.glass-panel') && !target.closest('.persistent-name')) {
                 if (isHomePage) {
                     resetToGlassPanel();
                 } else {
@@ -255,10 +327,19 @@ const createPath = (path: string) => {
 
         // Prevent modal from closing when clicking inside it, but allow navigation links to work
         popupModal.addEventListener('click', (event) => {
-            const target = event.target;
+            const target = event.target as HTMLElement;
+            
+            if (!target) return;
+            
+            // If it's the theme toggle button, don't close modal or navigate
+            if (target.id === 'theme-toggle-nav' || target.closest('#theme-toggle-nav')) {
+                event.stopPropagation();
+                return;
+            }
+            
             // If it's a navigation link, handle based on whether it opens in new tab
             if (target.classList.contains('nav-link') || target.closest('.nav-link')) {
-                const linkElement = target.classList.contains('nav-link') ? target : target.closest('.nav-link');
+                const linkElement = target.classList.contains('nav-link') ? target : target.closest('.nav-link') as HTMLElement;
                 
                 // If link opens in new tab (like resume), use the animated close
                 if (linkElement && linkElement.getAttribute('target') === '_blank') {
@@ -282,7 +363,7 @@ const createPath = (path: string) => {
                 
                 // Reset glass panel immediately if on home page
                 if (isHomePage) {
-                    const glassPanel = document.querySelector('.glass-panel');
+                    const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
                     if (glassPanel) {
                         glassPanel.style.position = '';
                         glassPanel.style.left = '';
@@ -293,7 +374,7 @@ const createPath = (path: string) => {
                         glassPanel.style.transform = '';
                         glassPanel.style.opacity = '';
                         
-                        const heroContent = glassPanel.querySelector('.hero-content');
+                        const heroContent = glassPanel.querySelector('.hero-content') as HTMLElement;
                         if (heroContent) {
                             heroContent.style.opacity = '';
                             heroContent.style.scale = '';
@@ -310,7 +391,7 @@ const createPath = (path: string) => {
 
         if (isHomePage) {
             persistentNavContainer.style.display = 'none';
-            const glassPanel = document.querySelector('.glass-panel');
+            const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
             
             if (glassPanel) {
                 // Add click event listener to glass panel
@@ -362,10 +443,16 @@ const createPath = (path: string) => {
     }
 
     // Initialize on first load
-    document.addEventListener('DOMContentLoaded', initializeFooterNavigation);
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeThemeToggle();
+        initializeFooterNavigation();
+    });
     
     // Re-initialize after Astro view transitions
-    document.addEventListener('astro:after-swap', initializeFooterNavigation);
+    document.addEventListener('astro:after-swap', () => {
+        initializeThemeToggle();
+        initializeFooterNavigation();
+    });
 })();
 </script>
 

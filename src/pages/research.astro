@@ -1,3 +1,11 @@
+<!--
+  research.astro
+  
+  Academic research page showcasing music technology and AI research projects.
+  Features thesis work, publications, and academic achievements.
+  Highlights research in artificial intelligence and music technology at McGill University.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 
@@ -70,9 +78,6 @@ const researchProjects = [
     link: null // Add link when available
   }
 ];
-
-// Group projects by category for better organization
-const categories = [...new Set(researchProjects.map(project => project.category))];
 ---
 
 <PageLayout title="Research - Colin Raab" description="Explore Colin's academic research and projects in music technology, audio engineering, and creative computing.">

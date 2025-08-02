@@ -1,15 +1,14 @@
----
-// ASCII Background Component
----
+<!--
+  ASCIIBackground.astro
+  
+  ASCII art background component providing animated character-based visuals.
+  Generates dynamic ASCII patterns and responds to theme changes.
+  Creates an immersive backdrop for the portfolio site with customizable animations.
+-->
 
 <div class="ascii-background">
   <div class="ascii-art" id="ascii-canvas"></div>
 </div>
-
-<button class="theme-toggle" id="theme-toggle">
-  <span class="theme-icon" data-theme="dark">🌙</span>
-  <span class="theme-icon" data-theme="light" style="display: none;">☀️</span>
-</button>
 
 <script>
   import { ASCIIGenerator, ASCIIAnimator } from '../utils/ASCIIGenerator.js';
@@ -31,7 +30,30 @@
     const generator = new ASCIIGenerator();
     
     if (asciiCanvas) {
-      currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12); // 12 fps for smooth but controlled updates
+      // Check if we're on the landing page (index page)
+      const isLandingPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+      
+      // Configure progressive reveal for landing page
+      const animatorOptions = {
+        progressiveReveal: isLandingPage,
+        revealDuration: 2000 // 2 seconds
+      };
+      
+      // Add CSS class for progressive reveal styling
+      if (isLandingPage) {
+        asciiCanvas.classList.add('progressive-reveal');
+        
+        // Gradually transition to complete state over 1 second after reveal
+        setTimeout(() => {
+          asciiCanvas.classList.add('reveal-complete');
+          // Wait a bit longer before removing progressive-reveal to avoid abrupt changes
+          setTimeout(() => {
+            asciiCanvas.classList.remove('progressive-reveal');
+          }, 1000); // Remove after 1 second of overlap
+        }, 2500); // Start transition 0.5 seconds after reveal completes
+      }
+      
+      currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12, animatorOptions); // 12 fps for smooth but controlled updates
       currentAnimator.start();
       
       // Handle resize and viewport changes
@@ -65,36 +87,6 @@
       const currentTheme = currentThemeController.getCurrentTheme();
       currentThemeController.applyTheme();
     }
-    
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcons = themeToggle?.querySelectorAll('.theme-icon');
-
-    function updateThemeButton(theme: string) {
-      if (themeIcons) {
-        themeIcons.forEach(icon => {
-          const iconTheme = icon.getAttribute('data-theme');
-          (icon as HTMLElement).style.display = iconTheme === theme ? 'inline' : 'none';
-        });
-      }
-    }
-
-    if (themeToggle) {
-      // Remove existing listeners to prevent duplicates
-      themeToggle.replaceWith(themeToggle.cloneNode(true));
-      const newThemeToggle = document.getElementById('theme-toggle');
-      
-      if (newThemeToggle) {
-        newThemeToggle.addEventListener('click', () => {
-          const newTheme = currentThemeController.toggle();
-          updateThemeButton(newTheme);
-        });
-      }
-    }
-
-    // Initialize theme button with current theme
-    const currentTheme = currentThemeController.getCurrentTheme();
-    updateThemeButton(currentTheme);
-    currentThemeController.onThemeChange(updateThemeButton);
   }
 
   // Initialize on first load

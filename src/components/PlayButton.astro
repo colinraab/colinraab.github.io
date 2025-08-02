@@ -1,0 +1,121 @@
+<!--
+  PlayButton.astro
+  
+  Individual track play button component for audio items.
+  Integrates with GlobalAudioPlayer for consistent playback experience.
+  Accepts track metadata (title, artist, URL) and manages play state indicators.
+-->
+
+---
+export interface AudioTrack {
+  title?: string;
+  artist?: string;
+  url: string;
+}
+
+export interface Props {
+  track: AudioTrack;
+}
+
+const { track } = Astro.props;
+---
+
+<button 
+  class="play-button" 
+  data-track-title={track.title}
+  data-track-artist={track.artist}
+  data-track-url={track.url}
+  title={`Play ${track.title || 'track'}`}
+>
+  <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+  <span class="play-text">Play</span>
+</button>
+
+<style lang="scss">
+  @use '../styles/helpers/colors' as *;
+  @use '../styles/helpers/fonts' as *;
+
+  .play-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    @include font-size('sm');
+    @include font-weight('medium');
+    flex: 1;
+    width: 100%;
+    
+    &:hover {
+      background: var(--color-primary-hover, var(--color-primary));
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    .play-icon {
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    
+    .play-text {
+      @include media-down('sm') {
+        display: none;
+      }
+    }
+  }
+</style>
+
+<script is:inline>
+function setupPlayButtons() {
+  // Setup event listeners for all play buttons
+  const playButtons = document.querySelectorAll('.play-button');
+  
+  playButtons.forEach(button => {
+    // Remove any existing listeners to prevent duplicates
+    button.removeEventListener('click', button.playButtonHandler);
+    
+    // Create the handler function and store it on the button element
+    button.playButtonHandler = async function() {
+      const trackData = {
+        title: this.dataset.trackTitle,
+        artist: this.dataset.trackArtist,
+        url: this.dataset.trackUrl
+      };
+      
+      // Load track into global player
+      if (typeof window.loadGlobalTrack === 'function') {
+        await window.loadGlobalTrack(trackData);
+      }
+    };
+    
+    // Add the event listener
+    button.addEventListener('click', button.playButtonHandler);
+  });
+}
+
+// Setup on initial DOM load
+document.addEventListener('DOMContentLoaded', setupPlayButtons);
+
+// Re-setup after Astro page transitions
+document.addEventListener('astro:after-swap', setupPlayButtons);
+
+// Also setup immediately if DOM is already ready
+if (document.readyState === 'loading') {
+  // DOM is still loading, event listeners above will handle it
+} else {
+  // DOM is already ready, setup immediately
+  setupPlayButtons();
+}
+</script>

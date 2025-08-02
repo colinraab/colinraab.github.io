@@ -1,5 +1,14 @@
+<!--
+  audioengineering.astro
+  
+  Audio engineering portfolio page showcasing recording, mixing, and mastering work.
+  Features before/after audio comparisons, client projects, and technical demonstrations.
+  Highlights professional audio services and engineering capabilities.
+-->
+
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+import PlayButton from '../components/PlayButton.astro';
 ---
 
 <PageLayout title="Audio Engineering - Colin Raab" description="Explore Colin's audio engineering projects, from recording to mixing and mastering.">
@@ -13,7 +22,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       </div>
       
       <div class="projects-grid">
-        <!-- Audio engineering project placeholder
+        <!-- Audio engineering project placeholder 
         <article class="project-card">
           <div class="project-image">
             <div class="placeholder-image">
@@ -41,6 +50,140 @@ import PageLayout from '../layouts/PageLayout.astro';
             </div>
           </div>
         </article> -->
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3><a href="https://open.spotify.com/album/2g6TRUUPjnEE1liK6NTBpH" target="_blank" rel="noopener noreferrer" class="spotify-link">Phoenyx A Capella - From the Ashes</a></h3>
+            <p class="project-type">Full Album Production</p>
+            <p>Complete album production including recording, mixing, and mastering</p>
+            <div class="spotify-embed">
+              <iframe 
+                data-testid="embed-iframe" 
+                style="border-radius:12px" 
+                src="https://open.spotify.com/embed/album/2g6TRUUPjnEE1liK6NTBpH?utm_source=generator" 
+                width="100%" 
+                height="152" 
+                frameborder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3>Frost Stamps Brass Quintet</h3>
+            <p class="project-type">Studio Recording</p>
+            <p>Studio recording of a jazz composition by student Brandon Myrvil.</p>
+            <PlayButton 
+              track={{
+                title: "Original Composition by Brandon Myrvil",
+                artist: "Forst Stamps Brass Quintet",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753909800/230527_brandon_brass_quintet_orcwfh.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3>Fantasy Orchestra</h3>
+            <p class="project-type">Orchestral Recording</p>
+            <p>25-member ensemble recorded, mixed, and mastered by myself. Original composition by Daniel Shiva</p>
+            <div class="play-buttons-group">
+              <PlayButton 
+                track={{
+                  title: "Movement 1",
+                  artist: "Daniel Shiva",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753909795/230527_Mvt_1_v4_wxvsvd.ogg"
+                }}
+              />
+              <PlayButton 
+                track={{
+                  title: "Movement 2", 
+                  artist: "Daniel Shiva",
+                  url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753909798/230527_Mvt_2_v4_nlj2yd.ogg"
+                }}
+              />
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3>Bak Sinfonia</h3>
+            <p class="project-type">Chamber Music Recording</p>
+            <p>String quartet performs two parts each in this modern counterpoint composition by Ericsson Hatfield. </p>
+            <PlayButton 
+              track={{
+                title: "Bak Sinfonia",
+                artist: "Ericsson Hatfield",
+                url: "https://res.cloudinary.com/dn8qfu68i/video/upload/v1753909797/ericsson_octet_march_2025_v3_rlauor.ogg"
+              }}
+            />
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3><a href="https://open.spotify.com/track/07gJXk7Zai5AY1xYQOWgLh" target="_blank" rel="noopener noreferrer" class="spotify-link">Marlei - Sheesh</a></h3>
+            <p class="project-type">Mixing</p>
+            <div class="spotify-embed">
+              <iframe 
+                data-testid="embed-iframe" 
+                style="border-radius:12px" 
+                src="https://open.spotify.com/embed/track/07gJXk7Zai5AY1xYQOWgLh?utm_source=generator" 
+                width="100%" 
+                height="152" 
+                frameborder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3><a href="https://open.spotify.com/track/12LBMZzIlimS3AXMWw05bC" target="_blank" rel="noopener noreferrer" class="spotify-link">Leon Nightingale - Surgeon</a></h3>
+            <p class="project-type">Mixing</p>
+            <div class="spotify-embed">
+              <iframe 
+                data-testid="embed-iframe" 
+                style="border-radius:12px" 
+                src="https://open.spotify.com/embed/track/12LBMZzIlimS3AXMWw05bC?utm_source=generator" 
+                width="100%" 
+                height="152" 
+                frameborder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-content">
+            <h3><a href="https://open.spotify.com/album/0vaFArSSPBvWc8lrZ4bmtq" target="_blank" rel="noopener noreferrer" class="spotify-link">Rosia - balance of a critic</a></h3>
+            <p class="project-type">Mastering</p>            
+            <div class="spotify-embed">
+              <iframe 
+                style="border-radius:12px" 
+                src="https://open.spotify.com/embed/album/0vaFArSSPBvWc8lrZ4bmtq?utm_source=generator" 
+                width="100%" 
+                height="152" 
+                frameborder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </article>
         
       </div>
       
@@ -61,7 +204,6 @@ import PageLayout from '../layouts/PageLayout.astro';
             <h3>Mixing and Mastering</h3>
             <ul>
               <li>Multi-track mixing</li>
-              <li>Stereo & surround mixing</li>
               <li>Clip-to-zero loudness</li>
               <li>Genre diversity</li>
               <li>Modern plugin use</li>
@@ -130,8 +272,8 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
     margin-bottom: 4rem;
     
     @include media-down('sm') {
@@ -175,6 +317,16 @@ import PageLayout from '../layouts/PageLayout.astro';
       margin-bottom: 0.25rem;
     }
     
+    .spotify-link {
+      color: inherit;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        @include text-color('primary');
+      }
+    }
+    
     .project-type {
       @include font-size('sm');
       @include text-color('primary');
@@ -208,6 +360,32 @@ import PageLayout from '../layouts/PageLayout.astro';
   .project-links {
     display: flex;
     gap: 1rem;
+  }
+
+  .play-buttons-group {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    
+    @include media-down('sm') {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  .spotify-embed {
+    margin-top: 1.5rem;
+    
+    iframe {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s ease;
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+    }
   }
 
   .btn {
