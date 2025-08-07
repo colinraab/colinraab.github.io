@@ -160,9 +160,24 @@ export class ASCIIAnimator {
     this.isAnimating = false;
     this.animationId = null;
     this.startTime = Date.now();
-    this.fps = fps;
+    this.initialFps = fps;
+    this.currentFps = fps;
+    this.targetFps = fps;
     this.frameInterval = 1000 / fps; // ms between frames
     this.lastFrameTime = 0;
+    
+    // FPS transition options
+    this.fpsTransitionDuration = options.fpsTransitionDuration || 2000; // 2 seconds
+    this.fpsTransitionStartTime = null;
+    this.fpsTransitionStartFps = 0;
+    this.isTransitioningFps = false;
+    
+    // Static mode options
+    this.staticMode = options.staticMode || false;
+    this.staticCharacterChangeInterval = options.staticCharacterChangeInterval || 2000; // 2 seconds
+    this.staticCharacterChangeCount = options.staticCharacterChangeCount || 6;
+    this.lastStaticChangeTime = 0;
+    this.currentStaticPattern = '';
     
     // Progressive reveal options
     this.progressiveReveal = options.progressiveReveal || false;
@@ -176,6 +191,7 @@ export class ASCIIAnimator {
     if (this.isAnimating) return;
     this.isAnimating = true;
     this.lastFrameTime = Date.now();
+    this.lastStaticChangeTime = Date.now();
     
     // Initialize progressive reveal if enabled
     if (this.progressiveReveal) {
@@ -191,6 +207,115 @@ export class ASCIIAnimator {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
     }
+  }
+
+  // Method to transition FPS smoothly
+  transitionToFps(targetFps, duration = this.fpsTransitionDuration) {
+    // Store the starting FPS for this transition
+    this.fpsTransitionStartFps = this.currentFps;
+    this.targetFps = targetFps;
+    this.fpsTransitionDuration = duration;
+    this.fpsTransitionStartTime = Date.now();
+    this.isTransitioningFps = true;
+  }
+
+  // Method to enable static mode (used for non-landing pages)
+  enableStaticMode() {
+    this.staticMode = true;
+    
+    // Generate initial static pattern if not already set
+    if (!this.currentStaticPattern) {
+      const currentTime = Date.now() - this.startTime;
+      this.currentStaticPattern = this.generator.generate(this.pattern, { time: currentTime });
+      this.element.textContent = this.currentStaticPattern;
+    }
+    
+    this.transitionToFps(0);
+  }
+
+  // Method to briefly animate when navigating (page transitions)
+  triggerPageTransition() {
+    if (this.staticMode) {
+      // First phase: quickly ramp up to higher FPS
+      this.transitionToFps(8, 500); // Burst to 8 fps over 0.5 seconds
+      
+      // Second phase: slowly transition back to 0
+      setTimeout(() => {
+        // Start the slow transition back to 0 FPS
+        this.transitionToFps(0, 2000); // Then slow back to 0 over 2 seconds
+      }, 500); // Wait for first transition to complete
+    }
+  }
+
+  // Update current FPS based on transition
+  updateFps() {
+    if (!this.isTransitioningFps) return;
+
+    const now = Date.now();
+    const elapsed = now - this.fpsTransitionStartTime;
+    const progress = Math.min(elapsed / this.fpsTransitionDuration, 1);
+
+    // Use linear interpolation for smoother, more predictable transitions
+    this.currentFps = this.fpsTransitionStartFps + (this.targetFps - this.fpsTransitionStartFps) * progress;
+
+    if (progress >= 1) {
+      this.currentFps = this.targetFps;
+      this.isTransitioningFps = false;
+    }
+
+    this.frameInterval = this.currentFps > 0 ? 1000 / this.currentFps : Infinity;
+  }
+
+  // Update a few random characters in static mode
+  updateStaticCharacters() {
+    if (!this.staticMode || this.currentFps > 0.1) return;
+
+    const now = Date.now();
+    if (now - this.lastStaticChangeTime < this.staticCharacterChangeInterval) return;
+
+    // Generate initial pattern if not set
+    if (!this.currentStaticPattern) {
+      const currentTime = now - this.startTime;
+      this.currentStaticPattern = this.generator.generate(this.pattern, { time: currentTime });
+      this.element.textContent = this.currentStaticPattern;
+      this.lastStaticChangeTime = now;
+      return;
+    }
+
+    // Convert string to array for easier manipulation
+    let patternArray = this.currentStaticPattern.split('');
+    const nonWhitespacePositions = [];
+
+    // Find all non-whitespace, non-newline positions
+    for (let i = 0; i < patternArray.length; i++) {
+      const char = patternArray[i];
+      if (char !== ' ' && char !== '\n') {
+        nonWhitespacePositions.push(i);
+      }
+    }
+
+    // Only proceed if we have positions to update
+    if (nonWhitespacePositions.length === 0) return;
+
+    // Randomly select positions to update
+    const positionsToUpdate = [];
+    for (let i = 0; i < Math.min(this.staticCharacterChangeCount, nonWhitespacePositions.length); i++) {
+      const randomIndex = Math.floor(Math.random() * nonWhitespacePositions.length);
+      const position = nonWhitespacePositions[randomIndex];
+      if (!positionsToUpdate.includes(position)) {
+        positionsToUpdate.push(position);
+      }
+    }
+
+    // Update selected positions with new random characters
+    const chars = ['.', ':', ';', '+', '*', '%', '#', '-', '|'];
+    positionsToUpdate.forEach(pos => {
+      patternArray[pos] = chars[Math.floor(Math.random() * chars.length)];
+    });
+
+    this.currentStaticPattern = patternArray.join('');
+    this.element.textContent = this.currentStaticPattern;
+    this.lastStaticChangeTime = now;
   }
 
   initializeProgressiveReveal() {
@@ -244,8 +369,18 @@ export class ASCIIAnimator {
     const now = Date.now();
     const deltaTime = now - this.lastFrameTime;
 
-    // Only update if enough time has passed
-    if (deltaTime >= this.frameInterval) {
+    // Update FPS if transitioning
+    this.updateFps();
+
+    // Handle static mode character updates
+    if (this.staticMode && this.currentFps <= 0.1) {
+      this.updateStaticCharacters();
+      this.animationId = requestAnimationFrame(() => this.animate());
+      return;
+    }
+
+    // Only update if enough time has passed (based on current FPS)
+    if (deltaTime >= this.frameInterval && this.currentFps > 0.1) {
       const currentTime = now - this.startTime;
       
       let ascii;
@@ -272,6 +407,12 @@ export class ASCIIAnimator {
       }
       
       this.element.textContent = ascii;
+      
+      // Store current pattern for static mode
+      if (this.staticMode) {
+        this.currentStaticPattern = ascii;
+      }
+      
       this.lastFrameTime = now;
     }
 
@@ -310,6 +451,11 @@ export class ASCIIAnimator {
       } else {
         const ascii = this.generator.generate(this.pattern, { time: currentTime });
         this.element.textContent = ascii;
+        
+        // Update static pattern if in static mode
+        if (this.staticMode) {
+          this.currentStaticPattern = ascii;
+        }
       }
     }
   }

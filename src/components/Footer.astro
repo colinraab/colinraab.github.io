@@ -115,18 +115,239 @@ declare const anime: any;
         themeController.onThemeChange(updateThemeToggleText);
     }
 
+    function triggerLandingPageTransition(targetUrl: string) {
+        const popupModal = document.getElementById('popup-modal');
+        const persistentNavContainer = document.getElementById('persistent-nav-container');
+        
+        if (!popupModal || !persistentNavContainer) {
+            // Fallback: navigate immediately if elements not found
+            window.location.href = targetUrl;
+            return;
+        }
+
+        // Ensure modal stays visible and properly positioned for the animation
+        popupModal.style.display = 'flex';
+        popupModal.style.opacity = '1';
+        popupModal.style.pointerEvents = 'none'; // Prevent further clicks during transition
+
+        // Add transition class to body to prevent scrolling and other issues
+        document.body.classList.add('transition-active');
+
+        // Create temporary persistent-name element in center of screen
+        const tempPersistentName = document.createElement('div');
+        tempPersistentName.className = 'persistent-name-transition';
+        tempPersistentName.textContent = 'COLIN RAAB';
+        
+        // Calculate exact center position
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        
+        tempPersistentName.style.cssText = `
+            position: fixed;
+            top: ${viewportHeight / 2}px;
+            left: ${viewportWidth / 2}px;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px) saturate(180%);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-family: var(--font-family-mono);
+            font-size: var(--font-size-md);
+            color: var(--color-text-primary);
+            white-space: nowrap;
+            z-index: 99;
+            opacity: 0;
+        `;
+        document.body.appendChild(tempPersistentName);
+
+        // Prepare footer for animation (initially hidden below screen)
+        persistentNavContainer.style.display = 'flex';
+        persistentNavContainer.style.transform = 'translateY(100%)';
+        persistentNavContainer.style.transition = 'none';
+        
+        // Use transition layout (minimal footer with only persistent-name)
+        document.body.classList.add('transition-active');
+        
+        // Hide the real persistent-name in footer during animation
+        const realPersistentName = persistentNavContainer.querySelector('.persistent-name') as HTMLElement;
+        if (realPersistentName) {
+            realPersistentName.style.opacity = '0';
+        }
+
+        // Create animation timeline
+        const timeline = anime.timeline({
+            easing: 'easeInOutCubic'
+        });
+
+        // Phase 1: Fade out popup modal text content (200ms)
+        timeline.add({
+            targets: popupModal.querySelector('.links-container'),
+            opacity: [1, 0],
+            duration: 200,
+            easing: 'easeOutQuad'
+        });
+
+        // Phase 2: Show temporary persistent-name behind modal (immediately)
+        timeline.add({
+            targets: tempPersistentName,
+            opacity: [0, 1],
+            duration: 100,
+            easing: 'easeOutQuad'
+        }, '-=50');
+
+        // Phase 3: Animate modal dimensions to match temp element (300ms)
+        timeline.add({
+            targets: popupModal,
+            width: () => {
+                const tempRect = tempPersistentName.getBoundingClientRect();
+                return tempRect.width + 'px';
+            },
+            height: () => {
+                const tempRect = tempPersistentName.getBoundingClientRect();
+                return tempRect.height + 'px';
+            },
+            duration: 300,
+            easing: 'easeInOutQuad'
+        }, '-=50');
+
+        // Phase 4: Fade out popup modal revealing temp element (200ms)
+        timeline.add({
+            targets: popupModal,
+            opacity: [1, 0],
+            duration: 200,
+            easing: 'easeOutQuad'
+        });
+
+        // Phase 5: Animate footer sliding up (500ms)
+        timeline.add({
+            targets: persistentNavContainer,
+            translateY: ['100%', '0%'],
+            duration: 500,
+            easing: 'easeOutCubic',
+            begin: () => {
+                persistentNavContainer.style.transition = '';
+            }
+        }, '-=100');
+
+        // Phase 6: Move temporary element to footer position (1000ms)
+        timeline.add({
+            targets: tempPersistentName,
+            top: () => {
+                // During transition, footer shows minimal layout with just persistent-name
+                // Center the temp element in the footer area
+                const footerRect = persistentNavContainer.getBoundingClientRect();
+                return (footerRect.top + (footerRect.height / 2)) + 'px';
+            },
+            left: () => {
+                // Center horizontally in the footer
+                return (window.innerWidth / 2) + 'px';
+            },
+            duration: 1000,
+            easing: 'easeInOutCubic'
+        }, '-=200');
+
+        // Phase 7: Show real persistent-name and hide temporary element
+        timeline.add({
+            targets: realPersistentName,
+            opacity: [0, 1],
+            duration: 200,
+            easing: 'easeOutQuad',
+            complete: () => {
+                // Clean up temporary element
+                if (tempPersistentName.parentNode) {
+                    tempPersistentName.parentNode.removeChild(tempPersistentName);
+                }
+                
+                // Clean up modal
+                popupModal.style.display = 'none';
+                popupModal.style.pointerEvents = 'none';
+                
+                // Navigate to target page immediately (keep transition-active class until navigation)
+                window.location.href = targetUrl;
+            }
+        });
+
+        timeline.add({
+            targets: tempPersistentName,
+            opacity: [1, 0],
+            duration: 200,
+            easing: 'easeInQuad'
+        }, '-=200');
+    }
+
     function initializeFooterNavigation() {
         const persistentNavContainer = document.getElementById('persistent-nav-container');
         const popupModal = document.getElementById('popup-modal');
         // Use location.pathname directly for homepage check
         const isHomePage = window.location.pathname === '/' || 
-                          window.location.pathname === '/colinraab.github.io/' || 
+                          window.location.pathname === '/colinraab.com/' || 
                           window.location.pathname.endsWith('/index.html');
 
         if (!persistentNavContainer || !popupModal) return;
 
         let isModalOpen = false;
         let isNavigating = false; // Flag to prevent animations during navigation
+
+        let glassPanelClickHandler: ((event: Event) => void) | null = null;
+        let glassPanelMouseEnterHandler: ((event: Event) => void) | null = null;
+        let glassPanelMouseLeaveHandler: ((event: Event) => void) | null = null;
+
+        // Function to setup glass panel interactivity
+        const setupGlassPanel = () => {
+            if (!isHomePage) return;
+            
+            const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
+            if (!glassPanel) return;
+            
+            // Remove existing event listeners if they exist
+            if (glassPanelClickHandler) {
+                glassPanel.removeEventListener('click', glassPanelClickHandler);
+            }
+            if (glassPanelMouseEnterHandler) {
+                glassPanel.removeEventListener('mouseenter', glassPanelMouseEnterHandler);
+            }
+            if (glassPanelMouseLeaveHandler) {
+                glassPanel.removeEventListener('mouseleave', glassPanelMouseLeaveHandler);
+            }
+            
+            // Create new event handlers
+            glassPanelClickHandler = (event: Event) => {
+                // Only handle glass panel clicks when modal is closed
+                if (!isModalOpen) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    morphToModal(glassPanel);
+                }
+                // When modal is open, don't interfere with modal click handling
+            };
+            
+            glassPanelMouseEnterHandler = () => {
+                if (!isModalOpen) {
+                    glassPanel.style.transform = 'scale(1.02)';
+                    glassPanel.style.boxShadow = '0 10px 30px rgba(0, 255, 0, 0.2)';
+                }
+            };
+            
+            glassPanelMouseLeaveHandler = () => {
+                if (!isModalOpen) {
+                    glassPanel.style.transform = 'scale(1)';
+                    glassPanel.style.boxShadow = 'none';
+                }
+            };
+            
+            // Add the new event listeners
+            glassPanel.addEventListener('click', glassPanelClickHandler);
+            glassPanel.addEventListener('mouseenter', glassPanelMouseEnterHandler);
+            glassPanel.addEventListener('mouseleave', glassPanelMouseLeaveHandler);
+            
+            // Add visual feedback for clickability
+            glassPanel.style.cursor = 'pointer';
+            glassPanel.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            
+            // Force pointer events to be enabled
+            glassPanel.style.pointerEvents = 'auto';
+        };
 
         const showModal = () => {
             if (isModalOpen) return;
@@ -259,12 +480,6 @@ declare const anime: any;
         const resetToGlassPanel = () => {
             if (!isModalOpen || isNavigating) return;
             
-            const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
-            if (!glassPanel) return;
-            
-            const heroContent = glassPanel.querySelector('.hero-content') as HTMLElement;
-            if (!heroContent) return;
-            
             // Simple approach - just fade out modal and restore glass panel
             popupModal.style.transition = 'opacity 0.3s ease';
             popupModal.style.opacity = '0';
@@ -277,21 +492,28 @@ declare const anime: any;
                 isModalOpen = false;
                 document.body.classList.remove('modal-open');
                 
-                // Make sure glass panel is visible
-                glassPanel.style.position = '';
-                glassPanel.style.left = '';
-                glassPanel.style.top = '';
-                glassPanel.style.width = '';
-                glassPanel.style.height = '';
-                glassPanel.style.zIndex = '';
-                glassPanel.style.opacity = '1';
-                glassPanel.style.transform = '';
-                glassPanel.style.transformOrigin = '';
-                
-                // Reset hero content
-                heroContent.style.opacity = '1';
-                heroContent.style.transform = '';
-                heroContent.style.scale = '';
+                // Get fresh reference to glass panel after modal interaction
+                const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
+                if (glassPanel) {
+                    // Make sure glass panel is visible and reset all positioning styles
+                    glassPanel.style.position = '';
+                    glassPanel.style.left = '';
+                    glassPanel.style.top = '';
+                    glassPanel.style.width = '';
+                    glassPanel.style.height = '';
+                    glassPanel.style.zIndex = '';
+                    glassPanel.style.opacity = '1';
+                    glassPanel.style.transform = '';
+                    glassPanel.style.transformOrigin = '';
+                    
+                    const heroContent = glassPanel.querySelector('.hero-content') as HTMLElement;
+                    if (heroContent) {
+                        // Reset hero content
+                        heroContent.style.opacity = '1';
+                        heroContent.style.transform = '';
+                        heroContent.style.scale = '';
+                    }
+                }
                 
                 // Make central content visible
                 const centralContent = document.getElementById('central-content');
@@ -299,6 +521,9 @@ declare const anime: any;
                     centralContent.style.visibility = 'visible';
                     centralContent.style.opacity = '1';
                 }
+                
+                // Completely reinitialize glass panel functionality with fresh reference
+                setupGlassPanel();
             }, 300);
         };
 
@@ -351,36 +576,34 @@ declare const anime: any;
                     return;
                 }
                 
-                // For regular navigation, set navigation flag and clean up immediately
+                // For regular navigation on landing page, trigger transition animation
+                if (isHomePage && linkElement) {
+                    event.preventDefault(); // Prevent immediate navigation
+                    event.stopPropagation();
+                    
+                    // Set navigation flag to prevent other interactions
+                    isNavigating = true;
+                    
+                    // Ensure modal stays visible during transition by preventing normal close behavior
+                    isModalOpen = true;
+                    
+                    // Get the target URL for navigation after animation
+                    const targetUrl = linkElement.getAttribute('href');
+                    if (targetUrl) {
+                        triggerLandingPageTransition(targetUrl);
+                    }
+                    return;
+                }
+                
+                // For regular navigation on other pages, set navigation flag and clean up immediately
                 isNavigating = true; // Prevent any animations
                 isModalOpen = false;
                 document.body.classList.remove('modal-open');
                 
-                // Hide modal and glass panel immediately without animation
+                // Hide modal immediately without animation
                 popupModal.style.display = 'none';
                 popupModal.style.opacity = '0';
                 popupModal.style.pointerEvents = 'none';
-                
-                // Reset glass panel immediately if on home page
-                if (isHomePage) {
-                    const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
-                    if (glassPanel) {
-                        glassPanel.style.position = '';
-                        glassPanel.style.left = '';
-                        glassPanel.style.top = '';
-                        glassPanel.style.width = '';
-                        glassPanel.style.height = '';
-                        glassPanel.style.zIndex = '';
-                        glassPanel.style.transform = '';
-                        glassPanel.style.opacity = '';
-                        
-                        const heroContent = glassPanel.querySelector('.hero-content') as HTMLElement;
-                        if (heroContent) {
-                            heroContent.style.opacity = '';
-                            heroContent.style.scale = '';
-                        }
-                    }
-                }
                 
                 // Don't prevent default - let navigation proceed normally
                 return;
@@ -391,38 +614,9 @@ declare const anime: any;
 
         if (isHomePage) {
             persistentNavContainer.style.display = 'none';
-            const glassPanel = document.querySelector('.glass-panel') as HTMLElement;
             
-            if (glassPanel) {
-                // Add click event listener to glass panel
-                glassPanel.addEventListener('click', (event) => {
-                    // Only handle glass panel clicks when modal is closed
-                    if (!isModalOpen) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        morphToModal(glassPanel);
-                    }
-                    // When modal is open, don't interfere with modal click handling
-                });
-                
-                // Add visual feedback for clickability
-                glassPanel.style.cursor = 'pointer';
-                glassPanel.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
-                
-                glassPanel.addEventListener('mouseenter', () => {
-                    if (!isModalOpen) {
-                        glassPanel.style.transform = 'scale(1.02)';
-                        glassPanel.style.boxShadow = '0 10px 30px rgba(0, 255, 0, 0.2)';
-                    }
-                });
-                
-                glassPanel.addEventListener('mouseleave', () => {
-                    if (!isModalOpen) {
-                        glassPanel.style.transform = 'scale(1)';
-                        glassPanel.style.boxShadow = 'none';
-                    }
-                });
-            }
+            // Setup glass panel interactivity
+            setupGlassPanel();
             
             // Initially hide the popup modal
             popupModal.style.display = 'none';
@@ -455,4 +649,43 @@ declare const anime: any;
     });
 })();
 </script>
+
+<style>
+.persistent-name-transition {
+    /* Styles are set inline in JavaScript for dynamic positioning */
+    /* This class exists for potential additional styling if needed */
+}
+
+/* Ensure footer can animate smoothly */
+#persistent-nav-container {
+    will-change: transform;
+}
+
+/* Hide scrollbars during transition to prevent layout shifts */
+body.transition-active {
+    overflow: hidden;
+}
+
+/* During transition, hide footer text and links to show minimal layout */
+body.transition-active #persistent-nav-container .footer-info,
+body.transition-active #persistent-nav-container .footer-links {
+    display: none !important;
+}
+
+/* During transition, ensure footer only shows persistent-name area */
+body.transition-active #persistent-nav-container .footer-content {
+    justify-content: center !important;
+}
+
+/* During transition, maintain footer height by setting minimum height */
+body.transition-active #persistent-nav-container {
+    min-height: 3rem !important; /* Adjust this value to match your normal footer height */
+}
+
+/* Ensure footer content takes full height during transition */
+body.transition-active #persistent-nav-container .footer-content {
+    height: 100% !important;
+    align-items: center !important;
+}
+</style>
 

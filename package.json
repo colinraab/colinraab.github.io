@@ -20,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/colinraab/colinraab.github.io.git"
   },
-  "homepage": "https://github.com/colinraab/colinraab.github.io",
+  "homepage": "https://colinraab.com",
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "lighthouse": "^12.8.0",

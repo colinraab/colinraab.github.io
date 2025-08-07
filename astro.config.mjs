@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://colinraab.github.io',
+  site: 'https://colinraab.com',
   base: '/',
 
   scopedStyleStrategy: 'class',

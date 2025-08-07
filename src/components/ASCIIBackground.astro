@@ -27,65 +27,92 @@
 
     // Initialize ASCII art
     const asciiCanvas = document.getElementById('ascii-canvas');
+    if (!asciiCanvas) {
+      console.warn('ASCII canvas element not found');
+      return;
+    }
+    
     const generator = new ASCIIGenerator();
     
-    if (asciiCanvas) {
-      // Check if we're on the landing page (index page)
-      const isLandingPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    // Check if we're on the landing page (index page)
+    const isLandingPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    
+    // Configure options based on page type
+    const animatorOptions = {
+      progressiveReveal: isLandingPage,
+      revealDuration: 2000, // 2 seconds
+      staticMode: !isLandingPage, // Enable static mode for non-landing pages
+      fpsTransitionDuration: 2000, // 2 seconds to transition to static
+      staticCharacterChangeInterval: 1000, // Change characters every 1 second
+      staticCharacterChangeCount: 6 // Change 6 characters at a time
+    };
+    
+    // Add CSS class for progressive reveal styling
+    if (isLandingPage) {
+      asciiCanvas.classList.add('progressive-reveal');
       
-      // Configure progressive reveal for landing page
-      const animatorOptions = {
-        progressiveReveal: isLandingPage,
-        revealDuration: 2000 // 2 seconds
-      };
-      
-      // Add CSS class for progressive reveal styling
-      if (isLandingPage) {
-        asciiCanvas.classList.add('progressive-reveal');
-        
-        // Gradually transition to complete state over 1 second after reveal
+      // Gradually transition to complete state over 1 second after reveal
+      setTimeout(() => {
+        asciiCanvas.classList.add('reveal-complete');
+        // Wait a bit longer before removing progressive-reveal to avoid abrupt changes
         setTimeout(() => {
-          asciiCanvas.classList.add('reveal-complete');
-          // Wait a bit longer before removing progressive-reveal to avoid abrupt changes
-          setTimeout(() => {
-            asciiCanvas.classList.remove('progressive-reveal');
-          }, 1000); // Remove after 1 second of overlap
-        }, 2500); // Start transition 0.5 seconds after reveal completes
-      }
-      
-      currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12, animatorOptions); // 12 fps for smooth but controlled updates
-      currentAnimator.start();
-      
-      // Handle resize and viewport changes
-      const handleResize = () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          currentAnimator?.resize();
-        }, 250);
-      };
-      
-      window.addEventListener('resize', handleResize);
-      
-      // Handle mobile viewport changes (address bar show/hide)
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', handleResize);
-      }
-      
-      // Handle orientation changes on mobile
-      window.addEventListener('orientationchange', () => {
-        setTimeout(() => {
-          currentAnimator?.resize();
-        }, 500); // Delay to allow orientation change to complete
-      });
+          asciiCanvas.classList.remove('progressive-reveal');
+        }, 1000); // Remove after 1 second of overlap
+      }, 2500); // Start transition 0.5 seconds after reveal completes
+    } else {
+      // For non-landing pages, remove any progressive reveal classes
+      asciiCanvas.classList.remove('progressive-reveal', 'reveal-complete');
     }
+    
+    currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12, animatorOptions); // 12 fps for smooth but controlled updates
+    currentAnimator.start();
+    
+    // For non-landing pages, enable static mode after the initial animation starts
+    if (!isLandingPage) {
+      // Give it a moment to render the initial pattern, then transition to static
+      setTimeout(() => {
+        if (currentAnimator) {
+          currentAnimator.enableStaticMode();
+        }
+      }, 300); // Increased delay to ensure initial pattern is rendered
+    }
+    
+    // Handle resize and viewport changes
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        currentAnimator?.resize();
+      }, 250);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Handle mobile viewport changes (address bar show/hide)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    }
+    
+    // Handle orientation changes on mobile
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        currentAnimator?.resize();
+      }, 500); // Delay to allow orientation change to complete
+    });
 
     // Initialize theme controller
     if (!currentThemeController) {
       currentThemeController = new ThemeController();
     } else {
       // Ensure theme is correctly applied on reinit
-      const currentTheme = currentThemeController.getCurrentTheme();
       currentThemeController.applyTheme();
+    }
+  }
+
+  // Handle page transitions for animation effects
+  function handlePageTransition() {
+    if (currentAnimator && currentAnimator.staticMode) {
+      // Trigger a brief animation burst when navigating between pages
+      currentAnimator.triggerPageTransition();
     }
   }
 
@@ -97,5 +124,12 @@
   }
 
   // Re-initialize after Astro view transitions
-  document.addEventListener('astro:after-swap', initializeComponents);
+  document.addEventListener('astro:after-swap', () => {
+    initializeComponents();
+    // Also trigger page transition animation
+    setTimeout(handlePageTransition, 50); // Small delay to ensure components are initialized
+  });
+
+  // Handle initial page transitions (before swap)
+  document.addEventListener('astro:before-swap', handlePageTransition);
 </script>

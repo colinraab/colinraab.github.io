@@ -2,7 +2,7 @@
 
 Showcases my professional, academic, and personal work. Built with Astro and anime.js.
 
-Visit the portfolio at: [https://colinraab.github.io/](https://colinraab.github.io/)
+Visit the portfolio at: [https://colinraab.com/](https://colinraab.com/)
 
 ## Pages
 
