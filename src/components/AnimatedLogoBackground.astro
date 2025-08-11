@@ -2,49 +2,22 @@
   AnimatedLogoBackground.astro
   
   Animated SVG logo background component with dynamic visual effects.
-  Features SVG animations, turbulence filters, and responsive scaling.
-  Provides visual branding element with subtle motion and atmospheric effects.
+  Features SVG animations and responsive scaling.
+  Provides visual branding element with subtle motion.
 -->
 
 <div id="animated-logo-background" class="logo-background">
   <svg id="logo-svg" viewBox="0 0 1000 1001.525" class="logo-svg">
     <defs>
-      <filter id="turbulence-1" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.03" numOctaves="4" result="noise" seed="1"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="8"/>
-      </filter>
-      <filter id="turbulence-2" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.025" numOctaves="3" result="noise" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6"/>
-      </filter>
-      <filter id="turbulence-3" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.035" numOctaves="5" result="noise" seed="3"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7"/>
-      </filter>
-      <filter id="turbulence-4" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.028" numOctaves="4" result="noise" seed="4"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="9"/>
-      </filter>
-      <filter id="turbulence-5" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.032" numOctaves="3" result="noise" seed="5"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7.5"/>
-      </filter>
-      <filter id="turbulence-6" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.026" numOctaves="4" result="noise" seed="6"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="8.5"/>
-      </filter>
-      <filter id="turbulence-7" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence baseFrequency="0.029" numOctaves="5" result="noise" seed="7"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6.8"/>
-      </filter>
+      <!-- Turbulence filters removed -->
     </defs>
-    <circle class="logo-circle" cx="344.447" cy="188.217" r="107.602" data-delay="0" filter="url(#turbulence-1)"/>
-    <circle class="logo-circle" cx="344.447" cy="586.661" r="107.602" data-delay="100" filter="url(#turbulence-2)"/>
-    <circle class="logo-circle" cx="187.503" cy="389.681" r="107.602" data-delay="200" filter="url(#turbulence-3)"/>
-    <circle class="logo-circle" cx="646.913" cy="188.217" r="107.602" data-delay="300" filter="url(#turbulence-4)"/>
-    <circle class="logo-circle" cx="802.43" cy="389.319" r="107.602" data-delay="400" filter="url(#turbulence-5)"/>
-    <circle class="logo-circle" cx="646.913" cy="586.661" r="107.602" data-delay="500" filter="url(#turbulence-6)"/>
-    <circle class="logo-circle" cx="825.523" cy="844.398" r="107.602" data-delay="600" filter="url(#turbulence-7)"/>
+    <circle class="logo-circle" cx="344.447" cy="188.217" r="107.602" data-delay="0"/>
+    <circle class="logo-circle" cx="344.447" cy="586.661" r="107.602" data-delay="100"/>
+    <circle class="logo-circle" cx="187.503" cy="389.681" r="107.602" data-delay="200"/>
+    <circle class="logo-circle" cx="646.913" cy="188.217" r="107.602" data-delay="300"/>
+    <circle class="logo-circle" cx="802.43" cy="389.319" r="107.602" data-delay="400"/>
+    <circle class="logo-circle" cx="646.913" cy="586.661" r="107.602" data-delay="500"/>
+    <circle class="logo-circle" cx="825.523" cy="844.398" r="107.602" data-delay="600"/>
   </svg>
 </div>
 
@@ -147,67 +120,6 @@
         easing: 'easeOutQuart'
       });
       currentAnimations.push(strokeAnimation);
-    });
-    
-    // Start turbulence animation faster and more extreme
-    setTimeout(() => {
-      startTurbulenceAnimation();
-    }, 100); // Start turbulence sooner since scale animation is faster
-  }
-  
-  // Function to animate the turbulence filters
-  function startTurbulenceAnimation() {
-    const turbulenceFilters = document.querySelectorAll('feTurbulence');
-    
-    turbulenceFilters.forEach((filter, index) => {
-      const originalFreq = parseFloat(filter.getAttribute('baseFrequency') || '0.03');
-      const originalSeed = parseInt(filter.getAttribute('seed') || '1');
-      
-      // Animate base frequency for organic movement - more extreme
-      const frequencyAnimation = anime({
-        targets: { freq: originalFreq },
-        freq: [originalFreq, originalFreq * 2, originalFreq * 0.3, originalFreq],
-        duration: 8000 + (index * 800),
-        loop: true,
-        direction: 'alternate',
-        easing: 'easeInOutSine',
-        update: function(anim: any) {
-          filter.setAttribute('baseFrequency', anim.animatables[0].target.freq.toString());
-        }
-      });
-      currentAnimations.push(frequencyAnimation);
-      
-      // Animate seed for texture variation - more dramatic
-      const seedAnimation = anime({
-        targets: { seed: originalSeed },
-        seed: [originalSeed, originalSeed + 100, originalSeed - 50, originalSeed],
-        duration: 8000 + (index * 1000), 
-        loop: true,
-        direction: 'alternate',
-        easing: 'easeInOutQuart',
-        update: function(anim: any) {
-          filter.setAttribute('seed', Math.round(anim.animatables[0].target.seed).toString());
-        }
-      });
-      currentAnimations.push(seedAnimation);
-      
-      // Animate displacement scale for intensity variation - much more extreme
-      const displacementMap = filter.nextElementSibling as any;
-      if (displacementMap && displacementMap.tagName === 'feDisplacementMap') {
-        const originalScale = parseFloat(displacementMap.getAttribute('scale') || '8');
-        const scaleAnimation = anime({
-          targets: { scale: originalScale },
-          scale: [originalScale, originalScale * 1.5, originalScale * 0.1, originalScale * 1.3, originalScale],
-          duration: 5000 + (index * 600), 
-          loop: true,
-          direction: 'alternate',
-          easing: 'easeInOutCubic',
-          update: function(anim: any) {
-            displacementMap.setAttribute('scale', anim.animatables[0].target.scale.toString());
-          }
-        });
-        currentAnimations.push(scaleAnimation);
-      }
     });
   }
   

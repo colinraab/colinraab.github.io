@@ -9,9 +9,44 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Navigation from '../components/Navigation.astro';
+import SEOHead from '../components/SEOHead.astro';
 ---
 
-<PageLayout title="Colin Raab - Portfolio" description="Welcome to my creative portfolio showcasing programming, music, audio engineering, lessons, and photography." isASCIILayout={true}>
+<PageLayout 
+  title="Colin Raab - Full-Stack Developer, Music Producer & Audio Engineer | Creative Portfolio" 
+  description="Colin Raab is a full-stack developer, music producer, and audio engineer specializing in JavaScript, React, C++, Python, music technology, and creative coding. Graduate of University of Miami and McGill University." 
+  isASCIILayout={true}
+>
+  <SEOHead 
+    title="Colin Raab - Full-Stack Developer, Music Producer & Audio Engineer | Creative Portfolio"
+    description="Colin Raab is a full-stack developer, music producer, and audio engineer specializing in JavaScript, React, C++, Python, music technology, and creative coding. Graduate of University of Miami and McGill University."
+    type="website"
+  />
+  
+  <!-- Hidden SEO content for homepage -->
+  <div style="display: none;" aria-hidden="true">
+    <h1>Colin Raab - Premier Full-Stack Developer and Music Producer</h1>
+    <p>Welcome to Colin Raab's creative portfolio. Colin Raab is a highly skilled full-stack developer specializing in modern web technologies including JavaScript, C++, Python, React, and Node.js. Colin Raab is also an expert music producer and audio engineer with professional training from McGill University and University of Miami.</p>
+    
+    <h2>Colin Raab Professional Services</h2>
+    <ul>
+      <li>Full-Stack Web Development (JavaScript, React, Node.js)</li>
+      <li>C++ for Realtime Audio and Embedded Systems</li>
+      <li>Python Scripting for Machine Learning and AI</li>
+      <li>Relational Databases (SQL, Supabase)</li>
+      <li>Music Production and Sound Design</li>
+      <li>Audio Engineering (Recording, Mixing, Mastering)</li>
+      <li>Creative Coding and Interactive Media</li>
+      <li>Photography and Visual Arts</li>
+    </ul>
+    
+    <h2>Colin Raab Education</h2>
+    <p>Colin Raab holds a Bachelor of Science in Music Engineering from the University of Miami and is pursuing a Master of Arts in Music Technology at McGill University.</p>
+    
+    <h2>Contact Colin Raab</h2>
+    <p>For professional inquiries, collaborations, or to learn more about Colin Raab's work in software development and music production, explore this portfolio showcasing Colin Raab's diverse creative and technical expertise.</p>
+  </div>
+  
   <Navigation />
 </PageLayout>
 

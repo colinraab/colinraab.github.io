@@ -8,6 +8,7 @@
 
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+import SEOHead from '../components/SEOHead.astro';
 
 // Get the base URL for proper navigation paths
 const baseUrl = import.meta.env.BASE_URL;
@@ -18,7 +19,16 @@ const createPath = (path: string) => {
 };
 ---
 
-<PageLayout title="About - Colin Raab" description="Learn more about Colin Raab, a creative developer and multi-disciplinary artist." isASCIILayout={true}>
+<PageLayout 
+  title="About Colin Raab - Full-Stack Developer & Music Producer | McGill University | University of Miami" 
+  description="Learn about Colin Raab, a full-stack developer and music producer with expertise in JavaScript, React, C++, Python, audio engineering, and music technology. Graduate of University of Miami (BS Music Engineering) and McGill University (MA Music Technology)." 
+  isASCIILayout={true}
+>
+  <SEOHead 
+    title="About Colin Raab - Full-Stack Developer & Music Producer | McGill University | University of Miami"
+    description="Learn about Colin Raab, a full-stack developer and music producer with expertise in JavaScript, React, C++, Python, audio engineering, and music technology. Graduate of University of Miami (BS Music Engineering) and McGill University (MA Music Technology)."
+    type="profile"
+  />
 
     <!-- Central content -->
     <div class="glass-panel">

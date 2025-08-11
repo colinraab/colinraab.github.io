@@ -46,17 +46,34 @@
             font-size: 0.75rem;
             color: #4b5563;
             font-style: italic;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
         }
         .item-date {
             font-size: 0.625rem;
             color: #6b7280;
-            text-align: right;
+            flex-shrink: 0;
+            margin-left: 1rem;
         }
         .item-description {
             margin-top: 0.0625rem;
             color: #374151;
             font-size: 0.75rem;
-            line-height: 1.2; /* Added tighter line height */
+            line-height: 1.2;
+            margin-left: 1rem;
+        }
+        .item-description-list {
+            margin-top: 0.0625rem;
+            margin-left: 1rem;
+            list-style-type: disc;
+            padding-left: 0.75rem;
+        }
+        .item-description-list li {
+            color: #374151;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            margin-bottom: 0.03125rem;
         }
         .languages {
             margin-top: 0.375rem; 
@@ -136,6 +153,9 @@
 
         /* Ensure content visibility when PDF is generated */
         @media print {
+            @page {
+                margin: 0.2in 0.3in 0.2in 0.3in; /* top right bottom left */
+            }
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -184,16 +204,94 @@
             <h1 class="text-xl font-bold">Colin Stephen Raab</h1>
             <div class="mt-0.5 text-gray-600 space-x-1 text-xs">
                 <a href="mailto:csr@raabfamily.net">csr@raabfamily.net</a>
-                <span>•</span>
-                <a href="https://linkedin.com/in/colinraab" target="_blank">linkedin.com/in/colinraab</a>
-                <span>•</span>
-                <a href="https://github.com/colinraab/" target="_blank">github.com/colinraab</a>
-                <span>•</span>
+                <span></span>
                 <a href="https://colinraab.com" target="_blank">colinraab.com</a>
-                <span>•</span>
-                <span>650.260.4561</span>
+                <span></span>
+                <a href="https://linkedin.com/in/colinraab" target="_blank">linkedin.com/in/colinraab</a>
+                <span></span>
+                <a href="https://github.com/colinraab/" target="_blank">github.com/colinraab</a>
+                <span></span>
+                <span>6502604561</span>
             </div>
         </header>
+
+        <!-- Academic Section -->
+        <section class="mb-2">
+            <h2 class="section-title">Education</h2>
+            <div class="space-y-1.5">
+                <div>
+                    <h3 class="item-title">McGill University Schulich School of Music</h3>
+                    <p class="item-subtitle">
+                        <span>Master of Arts in Music Technology</span>
+                        <span class="item-date">2023 - 2025</span>
+                    </p>
+                </div>
+                <div>
+                    <h3 class="item-title">University of Miami Frost School of Music</h3>
+                    <p class="item-subtitle">
+                        <span>Bachelor of Science in Music Engineering Technology, Computer Engineering minor. 3.91 GPA, Outstanding Senior</span>
+                        <span class="item-date">2019 - 2023</span>
+                    </p>
+                </div>
+                 <div>
+                    <h3 class="item-title">Menlo School</h3>
+                    <p class="item-subtitle">
+                        <span>Prestigious private high school in Atherton, California</span>
+                        <span class="item-date">2015 - 2019</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section class="mb-2">
+            <h2 class="section-title">Work Experience</h2>
+            <div class="space-y-2">
+                <div>
+                    <h3 class="item-title">Full Stack Software Engineer</h3>
+                    <p class="item-subtitle">
+                        <span>Aurmor.ai</span>
+                        <span class="item-date">2024 - Present</span>
+                    </p>
+                    <ul class="item-description-list">
+                        <li>Website (Node.js, React) development to interact with a relational database (Supabase, PostgreSQL).</li>
+                        <li>JUCE (C++) and ESP32 development for a microcontroller system with desktop application.</li>
+                        <li>Monitor and display serial data, analyze and detect patterns using machine learning.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="item-title">Research Assistant</h3>
+                    <p class="item-subtitle">
+                        <span>University of Miami Frost School of Music</span>
+                        <span class="item-date">2023 - Present</span>
+                    </p>
+                    <ul class="item-description-list">
+                        <li>Audio and video feature extraction and analysis using machine learning for music therapy research with Python.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="item-title">Recording Services, Recording and Sound Engineer</h3>
+                    <p class="item-subtitle">
+                        <span>University of Miami Frost School of Music</span>
+                        <span class="item-date">2019 - 2023</span>
+                    </p>
+                    <ul class="item-description-list">
+                        <li>Set up equipment and record recitals and large concerts in both a concert hall and recital hall.</li>
+                        <li>Worked with CNCO, Luis Fonsi, Maria Schneider, JACK Quartet, Soundmirror, and others.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="item-title">Technology Help Desk Employee</h3>
+                    <p class="item-subtitle">
+                        <span>University of Miami IT Department</span>
+                        <span class="item-date">2019 - 2023</span>
+                    </p>
+                    <ul class="item-description-list">
+                        <li>Assist undergrad and graduate students with computer and tech-related issues remotely and in person.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
         <!-- Projects Section -->
         <section class="mb-2">
@@ -210,126 +308,48 @@
             </div>
         </section>
 
-        <!-- Work Experience Section -->
+        <!-- Key Classes Section -->
         <section class="mb-2">
-            <h2 class="section-title">Work Experience</h2>
-            <div class="space-y-2">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">Full Stack Software Engineer</h3>
-                            <p class="item-subtitle">Aurmor.ai</p>
-                        </div>
-                        <p class="item-date">2024 - Present</p>
-                    </div>
-                    <ul class="item-description">
-                        <li>Website (Node.js, React) development to interact with a relational database (Supabase, PostgreSQL).</li>
-                        <li>JUCE (C++) and ESP32 development for a microcontroller system with desktop application.</li>
-                        <li>Monitor and display serial data, analyze and detect patterns using machine learning.</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">Research Assistant</h3>
-                            <p class="item-subtitle">University of Miami Frost School of Music</p>
-                        </div>
-                        <p class="item-date">2023 - Present</p>
-                    </div>
-                    <ul class="item-description">
-                        <li>Audio and video feature extraction and analysis using machine learning for music therapy research with Python.</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">Recording Services, Recording and Sound Engineer</h3>
-                            <p class="item-subtitle">University of Miami Frost School of Music</p>
-                        </div>
-                        <p class="item-date">2019 - 2023</p>
-                    </div>
-                    <ul class="item-description">
-                        <li>Set up equipment and record recitals and large concerts in both a concert hall and recital hall.</li>
-                        <li>Worked with CNCO, Luis Fonsi, Maria Schneider, JACK Quartet, Soundmirror, and others.</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">Student Technology Help Desk Employee</h3>
-                            <p class="item-subtitle">University of Miami</p>
-                        </div>
-                        <p class="item-date">2019 - 2023</p>
-                    </div>
-                    <ul class="item-description">
-                        <li>Assist undergrad and graduate students with computer and tech-related issues remotely and in person.</li>
-                        <li>Proficient with both Windows and Mac computers, Adobe, Google, and Microsoft Office Suites.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Academic Section -->
-        <section class="mb-2">
-            <h2 class="section-title">Academic</h2>
-            <div class="space-y-1.5">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">McGill University Schulich School of Music</h3>
-                            <p class="item-subtitle">Master of Arts in Music Technology</p>
-                        </div>
-                        <p class="item-date">2023 - 2025</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">University of Miami Frost School of Music</h3>
-                            <p class="item-subtitle">Bachelor of Science in Music Engineering Technology, Computer Engineering minor</p>
-                             <p class="text-xs text-gray-600">3.91 GPA, Outstanding Senior award</p>
-                        </div>
-                        <p class="item-date">2019 - 2023</p>
-                    </div>
-                </div>
-                 <div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="item-title">Menlo School</h3>
-                        </div>
-                        <p class="item-date">2015 - 2019</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-         <!-- Key Classes Section -->
-        <section class="mb-2">
-            <h2 class="section-title">Key Classes (Graduate Level)</h2>
+            <h2 class="section-title">Key Graduate Classes</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                 <div>
                     <h3 class="item-title">Computational Modeling of Acoustic Systems</h3>
-                    <p class="item-description">Methods for discrete-time modeling of musical acoustic systems, MATLAB and C++.</p>
+                    <p class="item-description">Methods for discrete-time modeling of musical acoustic systems with MATLAB and C++.</p>
                 </div>
                 <div>
-                    <h3 class="item-title">Music Information Acquisition, Preservation, and Retrieval</h3>
+                    <h3 class="item-title">Music Information Retrieval</h3>
                     <p class="item-description">State of the art review in machine learning for music, feature extraction and classification, and symbolic representations.</p>
                 </div>
                 <div>
                     <h3 class="item-title">Digital Sound Synthesis and Audio Processing</h3>
-                    <p class="item-description">Theoretical and practical study of spectral representation, analysis, and modification of sound signals using MAX/MSP.</p>
-                </div>
-                <div>
-                    <h3 class="item-title">Digital Synthesizer Design</h3>
-                    <p class="item-description">Practice research and development skills with VST effects and synthesizers in C++ using JUCE.</p>
+                    <p class="item-description">Study of spectral representation, analysis, and modification of sound using C++, JUCE, and MAX/MSP.</p>
                 </div>
                 <div>
                     <h3 class="item-title">Machine Learning</h3>
-                    <p class="item-description">Explore and implement neural networks in Python using PyTorch and libraries like numpy, scikit, matplotlib, scipy, and pandas.</p>
+                    <p class="item-description">Implement neural networks in Python using PyTorch, TensorFlow, numpy, scikit, matplotlib, scipy, and pandas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="mb-2">
+            <h2 class="section-title">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                <div>
+                    <h3 class="item-title">Programming Languages</h3>
+                    <p class="item-description">Python, C++, JavaScript, MATLAB, Max/MSP, HTML/CSS</p>
                 </div>
                 <div>
-                    <h3 class="item-title">Computational Psychoacoustics</h3>
-                    <p class="item-description">Study auditory sensory transduction, cochlear processes, and neural pathways with applications to perceptual data reduction.</p>
+                    <h3 class="item-title">Frameworks & Libraries</h3>
+                    <p class="item-description">React, Node.js, Electron, JUCE, PyTorch, TensorFlow</p>
+                </div>
+                <div>
+                    <h3 class="item-title">Databases & Tools</h3>
+                    <p class="item-description">PostgreSQL, Supabase, Git, Docker, Google Cloud</p>
+                </div>
+                <div>
+                    <h3 class="item-title">Hardware & Embedded Systems</h3>
+                    <p class="item-description">ESP32, Arduino, Firmware, Serial Communication</p>
                 </div>
             </div>
         </section>
