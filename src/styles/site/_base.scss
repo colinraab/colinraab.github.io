@@ -14,6 +14,15 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  
+  /* Dynamic viewport height properties for mobile browser UI handling */
+  --vh: 1vh;
+  --dvh: 100vh; /* fallback */
+  
+  /* Check if dynamic viewport units are supported */
+  @supports (height: 100dvh) {
+    --dvh: 100dvh;
+  }
 }
 
 body {
@@ -25,11 +34,13 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  min-height: var(--dvh); /* Use dynamic viewport height when supported */
   overflow-x: hidden; // Always prevent horizontal scroll
   
   // ASCII layout specific styles
   &.ascii-layout-body {
     height: 100vh;
+    height: var(--dvh); /* Use dynamic viewport height when supported */
     overflow: hidden; // Prevent all scrolling for ASCII pages
   }
   
@@ -73,6 +84,7 @@ body {
 
 .site-wrapper {
   min-height: 100vh;
+  min-height: var(--dvh); /* Use dynamic viewport height when supported */
   display: flex;
   flex-direction: column;
   position: relative;

@@ -12,27 +12,15 @@
   width: 100vw;
   height: 100vh;
   /* Use CSS custom properties for better mobile support */
-  width: 100dvw; /* Dynamic viewport width - fallback to 100vw */
-  height: 100dvh; /* Dynamic viewport height - fallback to 100vh */
+  height: var(--dvh); /* Use our dynamic viewport height */
   z-index: -10;
   pointer-events: none;
   overflow: hidden;
   
-  @supports not (height: 100dvh) {
-    /* Fallback for browsers that don't support dvh */
-    width: 100vw;
-    height: 100vh;
-  }
-  
   @include media-down('sm') {
     /* Ensure full coverage on mobile */
     width: 100vw;
-    height: 100vh;
-    /* Add slight padding to account for potential browser chrome issues */
-    width: calc(100vw + 10px);
-    height: calc(100vh + 10px);
-    top: -5px;
-    left: -5px;
+    height: var(--dvh); /* Use our dynamic viewport height */
   }
 }
 

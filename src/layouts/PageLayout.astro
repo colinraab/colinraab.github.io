@@ -49,15 +49,20 @@ const { title, description, isASCIILayout = false, hideLogoBackground = false } 
     &.ascii-layout {
       padding: 0;
       min-height: 100vh;
+      min-height: var(--dvh); /* Use dynamic viewport height when supported */
       height: 100vh;
+      height: var(--dvh); /* Use dynamic viewport height when supported */
       overflow: hidden; 
       display: flex;
       flex-direction: row;
+      justify-content: center;
+      align-items: center;
     }
     
     &:not(.ascii-layout) {
       padding-top: 2rem;
       min-height: calc(100vh - 160px);
+      min-height: calc(var(--dvh) - 160px); /* Use dynamic viewport height when supported */
     }
   }
 </style>
