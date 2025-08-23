@@ -4,6 +4,8 @@ Showcases my professional, academic, and personal work. Built with Astro and ani
 
 Visit the portfolio at: [https://colinraab.com/](https://colinraab.com/)
 
+*Last updated: August 23, 2025*
+
 ## Pages
 
 - **Resume** Printer-friendly HTML version of my resume
