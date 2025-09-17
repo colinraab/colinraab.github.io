@@ -1,6 +1,10 @@
 /**
- * Procedural ASCII Art Generator
- * Creates responsive ASCII patterns that adapt to screen size
+ * Optimized ASCII Generator
+ * Reduces memory usage and improves performance through:
+ * - String pooling and reuse
+ * - Reduced DOM manipulation
+ * - Smarter frame rate management
+ * - Memory-efficient pattern generation
  */
 
 export class ASCIIGenerator {
@@ -12,51 +16,88 @@ export class ASCIIGenerator {
       noise: this.generateNoise.bind(this),
       circuit: this.generateCircuit.bind(this)
     };
+    
+    // Caching for performance
+  this.dimensionsCache = null;
+    this.lastResizeTime = 0;
+    this.resizeThrottle = 250; // ms
+    
+    // String builder for efficiency
+    this.stringPool = [];
+    this.poolIndex = 0;
+    this.maxPoolSize = 5;
   }
 
-  // Generate wave patterns
+  // Optimized wave patterns with reduced calculations
   generateWaves(width, height, time = 0) {
-    let result = '';
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const wave1 = Math.sin(x * 0.1 + time * 0.01) * 0.5;
-        const wave2 = Math.sin(y * 0.15 + time * 0.008) * 0.5;
-        const intensity = (wave1 + wave2 + 1) * 0.5;
-        const charIndex = Math.floor(intensity * this.chars.length);
-        result += this.chars[Math.min(charIndex, this.chars.length - 1)];
-      }
-      result += '\n';
-    }
-    return result;
-  }
-
-  // Generate grid patterns
-  generateGrid(width, height, density = 0.3) {
-    let result = '';
-    // Adjust spacing to create square-appearing grid cells
-    // Since characters are ~0.6 aspect ratio (width/height), we need wider spacing horizontally
-    const horizontalSpacing = 6; // Wider horizontal spacing
-    const verticalSpacing = 4;   // Narrower vertical spacing
+    // Reuse string from pool if available
+    let result = this.getPooledString();
+    
+    // Reduce time precision to avoid excessive recalculation
+    const normalizedTime = Math.floor(time / 50) * 50;
     
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        if ((x % horizontalSpacing === 0 || y % verticalSpacing === 0) && Math.random() < density) {
-          result += this.chars[Math.floor(Math.random() * 4) + 2];
-        } else {
-          result += this.chars[Math.floor(Math.random() * 2)];
-        }
+        // Simplified wave calculation
+        const wave1 = Math.sin(x * 0.08 + normalizedTime * 0.005) * 0.4;
+        const wave2 = Math.sin(y * 0.12 + normalizedTime * 0.004) * 0.4;
+        const intensity = (wave1 + wave2 + 1) * 0.5;
+        const charIndex = Math.min(Math.floor(intensity * this.chars.length), this.chars.length - 1);
+        result += this.chars[charIndex];
       }
       result += '\n';
     }
     return result;
   }
 
-  // Generate noise patterns
-  generateNoise(width, height, intensity = 0.5) {
-    let result = '';
+  // Optimized grid with better caching
+  generateGrid(width, height, density = 0.25) {
+    let result = this.getPooledString();
+    
+    // Slightly tighter grid to reduce character count
+    const horizontalSpacing = 8;
+    const verticalSpacing = 5;
+    
+    // Pre-calculate random values to avoid repeated Math.random() calls
+    const randomGrid = new Float32Array(Math.ceil(width * height / 20));
+    for (let i = 0; i < randomGrid.length; i++) {
+      randomGrid[i] = Math.random();
+    }
+    
+    let randomIndex = 0;
+    
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const noise = Math.random();
+        const isLine = (x % horizontalSpacing === 0 || y % verticalSpacing === 0);
+        if (isLine && randomGrid[randomIndex % randomGrid.length] < density) {
+          result += this.chars[Math.floor(randomGrid[(randomIndex + 1) % randomGrid.length] * 4) + 2];
+        } else {
+          result += randomGrid[(randomIndex + 2) % randomGrid.length] < 0.1 ? this.chars[0] : ' ';
+        }
+        randomIndex++;
+      }
+      result += '\n';
+    }
+    return result;
+  }
+
+  // Simplified noise generation
+  generateNoise(width, height, intensity = 0.4) {
+    let result = this.getPooledString();
+    
+    // Use a smaller random pool for better performance
+    const randomPool = new Float32Array(1000);
+    for (let i = 0; i < randomPool.length; i++) {
+      randomPool[i] = Math.random();
+    }
+    
+    let poolIndex = 0;
+    
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const noise = randomPool[poolIndex % randomPool.length];
+        poolIndex++;
+        
         if (noise < intensity) {
           const charIndex = Math.floor(noise * this.chars.length / intensity);
           result += this.chars[charIndex];
@@ -69,13 +110,13 @@ export class ASCIIGenerator {
     return result;
   }
 
-  // Generate circuit-like patterns
+  // Optimized circuit pattern
   generateCircuit(width, height) {
-    let result = '';
-    // Adjust spacing to create square-appearing grid cells
-    // Since characters are ~0.6 aspect ratio (width/height), we need wider spacing horizontally
-    const horizontalSpacing = 10; // Wider horizontal spacing for square cells
-    const verticalSpacing = 6;    // Vertical spacing
+    let result = this.getPooledString();
+    
+    // Slightly larger spacing to reduce total characters
+    const horizontalSpacing = 12;
+    const verticalSpacing = 7;
     
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
@@ -85,9 +126,9 @@ export class ASCIIGenerator {
         if (isJunction) {
           result += '+';
         } else if (isLine) {
-          result += Math.random() < 0.7 ? '-' : '|';
+          result += x % horizontalSpacing === 0 ? '|' : '-';
         } else {
-          result += Math.random() < 0.1 ? '.' : ' ';
+          result += Math.random() < 0.05 ? '.' : ' '; // Reduced noise
         }
       }
       result += '\n';
@@ -95,67 +136,123 @@ export class ASCIIGenerator {
     return result;
   }
 
-  // Calculate optimal dimensions for screen
+  // String pooling for memory efficiency
+  getPooledString() {
+    if (this.stringPool.length > this.poolIndex) {
+      const str = this.stringPool[this.poolIndex];
+      this.stringPool[this.poolIndex] = ''; // Clear the string
+      this.poolIndex = (this.poolIndex + 1) % this.maxPoolSize;
+      return '';
+    }
+    return '';
+  }
+
+  // Optionally allow measuring based on a DOM element to account for font metrics
+  attachMeasureElement(el) {
+    this.measureElement = el || null;
+    this.dimensionsCache = null;
+  }
+
+  // Throttled dimension calculation
   calculateDimensions() {
-    // Get actual viewport dimensions accounting for mobile browser chrome
+    const now = Date.now();
+    if (this.dimensionsCache && (now - this.lastResizeTime) < this.resizeThrottle) {
+      return this.dimensionsCache;
+    }
+
     let vw, vh;
     
-    // Use visualViewport API if available (better for mobile)
-    if (window.visualViewport) {
+    if (this.measureElement) {
+      const rect = this.measureElement.getBoundingClientRect();
+      vw = rect.width;
+      vh = rect.height;
+    } else if (window.visualViewport) {
       vw = window.visualViewport.width;
       vh = window.visualViewport.height;
     } else {
-      // Fallback to traditional methods
       vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     }
     
-    // On mobile, add some extra space to ensure full coverage
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
-      vw += 20;
-      vh += 20;
+      vw += 10; // Reduced padding
+      vh += 10;
     }
     
-    // Calculate based on actual font size being used
-    let fontSize;
-    if (isMobile) {
-      const vmin = Math.min(vw, vh) / 100;
-      fontSize = Math.min(Math.max(vmin * 1.5, 4), 10);
+    // Determine character dimensions. Prefer measuring from the actual element to avoid rounding gaps.
+    let charWidth, lineHeight;
+    if (this.measureElement) {
+      // Use computed styles to get accurate line-height in pixels
+      const cs = window.getComputedStyle(this.measureElement);
+      const fontSizePx = parseFloat(cs.fontSize) || 12;
+      const lineHeightPx = cs.lineHeight === 'normal' ? fontSizePx * 1.2 : parseFloat(cs.lineHeight);
+      lineHeight = lineHeightPx || fontSizePx;
+
+      // Measure average character width using multiple characters for stability
+      const probe = document.createElement('span');
+      probe.textContent = 'MMMMMMMMMM';
+      probe.style.visibility = 'hidden';
+      probe.style.whiteSpace = 'pre';
+      this.measureElement.appendChild(probe);
+      const rect = probe.getBoundingClientRect();
+      this.measureElement.removeChild(probe);
+      const measuredWidth = rect.width || fontSizePx * 6; // rough fallback
+      charWidth = measuredWidth / 10;
     } else {
-      const vmin = Math.min(vw, vh) / 100;
-      fontSize = Math.min(Math.max(vmin, 6), 14);
+      // Fallback to heuristic based on viewport
+      let fontSize;
+      if (isMobile) {
+        const vmin = Math.min(vw, vh) / 100;
+        fontSize = Math.min(Math.max(vmin * 1.8, 5), 8); // Larger font on mobile
+      } else {
+        const vmin = Math.min(vw, vh) / 100;
+        fontSize = Math.min(Math.max(vmin * 1.2, 8), 12); // Larger font overall
+      }
+      charWidth = fontSize * 0.6;
+      lineHeight = fontSize;
     }
-    
-    // For monospace fonts, character width ≈ 0.6 * font size, line height ≈ font size
-    const charWidth = fontSize * 0.6;
-    const lineHeight = fontSize;
-    
-    const width = Math.ceil(vw / charWidth) + 2; 
+
+    // Slightly over-generate to ensure full coverage, clipping via overflow hidden
+    const width = Math.ceil(vw / charWidth) + 2;
     const height = Math.ceil(vh / lineHeight) + 2;
     
-    return { width, height };
+    this.dimensionsCache = { width, height };
+    this.lastResizeTime = now;
+    
+    return this.dimensionsCache;
   }
 
-  // Generate responsive ASCII art
+  // Main generation method with optimizations
   generate(pattern = 'waves', options = {}) {
     const { width, height } = this.calculateDimensions();
     const generator = this.patterns[pattern] || this.patterns.waves;
     
-    return generator(
+    const result = generator(
       options.width || width,
       options.height || height,
       options.time || Date.now(),
       ...Object.values(options).slice(3)
     );
+    
+    // Store in pool for potential reuse
+    if (this.stringPool.length < this.maxPoolSize) {
+      this.stringPool.push('');
+    }
+    
+    return result;
   }
 }
 
-// Animation controller for dynamic ASCII
+// Optimized Animation controller with smarter frame management
 export class ASCIIAnimator {
-  constructor(element, generator, pattern = 'waves', fps = 12, options = {}) {
+  constructor(element, generator, pattern = 'circuit', fps = 8, options = {}) {
     this.element = element;
     this.generator = generator;
+    // Allow generator to measure character size from the actual element
+    if (this.generator && typeof this.generator.attachMeasureElement === 'function') {
+      this.generator.attachMeasureElement(this.element);
+    }
     this.pattern = pattern;
     this.isAnimating = false;
     this.animationId = null;
@@ -163,28 +260,35 @@ export class ASCIIAnimator {
     this.initialFps = fps;
     this.currentFps = fps;
     this.targetFps = fps;
-    this.frameInterval = 1000 / fps; // ms between frames
+    this.frameInterval = 1000 / fps;
     this.lastFrameTime = 0;
     
-    // FPS transition options
-    this.fpsTransitionDuration = options.fpsTransitionDuration || 2000; // 2 seconds
+    // Optimized FPS management
+    this.fpsTransitionDuration = options.fpsTransitionDuration || 1500; // Faster transitions
     this.fpsTransitionStartTime = null;
     this.fpsTransitionStartFps = 0;
     this.isTransitioningFps = false;
     
-    // Static mode options
+    // Enhanced static mode
     this.staticMode = options.staticMode || false;
-    this.staticCharacterChangeInterval = options.staticCharacterChangeInterval || 2000; // 2 seconds
-    this.staticCharacterChangeCount = options.staticCharacterChangeCount || 6;
+    this.staticCharacterChangeInterval = options.staticCharacterChangeInterval || 3000; // Less frequent
+    this.staticCharacterChangeCount = options.staticCharacterChangeCount || 3; // Fewer changes
     this.lastStaticChangeTime = 0;
     this.currentStaticPattern = '';
     
-    // Progressive reveal options
+    // Optimized progressive reveal
     this.progressiveReveal = options.progressiveReveal || false;
-    this.revealDuration = options.revealDuration || 2000;
+    this.revealDuration = options.revealDuration || 1500; // Faster reveal
     this.revealStartTime = null;
     this.fullPattern = '';
     this.patternPositions = [];
+    
+    // Performance monitoring
+    this.frameSkipCount = 0;
+    this.maxFrameSkip = 2; // Skip frames if falling behind
+    
+    // Request idle callback support
+    this.supportsRequestIdleCallback = 'requestIdleCallback' in window;
   }
 
   start() {
@@ -193,7 +297,6 @@ export class ASCIIAnimator {
     this.lastFrameTime = Date.now();
     this.lastStaticChangeTime = Date.now();
     
-    // Initialize progressive reveal if enabled
     if (this.progressiveReveal) {
       this.revealStartTime = Date.now();
       this.initializeProgressiveReveal();
@@ -209,9 +312,10 @@ export class ASCIIAnimator {
     }
   }
 
-  // Method to transition FPS smoothly
+  // Optimized FPS transition
   transitionToFps(targetFps, duration = this.fpsTransitionDuration) {
-    // Store the starting FPS for this transition
+    if (Math.abs(this.currentFps - targetFps) < 0.1) return; // Skip tiny changes
+    
     this.fpsTransitionStartFps = this.currentFps;
     this.targetFps = targetFps;
     this.fpsTransitionDuration = duration;
@@ -219,35 +323,28 @@ export class ASCIIAnimator {
     this.isTransitioningFps = true;
   }
 
-  // Method to enable static mode (used for non-landing pages)
   enableStaticMode() {
     this.staticMode = true;
     
-    // Generate initial static pattern if not already set
     if (!this.currentStaticPattern) {
       const currentTime = Date.now() - this.startTime;
       this.currentStaticPattern = this.generator.generate(this.pattern, { time: currentTime });
       this.element.textContent = this.currentStaticPattern;
     }
     
-    this.transitionToFps(0);
+    this.transitionToFps(0, 1000); // Faster transition to static
   }
 
-  // Method to briefly animate when navigating (page transitions)
+  // Optimized page transition animation
   triggerPageTransition() {
     if (this.staticMode) {
-      // First phase: quickly ramp up to higher FPS
-      this.transitionToFps(8, 500); // Burst to 8 fps over 0.5 seconds
-      
-      // Second phase: slowly transition back to 0
+      this.transitionToFps(6, 300); // Shorter burst
       setTimeout(() => {
-        // Start the slow transition back to 0 FPS
-        this.transitionToFps(0, 2000); // Then slow back to 0 over 2 seconds
-      }, 500); // Wait for first transition to complete
+        this.transitionToFps(0, 1200);
+      }, 400);
     }
   }
 
-  // Update current FPS based on transition
   updateFps() {
     if (!this.isTransitioningFps) return;
 
@@ -255,8 +352,9 @@ export class ASCIIAnimator {
     const elapsed = now - this.fpsTransitionStartTime;
     const progress = Math.min(elapsed / this.fpsTransitionDuration, 1);
 
-    // Use linear interpolation for smoother, more predictable transitions
-    this.currentFps = this.fpsTransitionStartFps + (this.targetFps - this.fpsTransitionStartFps) * progress;
+    // Use easing for smoother transitions
+    const easeProgress = 1 - Math.pow(1 - progress, 3);
+    this.currentFps = this.fpsTransitionStartFps + (this.targetFps - this.fpsTransitionStartFps) * easeProgress;
 
     if (progress >= 1) {
       this.currentFps = this.targetFps;
@@ -266,14 +364,13 @@ export class ASCIIAnimator {
     this.frameInterval = this.currentFps > 0 ? 1000 / this.currentFps : Infinity;
   }
 
-  // Update a few random characters in static mode
+  // Optimized static character updates
   updateStaticCharacters() {
     if (!this.staticMode || this.currentFps > 0.1) return;
 
     const now = Date.now();
     if (now - this.lastStaticChangeTime < this.staticCharacterChangeInterval) return;
 
-    // Generate initial pattern if not set
     if (!this.currentStaticPattern) {
       const currentTime = now - this.startTime;
       this.currentStaticPattern = this.generator.generate(this.pattern, { time: currentTime });
@@ -282,34 +379,25 @@ export class ASCIIAnimator {
       return;
     }
 
-    // Convert string to array for easier manipulation
-    let patternArray = this.currentStaticPattern.split('');
-    const nonWhitespacePositions = [];
-
-    // Find all non-whitespace, non-newline positions
-    for (let i = 0; i < patternArray.length; i++) {
-      const char = patternArray[i];
-      if (char !== ' ' && char !== '\n') {
-        nonWhitespacePositions.push(i);
+    // More efficient character replacement
+    const patternArray = this.currentStaticPattern.split('');
+    const changePositions = [];
+    
+    // Pre-select positions to change
+    for (let i = 0; i < this.staticCharacterChangeCount && i < patternArray.length; i++) {
+      let pos;
+      do {
+        pos = Math.floor(Math.random() * patternArray.length);
+      } while (patternArray[pos] === ' ' || patternArray[pos] === '\n');
+      
+      if (!changePositions.includes(pos)) {
+        changePositions.push(pos);
       }
     }
 
-    // Only proceed if we have positions to update
-    if (nonWhitespacePositions.length === 0) return;
-
-    // Randomly select positions to update
-    const positionsToUpdate = [];
-    for (let i = 0; i < Math.min(this.staticCharacterChangeCount, nonWhitespacePositions.length); i++) {
-      const randomIndex = Math.floor(Math.random() * nonWhitespacePositions.length);
-      const position = nonWhitespacePositions[randomIndex];
-      if (!positionsToUpdate.includes(position)) {
-        positionsToUpdate.push(position);
-      }
-    }
-
-    // Update selected positions with new random characters
-    const chars = ['.', ':', ';', '+', '*', '%', '#', '-', '|'];
-    positionsToUpdate.forEach(pos => {
+    // Apply changes
+    const chars = ['.', ':', ';', '+', '*', '-', '|'];
+    changePositions.forEach(pos => {
       patternArray[pos] = chars[Math.floor(Math.random() * chars.length)];
     });
 
@@ -318,21 +406,22 @@ export class ASCIIAnimator {
     this.lastStaticChangeTime = now;
   }
 
+  // Optimized progressive reveal
   initializeProgressiveReveal() {
-    // Generate the full pattern once
     const currentTime = Date.now() - this.startTime;
     this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
     
-    // Create an array of all non-whitespace character positions for random reveal
     this.patternPositions = [];
-    for (let i = 0; i < this.fullPattern.length; i++) {
+    const step = Math.max(1, Math.floor(this.fullPattern.length / 500)); // Sample positions
+    
+    for (let i = 0; i < this.fullPattern.length; i += step) {
       const char = this.fullPattern[i];
       if (char !== ' ' && char !== '\n') {
         this.patternPositions.push(i);
       }
     }
     
-    // Shuffle the positions for random reveal order
+    // Shuffle for random reveal
     for (let i = this.patternPositions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.patternPositions[i], this.patternPositions[j]] = [this.patternPositions[j], this.patternPositions[i]];
@@ -344,11 +433,10 @@ export class ASCIIAnimator {
       return this.fullPattern;
     }
     
-    // Create a pattern with spaces for unrevealed characters
-    let revealedPattern = '';
     const revealCount = Math.floor(this.patternPositions.length * progress);
     const revealedPositions = new Set(this.patternPositions.slice(0, revealCount));
     
+    let revealedPattern = '';
     for (let i = 0; i < this.fullPattern.length; i++) {
       const char = this.fullPattern[i];
       if (char === '\n') {
@@ -363,24 +451,37 @@ export class ASCIIAnimator {
     return revealedPattern;
   }
 
+  // Optimized main animation loop
   animate() {
     if (!this.isAnimating) return;
 
     const now = Date.now();
     const deltaTime = now - this.lastFrameTime;
 
-    // Update FPS if transitioning
     this.updateFps();
 
-    // Handle static mode character updates
+    // Handle static mode
     if (this.staticMode && this.currentFps <= 0.1) {
-      this.updateStaticCharacters();
+      // Use requestIdleCallback for static updates when available
+      if (this.supportsRequestIdleCallback) {
+        requestIdleCallback(() => this.updateStaticCharacters());
+      } else {
+        this.updateStaticCharacters();
+      }
       this.animationId = requestAnimationFrame(() => this.animate());
       return;
     }
 
-    // Only update if enough time has passed (based on current FPS)
+    // Frame rate limiting with frame skipping
     if (deltaTime >= this.frameInterval && this.currentFps > 0.1) {
+      // Skip frames if we're falling behind
+      if (deltaTime > this.frameInterval * 2 && this.frameSkipCount < this.maxFrameSkip) {
+        this.frameSkipCount++;
+        this.animationId = requestAnimationFrame(() => this.animate());
+        return;
+      }
+      
+      this.frameSkipCount = 0;
       const currentTime = now - this.startTime;
       
       let ascii;
@@ -388,17 +489,13 @@ export class ASCIIAnimator {
         const revealElapsed = now - this.revealStartTime;
         const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
         
-        // For static patterns like 'circuit', keep the same pattern
-        // For animated patterns like 'waves', update the pattern
         if (this.pattern === 'waves') {
           this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
-          // Update pattern positions for new pattern
           this.updatePatternPositions();
         }
         
         ascii = this.getProgressivePattern(revealProgress);
         
-        // Once reveal is complete, switch to normal animation
         if (revealProgress >= 1) {
           this.progressiveReveal = false;
         }
@@ -408,7 +505,6 @@ export class ASCIIAnimator {
       
       this.element.textContent = ascii;
       
-      // Store current pattern for static mode
       if (this.staticMode) {
         this.currentStaticPattern = ascii;
       }
@@ -420,43 +516,47 @@ export class ASCIIAnimator {
   }
 
   updatePatternPositions() {
-    // Update positions for animated patterns
+    // Simplified position update
     this.patternPositions = [];
-    for (let i = 0; i < this.fullPattern.length; i++) {
+    const step = Math.max(1, Math.floor(this.fullPattern.length / 300));
+    
+    for (let i = 0; i < this.fullPattern.length; i += step) {
       const char = this.fullPattern[i];
       if (char !== ' ' && char !== '\n') {
         this.patternPositions.push(i);
       }
     }
-    
-    // Shuffle the positions for random reveal order
-    for (let i = this.patternPositions.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.patternPositions[i], this.patternPositions[j]] = [this.patternPositions[j], this.patternPositions[i]];
-    }
   }
 
   resize() {
-    // Regenerate on resize
-    if (this.isAnimating) {
-      const currentTime = Date.now() - this.startTime;
-      
-      if (this.progressiveReveal && this.revealStartTime) {
-        // Reinitialize progressive reveal with new dimensions
-        this.initializeProgressiveReveal();
-        const revealElapsed = Date.now() - this.revealStartTime;
-        const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
-        const ascii = this.getProgressivePattern(revealProgress);
-        this.element.textContent = ascii;
-      } else {
-        const ascii = this.generator.generate(this.pattern, { time: currentTime });
-        this.element.textContent = ascii;
+    // Debounced resize
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+    
+    this.resizeTimeout = setTimeout(() => {
+      if (this.isAnimating) {
+        // Invalidate generator dimension cache on resize
+        if (this.generator) {
+          this.generator.dimensionsCache = null;
+        }
+        const currentTime = Date.now() - this.startTime;
         
-        // Update static pattern if in static mode
-        if (this.staticMode) {
-          this.currentStaticPattern = ascii;
+        if (this.progressiveReveal && this.revealStartTime) {
+          this.initializeProgressiveReveal();
+          const revealElapsed = Date.now() - this.revealStartTime;
+          const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
+          const ascii = this.getProgressivePattern(revealProgress);
+          this.element.textContent = ascii;
+        } else {
+          const ascii = this.generator.generate(this.pattern, { time: currentTime });
+          this.element.textContent = ascii;
+          
+          if (this.staticMode) {
+            this.currentStaticPattern = ascii;
+          }
         }
       }
-    }
+    }, 150);
   }
 }

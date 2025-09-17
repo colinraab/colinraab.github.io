@@ -7,24 +7,20 @@
 // ASCII Art Background
 .ascii-background {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  /* Use CSS custom properties for better mobile support */
-  height: var(--dvh); /* Use our dynamic viewport height */
+  /* Pin to all viewport edges to guarantee full-bleed coverage */
+  inset: 0;
   z-index: -10;
   pointer-events: none;
   overflow: hidden;
   
   @include media-down('sm') {
-    /* Ensure full coverage on mobile */
-    width: 100vw;
-    height: var(--dvh); /* Use our dynamic viewport height */
+    /* Nothing special needed when using inset: 0; keep for clarity */
   }
 }
 
 .ascii-art {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   font-family: var(--font-family-ascii);
@@ -37,14 +33,16 @@
   opacity: 0.6;
   overflow: hidden;
   
-  // Glow effect
+  // Reduced glow effect for better performance
   text-shadow: 
-    0 0 5px var(--color-ascii-glow),
-    0 0 10px var(--color-ascii-glow),
-    0 0 15px var(--color-ascii-glow);
+    0 0 3px var(--color-ascii-glow),
+    0 0 6px var(--color-ascii-glow);
   
-  // Animation
-  animation: asciiPulse 4s ease-in-out infinite alternate;
+  // Reduced animation frequency
+  animation: asciiPulse 6s ease-in-out infinite alternate;
+  
+  // Use will-change for better performance
+  will-change: opacity;
   
   // Progressive reveal class
   &.progressive-reveal {
@@ -89,34 +87,18 @@
 @keyframes asciiPulse {
   0% {
     opacity: 0.4;
-    text-shadow: 
-      0 0 5px var(--color-ascii-glow),
-      0 0 10px var(--color-ascii-glow),
-      0 0 15px var(--color-ascii-glow);
   }
   100% {
-    opacity: 0.7;
-    text-shadow: 
-      0 0 8px var(--color-ascii-glow),
-      0 0 16px var(--color-ascii-glow),
-      0 0 24px var(--color-ascii-glow);
+    opacity: 0.6;
   }
 }
 
 @keyframes asciiPulseSubtle {
   0% {
-    opacity: 0.4;
-    text-shadow: 
-      0 0 3px var(--color-ascii-glow),
-      0 0 6px var(--color-ascii-glow),
-      0 0 9px var(--color-ascii-glow);
+    opacity: 0.3;
   }
   100% {
-    opacity: 0.5;
-    text-shadow: 
-      0 0 4px var(--color-ascii-glow),
-      0 0 8px var(--color-ascii-glow),
-      0 0 12px var(--color-ascii-glow);
+    opacity: 0.4;
   }
 }
 

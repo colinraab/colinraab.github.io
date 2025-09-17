@@ -1,9 +1,8 @@
 <!--
   ASCIIBackground.astro
   
-  ASCII art background component providing animated character-based visuals.
-  Generates dynamic ASCII patterns and responds to theme changes.
-  Creates an immersive backdrop for the portfolio site with customizable animations.
+  Performance-optimized ASCII art background component.
+  Reduces memory usage and CPU load through smart animation management.
 -->
 
 <div class="ascii-background">
@@ -18,6 +17,24 @@
   let currentAnimator: any = null;
   let currentThemeController: any = null;
   let resizeTimeout: ReturnType<typeof setTimeout>;
+  let isPageVisible = true;
+
+  // Visibility API for performance optimization
+  function handleVisibilityChange() {
+    isPageVisible = !document.hidden;
+    
+    if (currentAnimator) {
+      if (isPageVisible) {
+        // Resume animation when page becomes visible
+        if (!currentAnimator.isAnimating) {
+          currentAnimator.start();
+        }
+      } else {
+        // Pause animation when page is hidden to save resources
+        currentAnimator.stop();
+      }
+    }
+  }
 
   function initializeComponents() {
     // Clean up existing instances
@@ -34,87 +51,90 @@
     
     const generator = new ASCIIGenerator();
     
-    // Check if we're on the landing page (index page)
+    // Check if we're on the landing page
     const isLandingPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
     
-    // Configure options based on page type
+    // Reduced performance settings
     const animatorOptions = {
       progressiveReveal: isLandingPage,
-      revealDuration: 2000, // 2 seconds
-      staticMode: !isLandingPage, // Enable static mode for non-landing pages
-      fpsTransitionDuration: 2000, // 2 seconds to transition to static
-      staticCharacterChangeInterval: 1000, // Change characters every 1 second
-      staticCharacterChangeCount: 6 // Change 6 characters at a time
+      revealDuration: 1500, // Faster reveal
+      staticMode: !isLandingPage,
+      fpsTransitionDuration: 1500, // Faster transitions
+      staticCharacterChangeInterval: 4000, // Less frequent changes
+      staticCharacterChangeCount: 2 // Fewer character changes
     };
     
     // Add CSS class for progressive reveal styling
     if (isLandingPage) {
       asciiCanvas.classList.add('progressive-reveal');
       
-      // Gradually transition to complete state over 1 second after reveal
       setTimeout(() => {
         asciiCanvas.classList.add('reveal-complete');
-        // Wait a bit longer before removing progressive-reveal to avoid abrupt changes
         setTimeout(() => {
           asciiCanvas.classList.remove('progressive-reveal');
-        }, 1000); // Remove after 1 second of overlap
-      }, 2500); // Start transition 0.5 seconds after reveal completes
+        }, 800);
+      }, 2000);
     } else {
-      // For non-landing pages, remove any progressive reveal classes
       asciiCanvas.classList.remove('progressive-reveal', 'reveal-complete');
     }
     
-    currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 12, animatorOptions); // 12 fps for smooth but controlled updates
+    // Lower FPS for better performance
+    currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 6, animatorOptions);
     currentAnimator.start();
     
-    // For non-landing pages, enable static mode after the initial animation starts
+    // Enable static mode for non-landing pages
     if (!isLandingPage) {
-      // Give it a moment to render the initial pattern, then transition to static
       setTimeout(() => {
         if (currentAnimator) {
           currentAnimator.enableStaticMode();
         }
-      }, 300); // Increased delay to ensure initial pattern is rendered
+      }, 200);
     }
     
-    // Handle resize and viewport changes
+    // Optimized resize handling
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        currentAnimator?.resize();
-      }, 250);
+        if (currentAnimator && isPageVisible) {
+          currentAnimator.resize();
+        }
+      }, 300); // Increased debounce time
     };
     
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     
-    // Handle mobile viewport changes (address bar show/hide)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
+    // Only add mobile-specific listeners if needed
+    if (window.innerWidth <= 768) {
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleResize, { passive: true });
+      }
+      
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          if (currentAnimator && isPageVisible) {
+            currentAnimator.resize();
+          }
+        }, 600);
+      }, { passive: true });
     }
-    
-    // Handle orientation changes on mobile
-    window.addEventListener('orientationchange', () => {
-      setTimeout(() => {
-        currentAnimator?.resize();
-      }, 500); // Delay to allow orientation change to complete
-    });
 
-    // Initialize theme controller
+    // Initialize theme controller only if not already initialized
     if (!currentThemeController) {
       currentThemeController = new ThemeController();
     } else {
-      // Ensure theme is correctly applied on reinit
       currentThemeController.applyTheme();
     }
   }
 
-  // Handle page transitions for animation effects
+  // Optimized page transition handling
   function handlePageTransition() {
-    if (currentAnimator && currentAnimator.staticMode) {
-      // Trigger a brief animation burst when navigating between pages
+    if (currentAnimator && currentAnimator.staticMode && isPageVisible) {
       currentAnimator.triggerPageTransition();
     }
   }
+
+  // Initialize visibility change listener
+  document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
 
   // Initialize on first load
   if (document.readyState === 'loading') {
@@ -125,11 +145,13 @@
 
   // Re-initialize after Astro view transitions
   document.addEventListener('astro:after-swap', () => {
-    initializeComponents();
-    // Also trigger page transition animation
-    setTimeout(handlePageTransition, 50); // Small delay to ensure components are initialized
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      initializeComponents();
+      setTimeout(handlePageTransition, 100);
+    }, 50);
   });
 
-  // Handle initial page transitions (before swap)
+  // Handle page transitions
   document.addEventListener('astro:before-swap', handlePageTransition);
 </script>
