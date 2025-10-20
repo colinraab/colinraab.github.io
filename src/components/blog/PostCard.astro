@@ -1,0 +1,179 @@
+---
+import type { BlogPost } from '@/utils/blog';
+
+export interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const { frontmatter } = post;
+
+const publishDate = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}).format(frontmatter.pubDate);
+
+function formatMinutesRead(minutes?: number) {
+  if (!minutes) return null;
+  return `${minutes} min read`;
+}
+---
+
+<article class="post-card">
+  <a href={post.url} class="post-card__link">
+    <div class="post-card__meta">
+      <time datetime={frontmatter.pubDate.toISOString()}>{publishDate}</time>
+      {frontmatter.minutesRead && (
+        <span class="post-card__read-time">{formatMinutesRead(frontmatter.minutesRead)}</span>
+      )}
+    </div>
+
+    <h2 class="post-card__title">{frontmatter.title}</h2>
+    <p class="post-card__description">{frontmatter.description}</p>
+
+    {frontmatter.tags && frontmatter.tags.length > 0 && (
+      <ul class="post-card__tags">
+        {frontmatter.tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    )}
+  </a>
+
+  {(frontmatter.projectLink || frontmatter.repoLink) && (
+    <footer class="post-card__footer">
+      {frontmatter.projectLink && (
+        <a href={frontmatter.projectLink} class="post-card__footer-link" target="_blank" rel="noopener noreferrer">
+          View project ↗
+        </a>
+      )}
+      {frontmatter.repoLink && (
+        <a href={frontmatter.repoLink} class="post-card__footer-link" target="_blank" rel="noopener noreferrer">
+          View code ↗
+        </a>
+      )}
+    </footer>
+  )}
+</article>
+
+<style lang="scss">
+  @use '../../styles/helpers/colors' as *;
+  @use '../../styles/helpers/fonts' as *;
+  @use '../../styles/helpers/responsive' as *;
+
+  .post-card {
+    background: var(--color-blog-overlay);
+    border: 1px solid var(--color-blog-border);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    gap: 1.25rem;
+    height: 100%;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 18px 36px rgba(12, 18, 32, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+    &:hover {
+      transform: translateY(-6px);
+      border-color: rgba(59, 130, 246, 0.3);
+      box-shadow: 0 22px 44px rgba(12, 18, 32, 0.24);
+    }
+  }
+
+  .post-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .post-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    @include font-size('xs');
+    @include font-weight('medium');
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    @include text-color('text-muted');
+
+    time {
+      font-family: var(--font-family-mono);
+    }
+
+    .post-card__read-time {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--color-primary);
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+  }
+
+  .post-card__title {
+    @include font-size('3xl');
+    @include font-weight('semibold');
+    @include text-color('text-primary');
+    line-height: 1.2;
+  }
+
+  .post-card__description {
+    @include font-size('md');
+    @include text-color('text-secondary');
+    line-height: 1.7;
+  }
+
+  .post-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      @include font-size('xs');
+      @include font-weight('medium');
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      @include text-color('text-muted');
+    }
+  }
+
+  .post-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .post-card__footer-link {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: var(--color-primary);
+    text-decoration: none;
+    position: relative;
+
+    &:hover {
+      color: var(--color-primary-light);
+    }
+  }
+
+  @include media-down('sm') {
+    .post-card {
+      padding: 1.5rem;
+    }
+
+    .post-card__title {
+      @include font-size('2xl');
+    }
+
+    .post-card__description {
+      @include font-size('sm');
+    }
+  }
+</style>

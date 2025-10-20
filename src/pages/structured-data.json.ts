@@ -1,7 +1,38 @@
 // structured-data.json.ts
 // Additional JSON-LD structured data endpoint for enhanced SEO
 
+import { getAllBlogPosts } from '../utils/blog';
+
 export async function GET() {
+  const baseUrl = 'https://colinraab.com';
+  const blogPosts = getAllBlogPosts();
+  const blogPostStructuredData = blogPosts.map((post) => {
+    const lastModified = (post.frontmatter.updatedDate ?? post.frontmatter.pubDate).toISOString();
+    const image = post.frontmatter.heroImage ? new URL(post.frontmatter.heroImage, baseUrl).toString() : `${baseUrl}/logo.svg`;
+
+    return {
+      "@type": "BlogPosting",
+      "@id": `${baseUrl}${post.url}#blog-post`,
+      "mainEntityOfPage": `${baseUrl}${post.url}`,
+      "headline": post.frontmatter.title,
+      "description": post.frontmatter.description,
+      "image": image,
+      "datePublished": post.frontmatter.pubDate.toISOString(),
+      "dateModified": lastModified,
+      "author": {
+        "@id": "https://colinraab.com/#colin-raab"
+      },
+      "publisher": {
+        "@id": "https://colinraab.com/#colin-raab"
+      },
+      "keywords": post.frontmatter.tags || [],
+      "articleSection": "Projects",
+      "url": `${baseUrl}${post.url}`,
+      "thumbnailUrl": image,
+      "inLanguage": "en-US"
+    };
+  });
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -195,7 +226,20 @@ export async function GET() {
         "isPartOf": {
           "@id": "https://colinraab.com/#website"
         }
-      }
+      },
+      {
+        "@type": "Blog",
+        "@id": "https://colinraab.com/#blog",
+        "url": "https://colinraab.com/blog",
+        "name": "Colin Raab Blog",
+        "description": "Project write-ups and technical notes from Colin Raab.",
+        "publisher": {
+          "@id": "https://colinraab.com/#colin-raab"
+        },
+        "blogPost": blogPostStructuredData.map((post) => ({ "@id": post["@id"] })),
+        "inLanguage": "en-US"
+      },
+      ...blogPostStructuredData
     ]
   };
 

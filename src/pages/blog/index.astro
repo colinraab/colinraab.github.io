@@ -1,0 +1,264 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import { getAllBlogPosts } from '../../utils/blog';
+
+const posts = getAllBlogPosts();
+const [featuredPost, ...otherPosts] = posts;
+---
+
+<PageLayout title="Blog - Colin Raab" description="Project notes, technical breakdowns, and behind-the-scenes updates from Colin Raab.">
+  <SEOHead 
+    title="Blog - Colin Raab"
+    description="Project notes, technical breakdowns, and behind-the-scenes updates from Colin Raab."
+    type="website"
+  />
+
+  <section class="page-intro">
+    <div class="container">
+      <header class="intro">
+        <p class="eyebrow">Projects Journal</p>
+        <h1>Blog</h1>
+        <p class="lead">Stories and technical notes from my projects, experiments, and journey.</p>
+      </header>
+
+      {featuredPost && (
+        <a class="featured" href={featuredPost.url}>
+          <div class="featured__meta">
+            <p class="eyebrow">Latest post</p>
+            <h2>{featuredPost.frontmatter.title}</h2>
+            <p class="featured__description">{featuredPost.frontmatter.description}</p>
+
+            <div class="featured__details">
+              <time datetime={featuredPost.frontmatter.pubDate.toISOString()}>
+                {new Intl.DateTimeFormat('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                }).format(featuredPost.frontmatter.pubDate)}
+              </time>
+              {featuredPost.frontmatter.tags && (
+                <ul class="featured__tags">
+                  {featuredPost.frontmatter.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <span class="featured__link">Read the latest →</span>
+          </div>
+
+          {featuredPost.frontmatter.heroImage && (
+            <div class="featured__media">
+              <img src={featuredPost.frontmatter.heroImage} alt={featuredPost.frontmatter.title} loading="lazy" />
+            </div>
+          )}
+        </a>
+      )}
+    </div>
+  </section>
+
+  {otherPosts.length > 0 && (
+    <section class="post-grid">
+      <div class="container">
+        <h2 class="section-title">All posts</h2>
+        <div class="grid">
+          {otherPosts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</PageLayout>
+
+<style lang="scss">
+  @use '../../styles/helpers/colors' as *;
+  @use '../../styles/helpers/fonts' as *;
+  @use '../../styles/helpers/responsive' as *;
+  @use '../../styles/helpers/grid' as *;
+
+  .container {
+    width: min(100%, 1100px);
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  .page-intro {
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+
+    .eyebrow {
+      @include font-size('xs');
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-family: var(--font-family-mono);
+      @include text-color('text-muted');
+    }
+
+    h1 {
+      @include font-size('6xl');
+      @include font-weight('bold');
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      @include font-size('lg');
+      @include text-color('text-secondary');
+      max-width: 65ch;
+      line-height: 1.7;
+    }
+  }
+
+  .featured {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr;
+    gap: 2rem;
+    align-items: center;
+    border: 1px solid var(--color-blog-border);
+    border-radius: 26px;
+    padding: 2.5rem;
+    background: var(--color-blog-overlay);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 28px 52px rgba(12, 18, 32, 0.22);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .featured__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    h2 {
+      @include font-size('4xl');
+      @include font-weight('semibold');
+      line-height: 1.2;
+    }
+
+    .featured__description {
+      @include font-size('lg');
+      @include text-color('text-secondary');
+      line-height: 1.7;
+    }
+  }
+
+  .featured__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+
+    time {
+      font-family: var(--font-family-mono);
+      @include font-size('xs');
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      @include text-color('text-muted');
+    }
+  }
+
+  .featured__tags {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      @include font-size('xs');
+      @include font-weight('medium');
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--color-primary);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+    }
+  }
+
+  .featured__link {
+    align-self: flex-start;
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: var(--color-primary);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 0.2rem;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .featured:hover .featured__link {
+    color: var(--color-primary-light);
+    border-color: currentColor;
+  }
+
+  .featured__media {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    max-height: 100%;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .post-grid {
+    padding-bottom: 4rem;
+  }
+
+  .section-title {
+    @include font-size('xl');
+    @include font-weight('semibold');
+    margin-bottom: 1.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @include media-down('lg') {
+    .featured {
+      grid-template-columns: 1fr;
+      padding: 2rem;
+    }
+
+    .featured__media {
+      order: -1;
+    }
+  }
+
+  @include media-down('sm') {
+    .container {
+      padding: 0 1.25rem 2.5rem;
+    }
+
+    .intro h1 {
+      @include font-size('4xl');
+    }
+
+    .featured {
+      padding: 1.75rem;
+      gap: 1.5rem;
+    }
+
+    .grid {
+      gap: 1.25rem;
+    }
+  }
+</style>

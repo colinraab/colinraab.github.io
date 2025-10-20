@@ -1,0 +1,324 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import { getAllBlogPosts, getBlogPostBySlug } from '../../utils/blog';
+
+export function getStaticPaths() {
+  const posts = getAllBlogPosts();
+  return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = slug ? getBlogPostBySlug(slug) : undefined;
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+
+const { frontmatter } = post;
+const publishDate = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}).format(frontmatter.pubDate);
+
+const updatedDate = frontmatter.updatedDate
+  ? new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(frontmatter.updatedDate)
+  : undefined;
+
+const minutesRead = frontmatter.minutesRead ? `${frontmatter.minutesRead} min read` : undefined;
+const heroImage = frontmatter.heroImage;
+---
+
+<PageLayout title={`${frontmatter.title} - Colin Raab`} description={frontmatter.description}>
+  <SEOHead
+    title={`${frontmatter.title} - Colin Raab`}
+    description={frontmatter.description}
+    type="article"
+    image={frontmatter.heroImage}
+    article={{
+      publishedTime: frontmatter.pubDate.toISOString(),
+      modifiedTime: frontmatter.updatedDate?.toISOString(),
+      author: 'Colin Raab',
+      section: 'Projects',
+      tags: frontmatter.tags,
+    }}
+  />
+
+  <article class="post">
+    <header class="post__header">
+      <div class="post__meta">
+        <a class="post__back" href="/blog">← Back to blog</a>
+        <p class="post__eyebrow">Projects Journal</p>
+        <h1>{frontmatter.title}</h1>
+
+        <div class="post__details">
+          <time datetime={frontmatter.pubDate.toISOString()}>{publishDate}</time>
+          {updatedDate && (
+            <span class="post__details-item">Updated {updatedDate}</span>
+          )}
+          {minutesRead && (
+            <span class="post__details-item">{minutesRead}</span>
+          )}
+        </div>
+
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+          <ul class="post__tags">
+            {frontmatter.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )}
+
+        {(frontmatter.projectLink || frontmatter.repoLink) && (
+          <div class="post__links">
+            {frontmatter.projectLink && (
+              <a href={frontmatter.projectLink} target="_blank" rel="noopener noreferrer">
+                View project ↗
+              </a>
+            )}
+            {frontmatter.repoLink && (
+              <a href={frontmatter.repoLink} target="_blank" rel="noopener noreferrer">
+                View code ↗
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+
+      {heroImage && (
+        <div class="post__hero">
+          <img src={heroImage} alt={frontmatter.title} loading="lazy" />
+        </div>
+      )}
+    </header>
+
+    <div class="post__content">
+      <post.Content />
+    </div>
+  </article>
+</PageLayout>
+
+<style lang="scss">
+  @use '../../styles/helpers/colors' as *;
+  @use '../../styles/helpers/fonts' as *;
+  @use '../../styles/helpers/responsive' as *;
+  @use '../../styles/helpers/grid' as *;
+
+  .post {
+    width: min(100%, 840px);
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    background: var(--color-blog-overlay);
+    border: 1px solid var(--color-blog-border);
+    border-radius: 28px;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 30px 60px rgba(10, 12, 20, 0.22);
+  }
+
+  .post__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post__back {
+    @include font-size('xs');
+    font-family: var(--font-family-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    @include text-color('text-muted');
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  .post__eyebrow {
+    @include font-size('xs');
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-family: var(--font-family-mono);
+    @include text-color('text-muted');
+  }
+
+  .post__header h1 {
+    @include font-size('5xl');
+    @include font-weight('bold');
+    line-height: 1.15;
+  }
+
+  .post__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    @include font-size('sm');
+    font-family: var(--font-family-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    @include text-color('text-muted');
+  }
+
+  .post__details-item {
+    position: relative;
+    padding-left: 1.25rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.4);
+    }
+  }
+
+  .post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      @include font-size('xs');
+      @include font-weight('medium');
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+      color: var(--color-primary);
+    }
+  }
+
+  .post__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+
+    a {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      color: var(--color-primary);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+
+      &:hover {
+        border-color: currentColor;
+      }
+    }
+  }
+
+  .post__hero {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    margin-top: 1.75rem;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  .post__content {
+    display: grid;
+    gap: 1.5rem;
+
+    :global(h2) {
+      @include font-size('3xl');
+      @include font-weight('semibold');
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    :global(h3) {
+      @include font-size('2xl');
+      @include font-weight('semibold');
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    :global(p) {
+      @include font-size('md');
+      @include text-color('text-secondary');
+      line-height: 1.8;
+    }
+
+    :global(ul),
+    :global(ol) {
+      padding-left: 1.25rem;
+      display: grid;
+      gap: 0.75rem;
+      @include font-size('md');
+      @include text-color('text-secondary');
+      line-height: 1.7;
+    }
+
+    :global(li::marker) {
+      color: var(--color-primary);
+    }
+
+    :global(a) {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+
+    :global(code) {
+      font-family: var(--font-family-mono);
+      background: rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+      padding: 0.12rem 0.4rem;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+
+    :global(blockquote) {
+      border-left: 3px solid var(--color-primary);
+      padding-left: 1.25rem;
+      margin-left: 0;
+      font-style: italic;
+      @include text-color('text-secondary');
+    }
+  }
+
+  @include media-down('md') {
+    .post {
+      padding-top: 3rem;
+      padding-bottom: 4rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+
+    .post__header h1 {
+      @include font-size('4xl');
+    }
+  }
+
+  @include media-down('sm') {
+    .post {
+      padding: 2.5rem 1.25rem 3.5rem;
+      border-radius: 22px;
+    }
+
+    .post__header h1 {
+      @include font-size('3xl');
+    }
+  }
+</style>
