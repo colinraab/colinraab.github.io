@@ -4,7 +4,7 @@ Showcases my professional, academic, and personal work. Built with Astro and ani
 
 Visit the portfolio at: [https://colinraab.com/](https://colinraab.com/)
 
-*Last updated: August 23, 2025*
+*Last updated: October 19, 2025*
 
 ## Pages
 
