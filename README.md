@@ -12,6 +12,7 @@ Visit the portfolio at: [https://colinraab.com/](https://colinraab.com/)
 - **Work** My work experience
 - **Programming** - Software development projects
 - **Research** - Academic pursuits and skills
+- **Blog** - Write-ups of my projects and experiences
 - **Music** - Original musical compositions
 - **Audio Engineering** - Recording, mixing, and mastering projects
 - **Lessons** - 1-on-1 music lessons
