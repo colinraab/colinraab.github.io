@@ -161,14 +161,14 @@
       attributeFilter: ['data-theme']
     });
     
-    // Start initial animation after a short delay
+    // Start initial animation
     if (!animationInitialized) {
-      setTimeout(animateLogo, 200);
+      animateLogo();
     }
   });
   
   // Re-initialize on view transitions
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('astro:after-swap', () => {
     // Reset animation state for new page
     animationInitialized = false;
     stopCurrentAnimations();
@@ -176,6 +176,6 @@
     // Update theme and start animation
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
     updateLogoTheme(currentTheme);
-    setTimeout(animateLogo, 200);
+    animateLogo();
   });
 </script>

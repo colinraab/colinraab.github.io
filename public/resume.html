@@ -154,44 +154,87 @@
         /* Ensure content visibility when PDF is generated */
         @media print {
             @page {
-                margin: 0.2in 0.3in 0.2in 0.3in; /* top right bottom left */
+                margin: 0.2in 0.3in 0.2in 0.3in; /* Restored standard margins */
             }
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                font-size: 9px !important;
+                font-size: 8.9pt !important; /* Slightly reduced from 9pt */
+                line-height: 1.28 !important; /* Slightly reduced from 1.3 */
             }
+            
+            /* Safari-specific print adjustments */
+            @supports (-webkit-hyphens:none) {
+                body {
+                    font-size: 8.3pt !important;
+                    -webkit-text-size-adjust: none;
+                }
+                .section-title {
+                    margin-bottom: 0.22rem !important;
+                }
+                section {
+                    margin-bottom: 0.45rem !important;
+                }
+            }
+
             .download-button-container, .status-message {
                 display: none !important;
             }
             .resume-container {
                 margin: 0 !important;
-                padding: 8px !important;
+                padding: 0 !important;
                 box-shadow: none !important;
                 max-width: 100% !important;
                 background-color: white !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            header {
+                margin-bottom: 0.65rem !important;
+            }
+            header h1 {
+                font-size: 1.4em !important;
+                margin-bottom: 0.1rem !important;
+            }
+            header div {
+                margin-top: 0.1rem !important;
+            }
+            section {
+                margin-bottom: 0.65rem !important;
             }
             .section-title {
+                font-size: 1.15em !important;
+                margin-bottom: 0.42rem !important;
                 page-break-after: avoid !important;
                 break-after: avoid !important;
             }
             .item-title {
+                font-size: 1.05em !important;
                 page-break-after: avoid !important;
                 break-after: avoid !important;
             }
+            .item-subtitle, .item-description, .item-description-list li, ul li {
+                font-size: 0.95em !important;
+            }
+            .item-subtitle {
+                margin-bottom: 0.22rem !important;
+            }
+            .item-description-list, ul {
+                margin-top: 0.12rem !important;
+            }
+            .item-description-list li, ul li {
+                margin-bottom: 0.12rem !important;
+            }
             /* Force grid layout in print */
             .grid {
-                display: block !important;
-                column-count: 2 !important;
-                column-gap: 1rem !important;
-                column-fill: balance !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.05rem !important;
             }
             .grid > div {
-                display: inline-block !important;
-                width: 100% !important;
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
-                margin-bottom: 0.375rem !important; 
+                margin-bottom: 0.42rem !important; 
             }
         }
     </style>
@@ -222,21 +265,21 @@
                 <div>
                     <h3 class="item-title">McGill University Schulich School of Music</h3>
                     <p class="item-subtitle">
-                        <span>Master of Arts in Music Technology</span>
+                        <span>Master of Arts in Music Technology. 4.0 GPA.</span>
                         <span class="item-date">2023 - 2025</span>
                     </p>
                 </div>
                 <div>
                     <h3 class="item-title">University of Miami Frost School of Music</h3>
                     <p class="item-subtitle">
-                        <span>Bachelor of Science in Music Engineering Technology, Computer Engineering minor. 3.91 GPA, Outstanding Senior</span>
+                        <span>Bachelor of Science in Music Engineering Technology, Computer Engineering minor. 3.91 GPA, Outstanding Senior.</span>
                         <span class="item-date">2019 - 2023</span>
                     </p>
                 </div>
                  <div>
                     <h3 class="item-title">Menlo School</h3>
                     <p class="item-subtitle">
-                        <span>Prestigious private high school in Atherton, California</span>
+                        <span>Prestigious private high school in Atherton, California. 1570 SAT score.</span>
                         <span class="item-date">2015 - 2019</span>
                     </p>
                 </div>
@@ -257,6 +300,16 @@
                         <li>Website (Node.js, React) development to interact with a relational database (Supabase, PostgreSQL).</li>
                         <li>JUCE (C++) and ESP32 development for a microcontroller system with desktop application.</li>
                         <li>Monitor and display serial data, analyze and detect patterns using machine learning.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="item-title">AI Trainer</h3>
+                    <p class="item-subtitle">
+                        <span>Handshake AI</span>
+                        <span class="item-date">2025 - Present</span>
+                    </p>
+                    <ul class="item-description-list">
+                        <li>Rating and comparison of multi-modal AI-generated outputs for a frontier model provider.</li>
                     </ul>
                 </div>
                 <div>

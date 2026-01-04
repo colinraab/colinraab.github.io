@@ -25,24 +25,21 @@ export interface Props {
 const { title, description, isASCIILayout = false, hideLogoBackground = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
-  <ASCIIBackground />
+<BaseLayout title={title} description={description} isASCIILayout={isASCIILayout}>
+  <div transition:persist="ascii-bg-wrapper">
+    <ASCIIBackground />
+  </div>
   
   {!hideLogoBackground && (
-    <AnimatedLogoBackground />
+    <div transition:persist="logo-bg-wrapper">
+      <AnimatedLogoBackground />
+    </div>
   )}
   
   <main class={`main-content ${isASCIILayout ? 'ascii-layout' : ''}`}>
     <slot />
   </main>
 </BaseLayout>
-
-{isASCIILayout && (
-  <script>
-    // Add class to body for ASCII layout styling
-    document.body.classList.add('ascii-layout-body');
-  </script>
-)}
 
 <style lang="scss">
   .main-content {

@@ -57,7 +57,7 @@
     // Reduced performance settings
     const animatorOptions = {
       progressiveReveal: isLandingPage,
-      revealDuration: 1500, // Faster reveal
+      revealDuration: 3000, // Slower, smoother reveal
       staticMode: !isLandingPage,
       fpsTransitionDuration: 1500, // Faster transitions
       staticCharacterChangeInterval: 4000, // Less frequent changes
@@ -73,13 +73,13 @@
         setTimeout(() => {
           asciiCanvas.classList.remove('progressive-reveal');
         }, 800);
-      }, 2000);
+      }, 3200); // Match revealDuration with a small buffer
     } else {
       asciiCanvas.classList.remove('progressive-reveal', 'reveal-complete');
     }
     
     // Lower FPS for better performance
-    currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 6, animatorOptions);
+    currentAnimator = new ASCIIAnimator(asciiCanvas, generator, 'circuit', 3, animatorOptions);
     currentAnimator.start();
     
     // Enable static mode for non-landing pages
@@ -145,11 +145,8 @@
 
   // Re-initialize after Astro view transitions
   document.addEventListener('astro:after-swap', () => {
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-      initializeComponents();
-      setTimeout(handlePageTransition, 100);
-    }, 50);
+    initializeComponents();
+    setTimeout(handlePageTransition, 50);
   });
 
   // Handle page transitions

@@ -12,7 +12,7 @@ export class ASCIIGenerator {
     this.chars = ['.', ':', ';', '+', '*', '%', '@', '#'];
     this.patterns = {
       waves: this.generateWaves.bind(this),
-      grid: this.generateGrid.bind(this),
+      // grid: this.generateGrid.bind(this),
       noise: this.generateNoise.bind(this),
       circuit: this.generateCircuit.bind(this)
     };
@@ -68,12 +68,12 @@ export class ASCIIGenerator {
     
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const isLine = (x % horizontalSpacing === 0 || y % verticalSpacing === 0);
-        if (isLine && randomGrid[randomIndex % randomGrid.length] < density) {
-          result += this.chars[Math.floor(randomGrid[(randomIndex + 1) % randomGrid.length] * 4) + 2];
-        } else {
+        // const isLine = (x % horizontalSpacing === 0 || y % verticalSpacing === 0);
+        // if (isLine && randomGrid[randomIndex % randomGrid.length] < density) {
+        //   result += this.chars[Math.floor(randomGrid[(randomIndex + 1) % randomGrid.length] * 4) + 2];
+        // } else {
           result += randomGrid[(randomIndex + 2) % randomGrid.length] < 0.1 ? this.chars[0] : ' ';
-        }
+        // }
         randomIndex++;
       }
       result += '\n';
@@ -120,16 +120,16 @@ export class ASCIIGenerator {
     
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const isLine = (x % horizontalSpacing === 0) || (y % verticalSpacing === 0);
-        const isJunction = (x % horizontalSpacing === 0) && (y % verticalSpacing === 0);
+        // const isLine = (x % horizontalSpacing === 0) || (y % verticalSpacing === 0);
+        // const isJunction = (x % horizontalSpacing === 0) && (y % verticalSpacing === 0);
         
-        if (isJunction) {
-          result += '+';
-        } else if (isLine) {
-          result += x % horizontalSpacing === 0 ? '|' : '-';
-        } else {
+        // if (isJunction) {
+        //   result += '+';
+        // } else if (isLine) {
+        //   result += x % horizontalSpacing === 0 ? '|' : '-';
+        // } else {
           result += Math.random() < 0.05 ? '.' : ' '; // Reduced noise
-        }
+        // }
       }
       result += '\n';
     }
@@ -338,7 +338,7 @@ export class ASCIIAnimator {
   // Optimized page transition animation
   triggerPageTransition() {
     if (this.staticMode) {
-      this.transitionToFps(6, 300); // Shorter burst
+      this.transitionToFps(4, 300); // Shorter burst
       setTimeout(() => {
         this.transitionToFps(0, 1200);
       }, 400);
@@ -412,11 +412,9 @@ export class ASCIIAnimator {
     this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
     
     this.patternPositions = [];
-    const step = Math.max(1, Math.floor(this.fullPattern.length / 500)); // Sample positions
-    
-    for (let i = 0; i < this.fullPattern.length; i += step) {
-      const char = this.fullPattern[i];
-      if (char !== ' ' && char !== '\n') {
+    // Include all non-newline positions for a perfectly smooth transition
+    for (let i = 0; i < this.fullPattern.length; i++) {
+      if (this.fullPattern[i] !== '\n') {
         this.patternPositions.push(i);
       }
     }
@@ -426,6 +424,10 @@ export class ASCIIAnimator {
       const j = Math.floor(Math.random() * (i + 1));
       [this.patternPositions[i], this.patternPositions[j]] = [this.patternPositions[j], this.patternPositions[i]];
     }
+
+    // Initialize reveal mask for performance
+    this.revealMask = new Uint8Array(this.fullPattern.length);
+    this.lastRevealCount = 0;
   }
 
   getProgressivePattern(progress) {
@@ -434,14 +436,19 @@ export class ASCIIAnimator {
     }
     
     const revealCount = Math.floor(this.patternPositions.length * progress);
-    const revealedPositions = new Set(this.patternPositions.slice(0, revealCount));
+    
+    // Update mask if revealCount increased
+    if (revealCount > this.lastRevealCount) {
+      for (let i = this.lastRevealCount; i < revealCount; i++) {
+        this.revealMask[this.patternPositions[i]] = 1;
+      }
+      this.lastRevealCount = revealCount;
+    }
     
     let revealedPattern = '';
     for (let i = 0; i < this.fullPattern.length; i++) {
       const char = this.fullPattern[i];
-      if (char === '\n') {
-        revealedPattern += char;
-      } else if (char === ' ' || revealedPositions.has(i)) {
+      if (char === '\n' || this.revealMask[i]) {
         revealedPattern += char;
       } else {
         revealedPattern += ' ';
@@ -489,10 +496,8 @@ export class ASCIIAnimator {
         const revealElapsed = now - this.revealStartTime;
         const revealProgress = Math.min(revealElapsed / this.revealDuration, 1);
         
-        if (this.pattern === 'waves') {
-          this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
-          this.updatePatternPositions();
-        }
+        // Update full pattern every frame for dynamic reveal
+        this.fullPattern = this.generator.generate(this.pattern, { time: currentTime });
         
         ascii = this.getProgressivePattern(revealProgress);
         
@@ -513,19 +518,6 @@ export class ASCIIAnimator {
     }
 
     this.animationId = requestAnimationFrame(() => this.animate());
-  }
-
-  updatePatternPositions() {
-    // Simplified position update
-    this.patternPositions = [];
-    const step = Math.max(1, Math.floor(this.fullPattern.length / 300));
-    
-    for (let i = 0; i < this.fullPattern.length; i += step) {
-      const char = this.fullPattern[i];
-      if (char !== ' ' && char !== '\n') {
-        this.patternPositions.push(i);
-      }
-    }
   }
 
   resize() {

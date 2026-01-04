@@ -38,7 +38,7 @@ body {
   overflow-x: hidden; // Always prevent horizontal scroll
   
   // ASCII layout specific styles
-  &.ascii-layout-body {
+  html[data-ascii-layout="true"] & {
     height: 100vh;
     height: var(--dvh); /* Use dynamic viewport height when supported */
     overflow: hidden; // Prevent all scrolling for ASCII pages
