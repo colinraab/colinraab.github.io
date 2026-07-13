@@ -64,6 +64,7 @@ function createPath(path: string) {
 
 <script>
 import { ThemeController } from '../utils/ThemeController.js';
+import { navigate } from 'astro:transitions/client';
 
 // Declare anime.js for TypeScript
 declare const anime: any;
@@ -121,8 +122,9 @@ declare const anime: any;
         const persistentNavContainer = document.getElementById('persistent-nav-container');
         
         if (!popupModal || !persistentNavContainer) {
-            // Fallback: navigate immediately if elements not found
-            window.location.href = targetUrl;
+            // Keep navigation inside Astro's client router so the destination
+            // document does not briefly expose the browser's white canvas.
+            navigate(targetUrl);
             return;
         }
 
@@ -264,8 +266,11 @@ declare const anime: any;
                 popupModal.style.display = 'none';
                 popupModal.style.pointerEvents = 'none';
                 
-                // Navigate to target page immediately (keep transition-active class until navigation)
-                window.location.href = targetUrl;
+                // Use Astro's client router here as well. A full document
+                // navigation only happened on the first trip from the landing
+                // page, which caused the one-time white flash while the next
+                // page's styles loaded.
+                navigate(targetUrl);
             }
         });
 
@@ -689,4 +694,3 @@ body.transition-active #persistent-nav-container .footer-content {
     align-items: center !important;
 }
 </style>
-

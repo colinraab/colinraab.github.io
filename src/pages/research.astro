@@ -20,7 +20,7 @@ const researchProjects = [
     description: 'Applying multi-modal large language models to music analysis, exploring the intersection of AI and creative expression. Gemini and Qwen models are used for music information retrieval tasks and compared with state-of-the-art techniques.',
     tags: ['Large Language Models', 'Music Information Retrieval'],
     status: 'Completed',
-    link: null // Add link when available
+    link: 'https://mcgill.scholaris.ca/items/ba7b549a-dd38-4a98-93c9-3bfa6f14fbb1'
   },
   {
     id: 'capstone',
@@ -72,10 +72,21 @@ const researchProjects = [
     institution: 'University of Miami',
     year: '2023-2025',
     category: 'Feature Extraction',
-    description: 'Extraction of audio and video features for analysis of infant-directed singing. Research conducted with Dr. Shannon de l’Etoile, Dr. Soyoen Ahn, and Cameron Riopelle. Presented at the 2025 International Conference of Music Perception and Cognition (ICMPC)',
+    description: 'Extraction of audio and video features for analysis of infant-directed singing. Research conducted with Dr. Shannon de l’Etoile, Dr. Soyoen Ahn, and Cameron Riopelle.',
     tags: ['Machine Learning', 'Audio Classification'],
     status: 'Ongoing',
-    link: null // Add link when available
+    link: null, // Add link when available
+    presentations: [
+      {
+        text: 'Presented at the 2025 International Conference of Music Perception and Cognition (ICMPC).'
+      },
+      {
+        authors: 'de l’Etoile, S. K., Raab, C., & Kara, Y.',
+        date: 'July 2026',
+        title: 'Use of automated facial action recognition to capture infant response to infant-directed singing',
+        details: '[Poster presentation]. The International Congress of Infant Studies, Panama City, Panama.'
+      }
+    ]
   }
 ];
 ---
@@ -125,6 +136,29 @@ const researchProjects = [
                   View Project →
                 </a>
               </div>
+            )}
+
+            {project.presentations && (
+              <details class="presentations-disclosure">
+                <summary>
+                  <span>Presentations</span>
+                  <span class="presentation-count">{project.presentations.length}</span>
+                </summary>
+                <ol class="presentation-list">
+                  {project.presentations.map((presentation) => (
+                    <li>
+                      {presentation.text ? (
+                        presentation.text
+                      ) : (
+                        <>
+                          {presentation.authors} ({presentation.date}). <cite>{presentation.title}</cite>{' '}
+                          {presentation.details}
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </details>
             )}
           </div>
         ))}
@@ -348,5 +382,73 @@ const researchProjects = [
       }
     }
   }
-</style>
 
+  .presentations-disclosure {
+    border-top: 1px solid var(--color-border);
+    padding: 0 1.5rem;
+
+    summary {
+      @include font-size('sm');
+      @include font-weight('semibold');
+      color: var(--color-primary);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      transition: color 0.2s ease;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::after {
+        content: '→';
+        margin-left: auto;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover {
+        color: var(--color-primary-light);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 4px;
+        border-radius: 2px;
+      }
+    }
+
+    &[open] summary::after {
+      transform: rotate(90deg);
+    }
+  }
+
+  .presentation-count {
+    @include font-size('xs');
+    @include text-color('text-muted');
+    @include bg-color('bg-tertiary');
+    min-width: 1.5rem;
+    padding: 0.125rem 0.375rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-align: center;
+  }
+
+  .presentation-list {
+    @include font-size('xs');
+    @include text-color('text-secondary');
+    line-height: 1.55;
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+
+    li + li {
+      margin-top: 0.75rem;
+    }
+
+    cite {
+      font-style: italic;
+    }
+  }
+</style>
