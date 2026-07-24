@@ -9,6 +9,8 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  // Keep the interface intentionally rectangular across every route and component.
+  border-radius: 0 !important;
 }
 
 html {
