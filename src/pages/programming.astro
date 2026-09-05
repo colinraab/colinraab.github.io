@@ -10,7 +10,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Programming - Colin Raab" description="Explore Colin's programming projects, from full-stack web development to creative coding.">
+<PageLayout title="Programming - Colin Raab" description="Explore Colin's programming projects, including Cendance, a terminal-first generative music app with a built-in MCP server.">
   <section class="section">
     <div class="container">
       <div class="page-hero">
@@ -20,6 +20,55 @@ import PageLayout from '../layouts/PageLayout.astro';
         </p>
       </div>
       
+      <article class="featured-project">
+        <div class="featured-project__image">
+          <img
+            src="/images/cendance-terminal.png"
+            alt="Cendance terminal interface showing transport controls, four instrument tracks, and arrangement settings"
+            width="1508"
+            height="1124"
+          />
+        </div>
+
+        <div class="featured-project__content">
+          <p class="featured-project__eyebrow">New · macOS developer preview</p>
+          <h2>Cendance</h2>
+          <p class="featured-project__tagline">A keyboard-driven generative DAW that lives in the terminal.</p>
+          <p>
+            Create four-track musical sketches, shape arrangements, sounds, and effects,
+            or connect an MCP-compatible agent to control the same musical system.
+          </p>
+          <div class="project-tags" aria-label="Technologies used">
+            <span class="tag">C++</span>
+            <span class="tag">JUCE</span>
+            <span class="tag">FTXUI</span>
+            <span class="tag">Audio DSP</span>
+            <span class="tag">MCP</span>
+          </div>
+          <div class="project-links">
+            <a
+              href="https://github.com/colinraab/cendance/releases/tag/v0.1.2"
+              class="btn btn--primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download v0.1.2
+            </a>
+            <a
+              href="https://github.com/colinraab/cendance"
+              class="btn btn--secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View source
+            </a>
+          </div>
+          <p class="featured-project__status">
+            macOS 15 · Apple silicon and Intel · Unsigned developer preview
+          </p>
+        </div>
+      </article>
+
       <div class="projects-grid">
         <!-- Project placeholder 
         <article class="project-card">
@@ -182,6 +231,87 @@ import PageLayout from '../layouts/PageLayout.astro';
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
     margin-bottom: 4rem;
+  }
+
+  .featured-project {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+    margin-bottom: 2rem;
+    @include bg-color('bg-secondary');
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    @include media-down('md') {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .featured-project__image {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f7f7f5;
+    border-right: 1px solid var(--color-border);
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @include media-down('md') {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+
+  .featured-project__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+
+    h2 {
+      @include font-size('3xl');
+      margin-bottom: 0.75rem;
+    }
+
+    > p:not(.featured-project__eyebrow):not(.featured-project__status) {
+      @include text-color('text-secondary');
+      margin-bottom: 1rem;
+      @include line-height('relaxed');
+    }
+
+    @include media-down('sm') {
+      padding: 1.5rem;
+    }
+  }
+
+  .featured-project__eyebrow {
+    margin-bottom: 0.5rem;
+    @include font-size('sm');
+    @include font-weight('medium');
+    @include text-color('primary');
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .featured-project__tagline {
+    @include font-size('lg');
+    @include font-weight('medium');
+  }
+
+  .featured-project__status {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    @include font-size('xs');
+    @include text-color('text-muted');
   }
 
   .project-card {
