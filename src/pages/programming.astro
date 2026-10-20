@@ -10,7 +10,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Programming - Colin Raab" description="Explore Colin's programming projects, including Cendance, a terminal-first generative music app with a built-in MCP server.">
+<PageLayout title="Programming - Colin Raab" description="Explore Colin's creative audio software: Ritual Codec, an experimental audio degradation effect, and Cendance, a terminal-first generative DAW.">
   <section class="section">
     <div class="container">
       <div class="page-hero">
@@ -20,6 +20,61 @@ import PageLayout from '../layouts/PageLayout.astro';
         </p>
       </div>
       
+      <article class="featured-project" aria-labelledby="ritual-codec-title">
+        <div class="featured-project__media">
+          <img
+            src="/images/ritual-codec-plugin.png"
+            alt="Ritual Codec's purple plugin interface with spectral display and Budget, Competition, Memory, Punch, and Crunch controls"
+            width="1000"
+            height="650"
+          />
+          <div class="project-demo">
+            <h3 id="ritual-demo-title">Hear the damage</h3>
+            <audio controls preload="none" aria-labelledby="ritual-demo-title" aria-describedby="ritual-demo-sections">
+              <source src="/audio/ritual-codec-demo.mp3" type="audio/mpeg" />
+              <a href="/audio/ritual-codec-demo.mp3">Download the audio comparison</a>.
+            </audio>
+            <p id="ritual-demo-sections" class="project-demo__sections">
+              0:00 Original · 0:06 Subtle · 0:13 Damaged<br />
+              0:19 No Punch · 0:26 Extreme · 0:32 RIT / 64 kbps
+            </p>
+            <p class="project-demo__credit">
+              Music: “EDM Detection Mode” by
+              <a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500026">Kevin MacLeod</a>,
+              <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+              Excerpted, attenuated, and processed.
+            </p>
+          </div>
+        </div>
+        <div class="featured-project__content">
+          <p class="featured-project__eyebrow">New · Experimental audio effect</p>
+          <h2 id="ritual-codec-title">Ritual Codec</h2>
+          <p class="featured-project__tagline">Digital damage. On purpose.</p>
+          <p>
+            Starve frequency bands of precision, let old timbres linger, and turn
+            tails into texture—while Punch keeps drum attacks hitting hard.
+            Explore spectral degradation in Classic mode or real encoded-and-decoded
+            audio in RIT mode.
+          </p>
+          <p>Free and open source. Available as an AU or VST3 plugin, a standalone file player and WAV exporter, and command-line tools.</p>
+          <div class="project-tags" aria-label="Technologies used">
+            <span class="tag">C++</span>
+            <span class="tag">JUCE</span>
+            <span class="tag">Audio DSP</span>
+            <span class="tag">AU / VST3</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/colinraab/ritual-codec/releases/tag/v0.2.0" class="btn btn--primary" target="_blank" rel="noopener noreferrer">Download v0.2.0</a>
+            <a href="https://github.com/colinraab/ritual-codec" class="btn btn--secondary" target="_blank" rel="noopener noreferrer">View source</a>
+          </div>
+          <p class="featured-project__status">
+            Mac downloads: Apple silicon · macOS 26.6+ · Experimental release<br />
+            Ad-hoc signed, not notarized.
+            <a href="https://github.com/colinraab/ritual-codec/blob/main/docs/INSTALLING.md">Read the Mac installation guide.</a>
+          </p>
+        </div>
+      </article>
+
       <article class="featured-project">
         <div class="featured-project__image">
           <img
@@ -31,7 +86,7 @@ import PageLayout from '../layouts/PageLayout.astro';
         </div>
 
         <div class="featured-project__content">
-          <p class="featured-project__eyebrow">New · macOS developer preview</p>
+          <p class="featured-project__eyebrow">macOS developer preview</p>
           <h2>Cendance</h2>
           <p class="featured-project__tagline">A keyboard-driven generative DAW that lives in the terminal.</p>
           <p>
@@ -228,7 +283,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
     gap: 2rem;
     margin-bottom: 4rem;
   }
@@ -291,6 +346,56 @@ import PageLayout from '../layouts/PageLayout.astro';
     @include media-down('sm') {
       padding: 1.5rem;
     }
+  }
+
+  .featured-project__media {
+    min-width: 0;
+    padding: 1rem;
+    background: #17111b;
+    color: #e5d8eb;
+
+    > img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .project-demo {
+    padding: 1rem 0.5rem 0.5rem;
+
+    h3 {
+      @include font-size('lg');
+      color: inherit;
+      margin-bottom: 0.75rem;
+    }
+
+    audio {
+      display: block;
+      width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
+
+  .project-demo__sections {
+    @include font-size('xs');
+    @include line-height('relaxed');
+    margin: 0.75rem 0;
+  }
+
+  .project-demo__credit {
+    @include font-size('xs');
+    @include line-height('relaxed');
+    color: #bfaec7;
+    margin: 0;
+  }
+
+  .featured-project .project-links {
+    flex-wrap: wrap;
   }
 
   .featured-project__eyebrow {
